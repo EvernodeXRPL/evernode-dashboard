@@ -1,0 +1,38 @@
+@import "../../assets/variables";
+
+$anim: all 500ms ease-in;
+
+.event-scroll-list {
+    overflow: hidden;
+    border: 1px solid $gray-300;
+
+    .card-list-container{
+        height: 0px;
+
+        .card-list {
+            transform: translateY(-100%);
+        }
+    }
+}
+
+.event-enter {
+    height: 0px;
+    opacity: 0.3;
+}
+
+.event-enter.event-enter-active {
+    height: $event-card-height;
+    opacity: 1;
+    transition: $anim;
+}
+
+.event-leave {
+    height: $event-card-height;
+    opacity: 1;
+}
+
+.event-leave.event-leave-active {
+    height: 0px;
+    opacity: 0.3;
+    transition: $anim;
+}

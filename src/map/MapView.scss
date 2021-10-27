@@ -1,0 +1,39 @@
+@import "../assets/variables";
+
+.content {
+    overflow: hidden;
+}
+
+.map-view-container {
+    width: 0rem;
+    height: 0rem;
+    margin: 0rem auto;
+}
+
+.map-view {
+    background-image: url("../assets/map.svg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    transform: translate(-50%, -50%);
+}
+
+@media only screen and (max-width: 767px) {
+    .content {
+        overflow: inherit;
+    }
+
+    .map-view-container {
+        width: 100%;
+        height: auto;
+        padding: 0.5rem;
+    }
+
+    .map-view {
+        background-image: none;
+        transform: none;
+        width: auto !important;
+        height: auto !important;
+        padding-top: 3.2rem !important;
+        padding-bottom: 13.5rem !important;
+    }
+}

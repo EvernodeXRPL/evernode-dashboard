@@ -1,0 +1,57 @@
+@import "../../assets/variables";
+
+.event-card {
+    background-color: $gray-100;
+    height: $event-card-height;
+    overflow: hidden;
+
+    .event-header {
+        background-color: $gray-300;
+        padding: 0.3rem 0.6rem;
+        font-weight: bold;
+        opacity: 0.8;
+
+        &.event-active {
+            background-color: $active-bg;
+            color: $active-font;
+        }
+
+        &.event-redeem-req {
+            background-color: $redeem-req-bg;
+            color: $redeem-req-font;
+        }
+
+        &.event-redeem-res {
+            background-color: $redeem-res-bg;
+            color: $redeem-res-font;
+        }
+
+        &.event-audit-req {
+            background-color: $audit-req-bg;
+            color: $audit-req-font;
+        }
+
+        &.event-audit-res {
+            background-color: $audit-res-bg;
+            color: $audit-res-font;
+        }
+    }
+
+    .event-content {
+        .event-item {
+            background-color: $gray-400;
+            border-bottom: 1px solid $gray-200;
+            padding: 0.3rem 0.6rem;
+            line-height: 1.3;
+
+            &:last-child {
+                border-bottom: none;
+                padding-bottom: 0.6rem;
+            }
+
+            i {
+                padding-right: 0.8rem;
+            }
+        }
+    }
+}

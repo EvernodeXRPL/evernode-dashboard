@@ -1,0 +1,29 @@
+@import "../assets/variables";
+
+.sidebar {
+    width: $sidebar-width;
+    background-color: $sidebar-bg;
+}
+
+@media only screen and (max-width: 992px) {
+    .sidebar {
+        position: fixed;
+        bottom: 0rem;
+        left: 0rem;
+        width: 27rem;
+        height: auto;
+        box-shadow: -1px -3px 8px #000000c4;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        bottom: 0rem;
+        left: 0rem;
+        right: 0rem;
+        width: auto;
+        height: auto;
+        box-shadow: -1px -3px 8px #000000c4;
+    }
+}

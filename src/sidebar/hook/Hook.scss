@@ -1,0 +1,10 @@
+@import "../../assets/variables";
+
+.sidebar-hook {
+    background-color: $sidebar-hook-bg;
+
+    .sidebar-title {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+}
