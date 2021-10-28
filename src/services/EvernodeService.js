@@ -30,7 +30,6 @@ const events = {
     hookEvent: "hookEvent"
 }
 
-
 class HostNode {
     constructor(name, pos, node) {
         this.region = name;
@@ -60,7 +59,7 @@ class EvernodeManager {
         this.emitter = new EventEmitter();
 
         this.regions = {};
-        this.nodeRegions = {};
+        this.nodeLookup = {};
         this.nextIdx = 1;
     }
 
@@ -79,15 +78,17 @@ class EvernodeManager {
 
         let isListUpdated = false;
         for await (const row of rows) {
-            const host = JSON.parse(row.hosts)[0];
-            if (this.addNode({
-                idx: parseInt(row.rowKey),
-                location: host?.location,
-                size: host?.instanceSize,
-                token: host?.token,
-                address: host?.address
-            })) {
-                isListUpdated = true;
+            const hosts = JSON.parse(row.hosts);
+            for (const host of hosts) {
+                if (this.addNode({
+                    idx: this.nextIdx,
+                    location: host?.location,
+                    size: host?.instanceSize,
+                    token: host?.token,
+                    address: host?.address
+                })) {
+                    isListUpdated = true;
+                }
             }
         }
         if (isListUpdated)
@@ -117,41 +118,39 @@ class EvernodeManager {
             const event = message.event;
             const data = message.data;
 
-            const eventType = eventPlaceholders[event];
-            const output = {
-                type: eventType,
-                address: data.host,
-                ...data
-            }
-            let regionId = this.nodeRegions[data.host];
-            let region = regionId ? this.regions[regionId] : null;
-            let node = region?.nodes[output.address];
+            let node = null;
+            let region = null;
 
             if (event === signalREvents.HostRegistered) {
-                if (this.addNode({
+                node = this.addNode({
                     idx: this.nextIdx,
                     location: data.location,
                     size: data.instanceSize,
                     token: data.token,
                     address: data.host
-                })) {
-                    regionId = this.nodeRegions[data.host];
-                    region = regionId ? this.regions[regionId] : null;
-                    node = region?.nodes[output.address];
-
+                });
+                if (node) {
                     this.emitter.emit(events.regionListLoaded, this.regions);
+                    region = this.regions[this.nodeLookup[data.host]];
                 }
             }
             else if (event === signalREvents.HostDeregistered) {
-                if (this.removeNode(data.host)) {
+                region = this.regions[this.nodeLookup[data.host]];
+                if (this.removeNode(data.host))
                     this.emitter.emit(events.regionListLoaded, this.regions);
-                    node = null;
-                }
+            }
+            else {
+                region = this.regions[this.nodeLookup[data.host]];
+                node = region.nodes[data.host];
             }
 
-            if (node)
-                node.emitter.emit(events.hostEvent, output);
+            const eventType = eventPlaceholders[event];
 
+            // Emit event to node.
+            if (node)
+                node.emitter.emit(events.hostEvent, { type: eventType });
+
+            // Emit event to hook.
             this.emitter.emit(events.hookEvent, {
                 type: eventType,
                 region: region?.name,
@@ -177,32 +176,33 @@ class EvernodeManager {
             region = cycleRegions[regionIndex];
         }
 
+        const node = new HostNode(region.name, region.pos, msg);
         if (!this.regions[region.id]) {
             this.regions[region.id] = region;
             this.regions[region.id].nodes = {};
-            this.regions[region.id].nodes[msg.address] = new HostNode(region.name, region.pos, msg);
+            this.regions[region.id].nodes[msg.address] = node;
             isListUpdated = true;
         } else if (!this.regions[region.id].nodes[msg.address]) {
-            this.regions[region.id].nodes[msg.address] = new HostNode(region.name, region.pos, msg);
+            this.regions[region.id].nodes[msg.address] = node;
             isListUpdated = true;
         }
 
         if (isListUpdated) {
-            this.nodeRegions[msg.address] = region.id;
+            this.nodeLookup[msg.address] = region.id;
             this.nextIdx++;
         }
 
-        return isListUpdated;
+        return isListUpdated ? node : null;
     }
 
     removeNode(address) {
         let isListUpdated = false;
 
-        const regionId = this.nodeRegions[address];
+        const regionId = this.nodeLookup[address];
         if (!regionId)
             return false;
 
-        delete this.nodeRegions[address];
+        delete this.nodeLookup[address];
         const region = this.regions[regionId];
 
         if (region && region.nodes[address]) {

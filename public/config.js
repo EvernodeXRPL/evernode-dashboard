@@ -4,7 +4,7 @@ window.dashboardConfig = {
     tableName: "systemDashboard",
     clusterKey: "systemDashboard",
     partitionKey: "hosts",
-    tableSas: "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2021-10-28T15:31:26Z&st=2021-10-28T07:31:26Z&spr=https&sig=bl3M%2FktP6DVeANuY%2B9j1dIyMtXb4omH5XfqwFvkkr18%3D"
+    tableSas: "?sv=2020-08-04&ss=t&srt=o&sp=r&se=2021-10-29T16:10:08Z&st=2021-10-28T16:10:08Z&spr=https&sig=2xTbTCZ0alqbfR9qjE7OwIbGGizFIi2oNJClQBohY3E%3D"
 }
 
 window.dashboardConfig.regions = [
