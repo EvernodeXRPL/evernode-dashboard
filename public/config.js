@@ -1,17 +1,17 @@
 window.dashboardConfig = {}
 
-window.dashboardConfig.regions = window.dashboardConfig.regions = [
+window.dashboardConfig.regions = [
     {
         id: "syd",
         name: "Sydney",
         country: "AU",
-        pos: { anchor: "tr", top: "86%", left: "92.5%" }
+        pos: { anchor: "tl", top: "86%", left: "92.5%" }
     },
     {
         id: "yto",
         name: "Toronto",
         country: "CA",
-        pos: { anchor: "bl", top: "40%", left: "22.5%" }
+        pos: { anchor: "tr", top: "40%", left: "22.5%" }
     },
     {
         id: "ams",
@@ -23,7 +23,7 @@ window.dashboardConfig.regions = window.dashboardConfig.regions = [
         id: "atl",
         name: "Atlanta",
         country: "US",
-        pos: { anchor: "tl", top: "47.5%", left: "22%" }
+        pos: { anchor: "tr", top: "47.5%", left: "22%" }
     },
     {
         id: "cdg",
@@ -35,25 +35,25 @@ window.dashboardConfig.regions = window.dashboardConfig.regions = [
         id: "dfw",
         name: "Dallas",
         country: "US",
-        pos: { anchor: "br", top: "47%", left: "19%" }
+        pos: { anchor: "tr", top: "47%", left: "19%" }
     },
     {
         id: "ewr",
         name: "New Jersey",
         country: "US",
-        pos: { anchor: "tl", top: "43%", left: "25.3%" }
+        pos: { anchor: "tr", top: "43%", left: "25.3%" }
     },
     {
         id: "fra",
         name: "Frankfurt",
         country: "DE",
-        pos: { anchor: "tl", top: "37%", left: "49.5%" }
+        pos: { anchor: "br", top: "37%", left: "49.5%" }
     },
     {
         id: "icn",
         name: "Seoul",
         country: "KR",
-        pos: { anchor: "tr", top: "44%", left: "85%" }
+        pos: { anchor: "tl", top: "44%", left: "85%" }
     },
     {
         id: "lax",
@@ -65,49 +65,49 @@ window.dashboardConfig.regions = window.dashboardConfig.regions = [
         id: "lhr",
         name: "London",
         country: "GB",
-        pos: { anchor: "tr", top: "36%", left: "46.7%" }
+        pos: { anchor: "br", top: "36%", left: "46.7%" }
     },
     {
         id: "mia",
         name: "Miami",
         country: "US",
-        pos: { anchor: "tl", top: "52%", left: "23%" }
+        pos: { anchor: "tr", top: "52%", left: "23%" }
     },
     {
         id: "nrt",
         name: "Tokyo",
         country: "JP",
-        pos: { anchor: "bl", top: "44%", left: "88.5%" }
+        pos: { anchor: "tl", top: "44%", left: "88.5%" }
     },
     {
         id: "ord",
         name: "Chicago",
         country: "US",
-        pos: { anchor: "br", top: "42%", left: "21.8%" }
+        pos: { anchor: "tr", top: "42%", left: "21.8%" }
     },
     {
         id: "sea",
         name: "Seattle",
         country: "US",
-        pos: { anchor: "tr", top: "37.5%", left: "12.3%" }
+        pos: { anchor: "br", top: "37.5%", left: "12.3%" }
     },
     {
         id: "sgp",
         name: "Singapore",
         country: "SG",
-        pos: { anchor: "bl", top: "65%", left: "79%" }
+        pos: { anchor: "tl", top: "65%", left: "79%" }
     },
     {
         id: "sjc",
         name: "Silicon Valley",
         country: "US",
-        pos: { anchor: "bl", top: "31.8%", left: "11.5%" }
+        pos: { anchor: "br", top: "31.8%", left: "11.5%" }
     },
     {
         id: "sto",
         name: "Stockholm",
         country: "SE",
-        pos: { anchor: "bl", top: "30.8%", left: "52%" }
+        pos: { anchor: "br", top: "30.8%", left: "52%" }
     },
     {
         id: "mex",
@@ -119,7 +119,7 @@ window.dashboardConfig.regions = window.dashboardConfig.regions = [
         id: "col",
         name: "Colombo",
         country: "LK",
-        pos: { anchor: "tr", top: "62.8%", left: "71.5%" },
+        pos: { anchor: "tl", top: "62.8%", left: "71.5%" },
         skipCycling: true
     }
 ];

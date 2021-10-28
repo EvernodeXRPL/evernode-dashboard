@@ -24,15 +24,6 @@ else {
         }
     }
 
-    window.adjustEventListScrollViewSize = function () {
-        const eventListScroll = document.getElementsByClassName("event-scroll-list")[0];
-        if (eventListScroll) {
-            const nodeNumBar = document.getElementsByClassName("node-num-bar")[0];
-            const numBarHeight = nodeNumBar ? nodeNumBar.clientHeight : 0;
-            eventListScroll.style.height = (document.body.clientHeight - numBarHeight - 200) + "px"
-        }
-    }
-
     window.onresize = () => {
         window.adjustMapViewSize();
         window.adjustEventListScrollViewSize();

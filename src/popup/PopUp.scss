@@ -5,18 +5,17 @@ $anim: all 500ms ease-in;
 .popup {
     background-color: $gray-100;
     overflow: hidden;
-    transition: width 500ms, height 500ms;
     z-index: 1;
     position: sticky;
-
-    &.hide {
-        width: 0;
-        height: 0;
-    }
+    width: 0;
+    height: 0;
+    opacity: 0;
+    transition: width 500ms, height 500ms, opacity 500ms;
 
     &.show {
         width: $popup-width;
         height: $popup-height;
+        opacity: 1;
     }
 
     .tab {
@@ -51,5 +50,21 @@ $anim: all 500ms ease-in;
     .close {
         font-size: 1.2rem;
         text-align: center;
+    }
+
+    &.anchor-tl {
+        transform: translate(-103%, -103%);
+    }
+
+    &.anchor-tr {
+        transform: translate(3%, -103%);
+    }
+
+    &.anchor-br {
+        transform: translate(3%, 3%);
+    }
+
+    &.anchor-bl {
+        transform: translate(-103%, 3%);
     }
 }

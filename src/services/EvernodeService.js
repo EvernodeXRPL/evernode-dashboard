@@ -1,12 +1,7 @@
 import EventEmitter from "EventEmitter"
 
-const connectionStatus = {
-    none: 0,
-    connected: 1
-}
-
 const events = {
-    regionListUpdated: "regionListUpdated",
+    regionListLoaded: "regionListLoaded",
     hostEvent: "hostEvent",
     hookEvent: "hookEvent"
 }
@@ -18,17 +13,20 @@ const eventTypes = {
     AuditRes: 'audit-res'
 }
 
-const hostRegions = {};
+const regions = {};
+const nodeRegions = {};
 
 class HostNode {
-    constructor(name, host, idx, pos, nodeManager) {
-        this.name = name;
-        this.host = host;
-        this.idx = idx;
+    constructor(name, pos, node) {
+        this.region = name;
         this.pos = pos;
-        this.nodeManager = nodeManager;
 
-        this.status = connectionStatus.none;
+        this.idx = node.idx;
+        this.location = node.location;
+        this.size = node.size;
+        this.token = node.token;
+        this.address = node.address;
+
         this.emitter = new EventEmitter();
     }
 
@@ -49,35 +47,77 @@ class EvernodeManager {
 
     async start() {
         await this.loadHosts();
+    }
 
-        this.mockListener();
+    // -------------------- Mock functions ------------------------
+
+
+    generateString(length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = ' ';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+
+        return result;
     }
 
     async loadHosts() {
-        let isListUpdated = false;
         const rows = []
         for (let i = 0; i <= 40; i++) {
+            const string = this.generateString(29);
             rows.push({
                 rowKey: (i + 1).toString(),
-                uri: i.toString()
+                location: string.substr(0, 3),
+                size: string.substr(3, 3),
+                token: string.substr(6, 3).toUpperCase(),
+                address: string.substr(9).toLowerCase()
             });
         }
 
         for await (const row of rows) {
-            if (this.addNode({
+            this.addNode({
                 idx: parseInt(row.rowKey),
-                uri: row.uri
-            })) {
-                isListUpdated = true;
-            }
-
+                ...row
+            })
         }
-        if (isListUpdated)
-            this.emitter.emit(events.regionListUpdated, hostRegions);
+
+        this.emitter.emit(events.regionListLoaded, regions);
+
+        this.mockListener(rows);
     }
 
+    mockListener(rows) {
+        const evs = [eventTypes.RedeemReq, eventTypes.RedeemRes, eventTypes.AuditReq, eventTypes.AuditRes];
+
+        setInterval(() => {
+            const iterations = (Math.floor(100000 + Math.random() * 900000)) % 4;
+            for (let i = 0; i < iterations; i++) {
+                const random = (Math.floor(100000 + Math.random() * 900000));
+                const node = rows[random % rows.length];
+                const event = evs[random % 4];
+    
+                const e = {
+                    type: event,
+                    address: node.address,
+                    amount: (random % 100),
+                    info: 'Test'
+                }
+    
+                const regionId = nodeRegions[e.address];
+                const eventNode = regions[regionId].nodes[e.address];
+                if (eventNode) {
+                    eventNode.emitter.emit(events.hostEvent, e)
+                    this.emitter.emit(events.hookEvent, { node: eventNode, event: e });
+                }
+            }
+        }, 3000);
+    }
+
+    // ------------------------------------------------------------------
+
     addNode(msg) {
-        let isListUpdated = false;
         let region = null;
 
         // Check whether there's a special region assignment for this node index.
@@ -93,49 +133,15 @@ class EvernodeManager {
             region = cycleRegions[regionIndex];
         }
 
-        if (!hostRegions[region.id]) {
-            hostRegions[region.id] = region;
-            hostRegions[region.id].nodes = {};
-            hostRegions[region.id].nodes[msg.uri] = new HostNode(region.name, msg.uri, msg.idx, region.pos, exports.evernodeManager);
-            isListUpdated = true;
-        } else if (!hostRegions[region.id].nodes[msg.uri]) {
-            isListUpdated = true;
-            hostRegions[region.id].nodes[msg.uri] = new HostNode(region.name, msg.uri, msg.idx, region.pos, exports.evernodeManager);
+        if (!regions[region.id]) {
+            regions[region.id] = region;
+            regions[region.id].nodes = {};
+            regions[region.id].nodes[msg.address] = new HostNode(region.name, region.pos, msg);
+        } else if (!regions[region.id].nodes[msg.address]) {
+            regions[region.id].nodes[msg.address] = new HostNode(region.name, region.pos, msg);
         }
 
-        return isListUpdated;
-    }
-
-    mockListener() {
-        const evs = [
-            {
-                type: eventTypes.RedeemReq
-            },
-            {
-                type: eventTypes.RedeemRes
-            },
-            {
-                type: eventTypes.AuditReq
-            },
-            {
-                type: eventTypes.AuditRes
-            }
-        ];
-
-        let hi = 0
-        setInterval(() => {
-            const i = (Math.floor(100000 + Math.random() * 900000)) % 4;
-            const event = evs[i];
-            const host = (hi % 40) + 1
-            for (let region of Object.values(hostRegions)) {
-                let node = region.nodes[host];
-                if (node) {
-                    node.emitter.emit(events.hostEvent, event)
-                    this.emitter.emit(events.hookEvent, { node: node, event: event });
-                }
-            }
-            hi++;
-        }, 3000);
+        nodeRegions[msg.address] = region.id;
     }
 
     on(event, handler) {

@@ -1,6 +1,6 @@
 @import "../assets/variables";
 
-$marker-size: 1rem;
+$marker-size: 0.8rem;
 $node-width: 15rem;
 
 .map-node-marker-container {
@@ -25,47 +25,9 @@ $node-width: 15rem;
         }
     }
 
-    .node-event-container {
-        width: 0rem;
-        height: 0rem;
-    }
-
-    .node-event {
-        font-size: 0.65rem;
-        line-height: 0.3rem;
-        font-weight: normal;
-        color: $gray-100;
-        opacity: 0.8;
-        text-shadow: 0px 0px 6px black;
-        border-top: 2px solid rgba(0, 0, 0, 0);
-        border-bottom: 2px solid rgba(0, 0, 0, 0);
-        z-index: 1;
+    &.front {
         position: sticky;
-        
-        &.event-active {
-            background-color: $active-bg;
-            color: $active-font;
-        }
-    
-        &.event-redeem-req {
-            background-color: $redeem-req-bg;
-            color: $redeem-req-font;
-        }
-    
-        &.event-redeem-res {
-            background-color: $redeem-res-bg;
-            color: $redeem-res-font;
-        }
-    
-        &.event-audit-req {
-            background-color: $audit-req-bg;
-            color: $audit-req-font;
-        }
-    
-        &.event-audit-res {
-            background-color: $audit-res-bg;
-            color: $audit-res-font;
-        }
+        z-index: 1;
     }
 
     &.event-active {

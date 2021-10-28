@@ -13,9 +13,7 @@ class Hook extends React.Component {
                         </h3>
                     </div>
                 </div>
-                <div className="flex">
-                    <EventCardList />
-                </div>
+                <EventCardList />
             </div>
         )
     }

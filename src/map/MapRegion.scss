@@ -1,8 +1,79 @@
 @import "../assets/variables";
 
+$status-line-height: 0.3rem;
+$status-width: 5rem;
+
+$anim: all 500ms ease-in;
+
 .map-region-container {
     width: 0rem;
     height: 0rem;
     position: relative;
     cursor: pointer;
+
+    .region-status-container {
+        width: 0rem;
+        height: 0rem;
+    }
+
+    .region-status {
+        font-size: 0.65rem;
+        line-height: 0.3rem;
+        font-weight: normal;
+        width: $status-width;
+        color: $gray-100;
+        opacity: 0.8;
+        text-shadow: 0px 0px 6px black;
+        border-top: 2px solid rgba(0, 0, 0, 0);
+        border-bottom: 2px solid rgba(0, 0, 0, 0);
+        z-index: 1;
+        position: sticky;
+        
+        &.status-active {
+            background-color: $active-bg;
+            color: $active-font;
+        }
+    
+        &.status-redeem-req {
+            background-color: $redeem-req-bg;
+            color: $redeem-req-font;
+        }
+    
+        &.status-redeem-res {
+            background-color: $redeem-res-bg;
+            color: $redeem-res-font;
+        }
+    
+        &.status-audit-req {
+            background-color: $audit-req-bg;
+            color: $audit-req-font;
+        }
+    
+        &.status-audit-res {
+            background-color: $audit-res-bg;
+            color: $audit-res-font;
+        }
+    }
+}
+
+.status-enter {
+    line-height: 0px;
+    opacity: 0.3;
+}
+
+.status-enter.status-enter-active {
+    line-height: $status-line-height;
+    opacity: 1;
+    transition: $anim;
+}
+
+.status-leave {
+    line-height: $status-line-height;
+    opacity: 1;
+}
+
+.status-leave.status-leave-active {
+    line-height: 0px;
+    opacity: 0.3;
+    transition: $anim;
 }

@@ -17,7 +17,7 @@ class MapView extends React.Component {
                 regionList: regionList
             })
         };
-        Evernode.evernodeManager.on(Evernode.events.regionListUpdated, onUpdated);
+        Evernode.evernodeManager.on(Evernode.events.regionListLoaded, onUpdated);
     }
 
     render() {

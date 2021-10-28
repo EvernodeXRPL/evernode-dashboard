@@ -2,14 +2,16 @@ import React from "react"
 import Evernode from "../services/EvernodeService"
 import "./MapNode.scss"
 
+const NOTIFY_LIFE = 5000;
+
 class MapNode extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            idx: this.props.idx,
+            regionIdx: this.props.regionIdx,
             node: this.props.node,
             count: this.props.count,
-            event: null
+            status: null
         }
     }
 
@@ -19,26 +21,26 @@ class MapNode extends React.Component {
             clearTimeout(this.timeout);
             this.timeout = null;
 
-            let state = this.state;
-            state.event = event;
-            this.setState(state);
+            this.changeStatus(event.type);
             this.timeout = setTimeout(() => {
-                state.event = null;
-                this.setState(state);
-            }, 1000);
+                this.changeStatus();
+            }, NOTIFY_LIFE);
         });
     }
 
+    changeStatus(status = null) {
+        let state = this.state;
+        state.status = status;
+        this.setState(state);
+        this.props.onStatusChange(this.state.regionIdx, status);
+    }
+
     render() {
-        const { idx, event } = this.state;
+        const { regionIdx, status } = this.state;
         return (
-            <div className={"map-node-marker-container event-" + (event ? event.type : "active")} style={{ marginTop: (idx * 2), marginLeft: (idx * 2) }}>
-                {event ? <div className="node-event-container">
-                    <span className={"node-event badge badge-secondary p-1 event-" + (event ? event.type : "active")}>
-                        <span className="d-none d-lg-inline">{event.type}</span>
-                    </span>
-                </div> : <></>}
-                <i className="fas fa-home map-node-marker"></i>
+            <div className={"map-node-marker-container event-" + (status ? `${status} front` : "active")}
+                style={{ marginTop: regionIdx === 0 ? 0 : 2, marginLeft: regionIdx }}>
+                <i className="fas fa-server map-node-marker"></i>
             </div>
         );
     }
