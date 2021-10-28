@@ -58,7 +58,7 @@ class MapRegion extends React.Component {
         });
 
         const statusList = statuses.map((s, idx) =>
-            <span className={"col-12 badge badge-secondary p-1 region-status status-" + s.status} key={idx}>
+            <span className={"col-12 badge badge-secondary p-1 region-status event-" + s.status} key={idx}>
                 <span className="d-none d-lg-inline">{s.status}</span>
             </span>)
 

@@ -34,19 +34,35 @@ $node-width: 15rem;
         color: $active-bg;
     }
 
+    &.event-host-reg {
+        color: $host-reg-bg;
+    }
+
+    &.event-host-dereg {
+        color: $host-dereg-bg;
+    }
+
     &.event-redeem-req {
         color: $redeem-req-bg;
     }
 
-    &.event-redeem-res {
-        color: $redeem-res-bg;
+    &.event-redeem-suc {
+        color: $redeem-suc-bg;
+    }
+
+    &.event-redeem-err {
+        color: $redeem-err-bg;
     }
 
     &.event-audit-req {
         color: $audit-req-bg;
     }
 
-    &.event-audit-res {
-        color: $audit-res-bg;
+    &.event-audit-suc {
+        color: $audit-suc-bg;
+    }
+
+    &.event-refund-req {
+        color: $refund-req-bg;
     }
 }

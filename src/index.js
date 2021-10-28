@@ -26,7 +26,6 @@ else {
 
     window.onresize = () => {
         window.adjustMapViewSize();
-        window.adjustEventListScrollViewSize();
     };
 
     ReactDOM.render(

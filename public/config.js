@@ -2,8 +2,9 @@ window.dashboardConfig = {
     signalRUrl: "https://func-hotpocket.azurewebsites.net/api",
     tableAccount: "https://sthotpocket.table.core.windows.net",
     tableName: "systemDashboard",
+    clusterKey: "systemDashboard",
     partitionKey: "hosts",
-    tableSas: "?sv=2020-08-04&ss=t&srt=o&sp=r&se=2021-10-28T16:52:13Z&st=2021-10-28T08:52:13Z&spr=https&sig=0%2B9Ig%2Bu3IVUdkBKrKFubkWaELirlqRrnF1b7ZrpkJgA%3D"
+    tableSas: "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2021-10-28T15:31:26Z&st=2021-10-28T07:31:26Z&spr=https&sig=bl3M%2FktP6DVeANuY%2B9j1dIyMtXb4omH5XfqwFvkkr18%3D"
 }
 
 window.dashboardConfig.regions = [

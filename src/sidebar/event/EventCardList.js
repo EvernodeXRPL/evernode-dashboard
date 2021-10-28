@@ -25,7 +25,7 @@ class EventCardList extends React.Component {
         const eventList = events.map((event, idx) =>
             <div key={idx}>
                 <div className="m-1">
-                    <EventCard node={event.node} event={event.event} />
+                    <EventCard data={event} />
                 </div>
             </div>
         );

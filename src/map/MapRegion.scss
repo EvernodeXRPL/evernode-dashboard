@@ -43,7 +43,6 @@ $anim: all 500ms ease-in;
         line-height: 0.3rem;
         font-weight: normal;
         width: $status-width;
-        color: $gray-100;
         opacity: 0.8;
         text-shadow: 0px 0px 6px black;
         border-top: 2px solid rgba(0, 0, 0, 0);
@@ -51,29 +50,36 @@ $anim: all 500ms ease-in;
         z-index: 1;
         position: sticky;
 
-        &.status-active {
-            background-color: $active-bg;
-            color: $active-font;
+        &.event-host-reg {
+            background-color: $host-reg-bg;
+        }
+    
+        &.event-host-dereg {
+            background-color: $host-dereg-bg;
         }
 
-        &.status-redeem-req {
+        &.event-redeem-req {
             background-color: $redeem-req-bg;
-            color: $redeem-req-font;
         }
-
-        &.status-redeem-res {
-            background-color: $redeem-res-bg;
-            color: $redeem-res-font;
+    
+        &.event-redeem-suc {
+            background-color: $redeem-suc-bg;
         }
-
-        &.status-audit-req {
+    
+        &.event-redeem-err {
+            background-color: $redeem-err-bg;
+        }
+    
+        &.event-audit-req {
             background-color: $audit-req-bg;
-            color: $audit-req-font;
         }
-
-        &.status-audit-res {
-            background-color: $audit-res-bg;
-            color: $audit-res-font;
+    
+        &.event-audit-suc {
+            background-color: $audit-suc-bg;
+        }
+    
+        &.event-refund-req {
+            background-color: $refund-req-bg;
         }
     }
 }

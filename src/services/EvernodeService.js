@@ -1,5 +1,28 @@
 import EventEmitter from "EventEmitter"
 const { TableClient, AzureSASCredential } = require("@azure/data-tables");
+const signalR = require("@microsoft/signalr");
+
+const signalREvents = {
+    HostRegistered: "hostRegistered",
+    HostDeregistered: "hostDeregistered",
+    Redeem: "redeem",
+    RedeemSuccess: "redeemSuccess",
+    RedeemError: "redeemError",
+    RefundRequest: "refundRequest",
+    AuditRequest: "auditRequest",
+    AuditSuccess: "auditSuccess"
+}
+
+const eventPlaceholders = {
+    hostRegistered: 'host-reg',
+    hostDeregistered: 'host-dereg',
+    redeem: 'redeem-req',
+    redeemSuccess: 'redeem-suc',
+    redeemError: 'redeem-err',
+    refundRequest: 'refund-req',
+    auditRequest: 'audit-req',
+    auditSuccess: 'audit-suc'
+}
 
 const events = {
     regionListLoaded: "regionListLoaded",
@@ -7,15 +30,6 @@ const events = {
     hookEvent: "hookEvent"
 }
 
-const eventTypes = {
-    RedeemReq: 'redeem-req',
-    RedeemRes: 'redeem-res',
-    AuditReq: 'audit-req',
-    AuditRes: 'audit-res'
-}
-
-const regions = {};
-const nodeRegions = {};
 
 class HostNode {
     constructor(name, pos, node) {
@@ -44,10 +58,15 @@ class EvernodeManager {
 
     constructor() {
         this.emitter = new EventEmitter();
+
+        this.regions = {};
+        this.nodeRegions = {};
+        this.nextIdx = 1;
     }
 
     async start() {
         await this.loadHosts();
+        this.connectToSignalR(); // Connect to signalr asynchronously.
     }
 
     async loadHosts() {
@@ -58,67 +77,91 @@ class EvernodeManager {
 
         const rows = await tableClient.listEntities({ queryOptions: { filter: `PartitionKey eq '${window.dashboardConfig.partitionKey}'` } });
 
-        ///
-        let test = [];
-        ///
-
+        let isListUpdated = false;
         for await (const row of rows) {
             const host = JSON.parse(row.hosts)[0];
-            const node = {
+            if (this.addNode({
                 idx: parseInt(row.rowKey),
                 location: host?.location,
                 size: host?.instanceSize,
                 token: host?.token,
                 address: host?.address
-            };
-            this.addNode(node);
-
-            ///
-            test.push(node)
-            ///
+            })) {
+                isListUpdated = true;
+            }
         }
-
-        this.emitter.emit(events.regionListLoaded, regions);
-
-        ///
-        if (test.length)
-            this.mockListener(test);
-        ///
+        if (isListUpdated)
+            this.emitter.emit(events.regionListLoaded, this.regions);
     }
 
-    // -------------------- Mock functions ------------------------
+    async connectToSignalR() {
+        try {
+            this.signalRConnection = new signalR.HubConnectionBuilder()
+                .withUrl(window.dashboardConfig.signalRUrl, {
+                    headers: { "x-ms-client-principal-id": window.dashboardConfig.clusterKey }
+                })
+                .configureLogging(signalR.LogLevel.Information)
+                .withAutomaticReconnect()
+                .build();
 
+            this.initiateSignalRHandlers();
 
-    mockListener(rows) {
-        const evs = [eventTypes.RedeemReq, eventTypes.RedeemRes, eventTypes.AuditReq, eventTypes.AuditRes];
+            await this.signalRConnection.start();
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
-        setInterval(() => {
-            const iterations = (Math.floor(100000 + Math.random() * 900000)) % 4;
-            for (let i = 0; i < iterations; i++) {
-                const random = (Math.floor(100000 + Math.random() * 900000));
-                const node = rows[random % rows.length];
-                const event = evs[random % 4];
+    initiateSignalRHandlers() {
+        this.signalRConnection.on("newMessage", (message) => {
+            const event = message.event;
+            const data = message.data;
 
-                const e = {
-                    type: event,
-                    address: node.address,
-                    amount: (random % 100),
-                    info: 'Test'
-                }
+            const eventType = eventPlaceholders[event];
+            const output = {
+                type: eventType,
+                address: data.host,
+                ...data
+            }
+            let regionId = this.nodeRegions[data.host];
+            let region = regionId ? this.regions[regionId] : null;
+            let node = region?.nodes[output.address];
 
-                const regionId = nodeRegions[e.address];
-                const eventNode = regions[regionId].nodes[e.address];
-                if (eventNode) {
-                    eventNode.emitter.emit(events.hostEvent, e)
-                    this.emitter.emit(events.hookEvent, { node: eventNode, event: e });
+            if (event === signalREvents.HostRegistered) {
+                if (this.addNode({
+                    idx: this.nextIdx,
+                    location: data.location,
+                    size: data.instanceSize,
+                    token: data.token,
+                    address: data.host
+                })) {
+                    regionId = this.nodeRegions[data.host];
+                    region = regionId ? this.regions[regionId] : null;
+                    node = region?.nodes[output.address];
+
+                    this.emitter.emit(events.regionListLoaded, this.regions);
                 }
             }
-        }, 3000);
+            else if (event === signalREvents.HostDeregistered) {
+                if (this.removeNode(data.host)) {
+                    this.emitter.emit(events.regionListLoaded, this.regions);
+                    node = null;
+                }
+            }
+
+            if (node)
+                node.emitter.emit(events.hostEvent, output);
+
+            this.emitter.emit(events.hookEvent, {
+                type: eventType,
+                region: region?.name,
+                address: data.host
+            });
+        });
     }
 
-    // ------------------------------------------------------------------
-
     addNode(msg) {
+        let isListUpdated = false;
         let region = null;
 
         // Check whether there's a special region assignment for this node index.
@@ -134,15 +177,45 @@ class EvernodeManager {
             region = cycleRegions[regionIndex];
         }
 
-        if (!regions[region.id]) {
-            regions[region.id] = region;
-            regions[region.id].nodes = {};
-            regions[region.id].nodes[msg.address] = new HostNode(region.name, region.pos, msg);
-        } else if (!regions[region.id].nodes[msg.address]) {
-            regions[region.id].nodes[msg.address] = new HostNode(region.name, region.pos, msg);
+        if (!this.regions[region.id]) {
+            this.regions[region.id] = region;
+            this.regions[region.id].nodes = {};
+            this.regions[region.id].nodes[msg.address] = new HostNode(region.name, region.pos, msg);
+            isListUpdated = true;
+        } else if (!this.regions[region.id].nodes[msg.address]) {
+            this.regions[region.id].nodes[msg.address] = new HostNode(region.name, region.pos, msg);
+            isListUpdated = true;
         }
 
-        nodeRegions[msg.address] = region.id;
+        if (isListUpdated) {
+            this.nodeRegions[msg.address] = region.id;
+            this.nextIdx++;
+        }
+
+        return isListUpdated;
+    }
+
+    removeNode(address) {
+        let isListUpdated = false;
+
+        const regionId = this.nodeRegions[address];
+        if (!regionId)
+            return false;
+
+        delete this.nodeRegions[address];
+        const region = this.regions[regionId];
+
+        if (region && region.nodes[address]) {
+            delete this.regions[regionId].nodes[address];
+            isListUpdated = true;
+        }
+
+        if (region && Object.keys(region.nodes).length === 0) {
+            delete this.regions[regionId];
+            isListUpdated = true;
+        }
+
+        return isListUpdated;
     }
 
     on(event, handler) {
