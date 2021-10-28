@@ -14,9 +14,9 @@ const EventCard = (props) => {
                 <li className="list-group-item event-item text-truncate">
                     <i className="fa fa-address-card" title="node">&nbsp;{node.address}</i>
                 </li>
-                {event.info ? <li className="list-group-item event-item text-truncate">
+                {event.info && <li className="list-group-item event-item text-truncate">
                     <i className="fa fa-info-circle" title="node">&nbsp;{event.info}</i>
-                </li> : <></>}
+                </li>}
             </ul>
         </div>
     )

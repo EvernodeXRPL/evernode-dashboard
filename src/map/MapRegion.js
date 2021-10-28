@@ -36,7 +36,7 @@ class MapRegion extends React.Component {
         // Remove existing statueses.
         state.statuses = state.statuses.filter(s => s.idx !== idx);
         if (status)
-            state.statuses.unshift({idx: idx, status: status});
+            state.statuses.unshift({ idx: idx, status: status });
         this.setState(state);
     }
 
@@ -71,8 +71,9 @@ class MapRegion extends React.Component {
                 <div onClick={this.onClick}>
                     {nodeList.map((n, idx) => <MapNode key={idx} regionIdx={idx} node={n} onStatusChange={this.onStatusChange} />)}
                 </div>
+                {showInfo && <div className="popup-container"><PopUp onClose={this.onPopUpClose} tabs={tabs} pos={popupPos} /></div>}
                 {statusList && statusList.length > 0 &&
-                    <div className="row region-status-container">
+                    <div className={"row m-1 region-status-container " + (pos.anchor && `anchor-${pos.anchor}`)}>
                         <CSSTransitionGroup
                             transitionName="status"
                             transitionEnterTimeout={500}
@@ -80,7 +81,6 @@ class MapRegion extends React.Component {
                             {statusList}
                         </CSSTransitionGroup>
                     </div>}
-                {showInfo ? <PopUp onClose={this.onPopUpClose} tabs={tabs} pos={popupPos} /> : <></>}
             </div>
         );
     }

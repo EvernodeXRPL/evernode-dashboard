@@ -56,9 +56,9 @@ class PopUp extends React.Component {
         const { tabs, pos, selectedTab, show } = this.state;
 
         return (
-            <div ref={this.popupRef} className={"popup border border-dark rounded shadow " + (pos.anchor ? `anchor-${pos.anchor} ` : "") + (show ? "show" : "")}>
+            <div ref={this.popupRef} className={"popup border border-dark rounded shadow " + (pos.anchor && `anchor-${pos.anchor} `) + (show && "show")}>
                 <div className="row m-0">
-                    {tabs.map((t, idx) => <div className={"col clearfix tab " + (t === selectedTab ? "active" : "")} onClick={() => this.onTabClick(t)} key={idx}>{t.name}</div>)}
+                    {tabs.map((t, idx) => <div className={"col clearfix tab " + (t === selectedTab && "active")} onClick={() => this.onTabClick(t)} key={idx}>{t.name}</div>)}
                 </div>
                 <ul className="list-group list-group-flush tab-content">
                     {Object.keys(selectedTab.content).map((k, idx) => <li className="list-group-item item text-truncate" key={idx}><i>{k}&nbsp;:&nbsp;{selectedTab.content[k]}</i></li>)}

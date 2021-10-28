@@ -11,9 +11,31 @@ $anim: all 500ms ease-in;
     position: relative;
     cursor: pointer;
 
+    .popup-container {
+        width: 0;
+        height: 0;
+    }
+
     .region-status-container {
-        width: 0rem;
-        height: 0rem;
+        width: fit-content;
+        height: fit-content;
+        position: sticky;
+
+        &.anchor-tl {
+            transform: translate(-113%, -153%);
+        }
+
+        &.anchor-tr {
+            transform: translate(3%, -153%);
+        }
+
+        &.anchor-br {
+            transform: translate(3%, 0);
+        }
+
+        &.anchor-bl {
+            transform: translate(-113%, 0);
+        }
     }
 
     .region-status {
@@ -28,27 +50,27 @@ $anim: all 500ms ease-in;
         border-bottom: 2px solid rgba(0, 0, 0, 0);
         z-index: 1;
         position: sticky;
-        
+
         &.status-active {
             background-color: $active-bg;
             color: $active-font;
         }
-    
+
         &.status-redeem-req {
             background-color: $redeem-req-bg;
             color: $redeem-req-font;
         }
-    
+
         &.status-redeem-res {
             background-color: $redeem-res-bg;
             color: $redeem-res-font;
         }
-    
+
         &.status-audit-req {
             background-color: $audit-req-bg;
             color: $audit-req-font;
         }
-    
+
         &.status-audit-res {
             background-color: $audit-res-bg;
             color: $audit-res-font;

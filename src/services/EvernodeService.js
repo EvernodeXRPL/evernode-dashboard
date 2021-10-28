@@ -1,4 +1,5 @@
 import EventEmitter from "EventEmitter"
+const { TableClient, AzureSASCredential } = require("@azure/data-tables");
 
 const events = {
     regionListLoaded: "regionListLoaded",
@@ -49,44 +50,44 @@ class EvernodeManager {
         await this.loadHosts();
     }
 
-    // -------------------- Mock functions ------------------------
-
-
-    generateString(length) {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let result = ' ';
-        const charactersLength = characters.length;
-        for (let i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-
-        return result;
-    }
-
     async loadHosts() {
-        const rows = []
-        for (let i = 0; i <= 40; i++) {
-            const string = this.generateString(29);
-            rows.push({
-                rowKey: (i + 1).toString(),
-                location: string.substr(0, 3),
-                size: string.substr(3, 3),
-                token: string.substr(6, 3).toUpperCase(),
-                address: string.substr(9).toLowerCase()
-            });
-        }
+        const tableClient = new TableClient(
+            window.dashboardConfig.tableAccount,
+            window.dashboardConfig.tableName,
+            new AzureSASCredential(window.dashboardConfig.tableSas));
+
+        const rows = await tableClient.listEntities({ queryOptions: { filter: `PartitionKey eq '${window.dashboardConfig.partitionKey}'` } });
+
+        ///
+        let test = [];
+        ///
 
         for await (const row of rows) {
-            this.addNode({
+            const host = JSON.parse(row.hosts)[0];
+            const node = {
                 idx: parseInt(row.rowKey),
-                ...row
-            })
+                location: host?.location,
+                size: host?.instanceSize,
+                token: host?.token,
+                address: host?.address
+            };
+            this.addNode(node);
+
+            ///
+            test.push(node)
+            ///
         }
 
         this.emitter.emit(events.regionListLoaded, regions);
 
-        this.mockListener(rows);
+        ///
+        if (test.length)
+            this.mockListener(test);
+        ///
     }
+
+    // -------------------- Mock functions ------------------------
+
 
     mockListener(rows) {
         const evs = [eventTypes.RedeemReq, eventTypes.RedeemRes, eventTypes.AuditReq, eventTypes.AuditRes];
@@ -97,14 +98,14 @@ class EvernodeManager {
                 const random = (Math.floor(100000 + Math.random() * 900000));
                 const node = rows[random % rows.length];
                 const event = evs[random % 4];
-    
+
                 const e = {
                     type: event,
                     address: node.address,
                     amount: (random % 100),
                     info: 'Test'
                 }
-    
+
                 const regionId = nodeRegions[e.address];
                 const eventNode = regions[regionId].nodes[e.address];
                 if (eventNode) {
