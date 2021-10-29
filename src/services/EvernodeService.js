@@ -151,19 +151,23 @@ class EvernodeManager {
         let region = null;
 
         // Check whether there's a special region assignment for this node index.
+        // If region exists in the message, assign to that region directly.
+        // Otherwise take from the cycle regions.
         const specialAssignment = window.dashboardConfig.specialRegionAssignments.filter(a => a.idx === msg.idx)[0];
         if (specialAssignment) {
             region = window.dashboardConfig.regions.filter(r => r.id === specialAssignment.regionId)[0];
             if (!region)
                 return;
         }
-        else if (!msg.region) {
+        else if (msg.region) {
+            region = window.dashboardConfig.regions.filter(r => r.id === msg.region)[0];
+            if (!region)
+                return;
+        }
+        else {
             const cycleRegions = window.dashboardConfig.regions.filter(r => r.skipCycling !== true);
             const regionIndex = (msg.idx - 1) % cycleRegions.length;
             region = cycleRegions[regionIndex];
-        }
-        else {
-            region = window.dashboardConfig.regions.filter(r => r.id === msg.region)[0];
         }
 
         const node = new HostNode(region.name, region.pos, msg);
