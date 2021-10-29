@@ -22,6 +22,7 @@ class MapNode extends React.Component {
             this.timeout = null;
 
             this.changeStatus(event.type);
+            // Set status disappear after NOTIFY_LIFE.
             this.timeout = setTimeout(() => {
                 this.changeStatus();
             }, NOTIFY_LIFE);
