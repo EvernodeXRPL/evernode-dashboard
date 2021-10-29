@@ -130,8 +130,8 @@ class EvernodeManager {
                 });
             }
             else {
-                const region = this.regions[this.nodeLookup[data.host]];
-                const node = region.nodes[data.host];
+                const region = data.host ? this.regions[this.nodeLookup[data.host]] : null;
+                const node = region?.nodes[data.host];
 
                 if (node)
                     node.emitter.emit(events.hostEvent, { type: eventType });
@@ -139,7 +139,7 @@ class EvernodeManager {
                 this.emitter.emit(events.hookEvent, {
                     type: eventType,
                     region: region?.name,
-                    address: data.host,
+                    address: data.host || data.auditor,
                     nodeId: node?.idx
                 });
             }
