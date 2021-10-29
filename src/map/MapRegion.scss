@@ -20,6 +20,7 @@ $anim: all 500ms ease-in;
         width: fit-content;
         height: fit-content;
         position: sticky;
+        z-index: 1;
 
         &.anchor-tl {
             transform: translate(-113%, -153%);
@@ -49,11 +50,12 @@ $anim: all 500ms ease-in;
         border-bottom: 2px solid rgba(0, 0, 0, 0);
         z-index: 1;
         position: sticky;
+        overflow: hidden;
 
         &.event-host-reg {
             background-color: $host-reg-bg;
         }
-    
+
         &.event-host-dereg {
             background-color: $host-dereg-bg;
         }
@@ -61,23 +63,23 @@ $anim: all 500ms ease-in;
         &.event-redeem-req {
             background-color: $redeem-req-bg;
         }
-    
+
         &.event-redeem-suc {
             background-color: $redeem-suc-bg;
         }
-    
+
         &.event-redeem-err {
             background-color: $redeem-err-bg;
         }
-    
+
         &.event-audit-req {
             background-color: $audit-req-bg;
         }
-    
+
         &.event-audit-suc {
             background-color: $audit-suc-bg;
         }
-    
+
         &.event-refund-req {
             background-color: $refund-req-bg;
         }
@@ -85,8 +87,8 @@ $anim: all 500ms ease-in;
 }
 
 .status-enter {
-    line-height: 0px;
-    opacity: 0.3;
+    line-height: 0px !important;
+    opacity: 0;
 }
 
 .status-enter.status-enter-active {
@@ -102,6 +104,6 @@ $anim: all 500ms ease-in;
 
 .status-leave.status-leave-active {
     line-height: 0px;
-    opacity: 0.3;
+    opacity: 0;
     transition: $anim;
 }

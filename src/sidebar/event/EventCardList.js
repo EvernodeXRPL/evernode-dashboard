@@ -18,6 +18,8 @@ class EventCardList extends React.Component {
             state.events.push(event);
             this.setState(state);
         });
+
+        window.adjustEventListScrollViewSize();
     }
 
     render() {
@@ -30,7 +32,7 @@ class EventCardList extends React.Component {
             </div>
         );
         return (
-            <div className="event-scroll-list d-none d-lg-flex flex-column p-1 flex-fill">
+            <div className="event-scroll-list d-flex flex-column p-1 flex-fill">
                 <div className="flex-fill">
                     {/* Filler space to push the card list down */}
                 </div>

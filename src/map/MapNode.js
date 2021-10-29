@@ -10,7 +10,7 @@ class MapNode extends React.Component {
         this.state = {
             regionIdx: this.props.regionIdx,
             node: this.props.node,
-            count: this.props.count,
+            selected: this.props.selected,
             status: null
         }
     }
@@ -39,7 +39,7 @@ class MapNode extends React.Component {
     render() {
         const { regionIdx, status } = this.state;
         return (
-            <div className={"map-node-marker-container event-" + (status ? `${status} front` : "active")}
+            <div className={"map-node-marker-container event-" + (status ? `${status} front` : (this.props.selected ? "selected" : "active"))}
                 style={{ marginTop: regionIdx === 0 ? 0 : 2, marginLeft: regionIdx }}>
                 <i className="fas fa-server map-node-marker"></i>
             </div>

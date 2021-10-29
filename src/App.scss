@@ -3,9 +3,8 @@
     height: 100vh;
 }
 
-@media only screen and (max-width: 767px) {
-    .wrapper {
-        width: auto;
-        height: auto;
-    }
+.title-container {
+    position: fixed;
+    top: 0;
+    left: 0;
 }

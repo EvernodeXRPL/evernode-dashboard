@@ -5,7 +5,7 @@ $anim: all 500ms ease-in;
 .popup {
     background-color: $gray-100;
     overflow: hidden;
-    z-index: 1;
+    z-index: 2;
     position: sticky;
     width: 0;
     height: 0;
@@ -16,6 +16,12 @@ $anim: all 500ms ease-in;
         width: $popup-width;
         height: $popup-height;
         opacity: 1;
+    }
+
+    .header {
+        background-color: $gray-300;
+        padding: 0.3rem 0.6rem;
+        font-weight: bold;
     }
 
     .tab {

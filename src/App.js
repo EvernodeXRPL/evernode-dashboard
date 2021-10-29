@@ -8,13 +8,22 @@ class App extends React.Component {
 
     componentDidMount() {
         Evernode.evernodeManager.start();
+
+        // Dom manipulations.
+        window.onresize = () => {
+            window.adjustMapViewSize();
+            window.adjustEventListScrollViewSize();
+        };
     }
 
     render() {
         return (
-            <div className="wrapper d-flex flex-column flex-md-row">
-                <MapView />
-                <SideBar />
+            <div>
+                <div className="wrapper d-flex flex-column flex-md-row">
+                    <MapView />
+                    <SideBar />
+                </div>
+                <div className="title-container p-3"><h3>Evernode Cluster Dashboard</h3></div>
             </div>
         )
     }

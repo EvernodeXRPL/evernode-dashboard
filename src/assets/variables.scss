@@ -11,12 +11,14 @@ $gray-100: #222;
 $gray-200: #444;
 $gray-300: #555;
 $gray-400: #303030;
+$gray-500: #c4c4c4;
 
 //blue
 $blue-100: #7baadc;
 
 $white: #ffffff;
 $green: #60cc17;
+$green-dark: #225202;
 $red: #af3131;
 $red-dark: #881919;
 $blue: #078fff;
@@ -25,6 +27,7 @@ $yellow: #ebc51f;
 $orange: #e97414;
 
 $active-bg: $green;
+$selected-bg: $green-dark;
 $host-reg-bg: #856e08;
 $host-dereg-bg: #5e5530;
 $redeem-req-bg: #043b68;
@@ -36,6 +39,6 @@ $refund-req-bg: #335c04;
 
 $sidebar-width: 22rem;
 $popup-width: 22rem;
-$popup-height: 9.5rem;
+$popup-height: 12.7rem;
 
-$event-card-height: 5rem;
+$event-card-height: 6.5rem;

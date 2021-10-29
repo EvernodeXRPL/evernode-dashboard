@@ -31,15 +31,17 @@ const events = {
 }
 
 class HostNode {
-    constructor(name, pos, node) {
-        this.region = name;
+    constructor(region, pos, node) {
+        this.region = region;
         this.pos = pos;
 
         this.idx = node.idx;
+        this.address = node.address;
+        this.ip = node.ip;
+        this.evrBalance = node.evrBalance;
         this.location = node.location;
         this.size = node.size;
         this.token = node.token;
-        this.address = node.address;
 
         this.emitter = new EventEmitter();
     }
@@ -78,17 +80,17 @@ class EvernodeManager {
 
         let isListUpdated = false;
         for await (const row of rows) {
-            const hosts = JSON.parse(row.hosts);
-            for (const host of hosts) {
-                if (this.addNode({
-                    idx: this.nextIdx,
-                    location: host?.location,
-                    size: host?.instanceSize,
-                    token: host?.token,
-                    address: host?.address
-                })) {
-                    isListUpdated = true;
-                }
+            if (this.addNode({
+                idx: parseInt(row.rowKey) + 1,
+                address: row.address,
+                region: row.region,
+                evrBalance: row.evrBalance,
+                ip: row.ip,
+                location: row.location,
+                size: row.instanceSize,
+                token: row.token,
+            })) {
+                isListUpdated = true;
             }
         }
         if (isListUpdated)
@@ -118,44 +120,29 @@ class EvernodeManager {
             const event = message.event;
             const data = message.data;
 
-            let node = null;
-            let region = null;
-
-            if (event === signalREvents.HostRegistered) {
-                node = this.addNode({
-                    idx: this.nextIdx,
-                    location: data.location,
-                    size: data.instanceSize,
-                    token: data.token,
-                    address: data.host
-                });
-                if (node) {
-                    this.emitter.emit(events.regionListLoaded, this.regions);
-                    region = this.regions[this.nodeLookup[data.host]];
-                }
-            }
-            else if (event === signalREvents.HostDeregistered) {
-                region = this.regions[this.nodeLookup[data.host]];
-                if (this.removeNode(data.host))
-                    this.emitter.emit(events.regionListLoaded, this.regions);
-            }
-            else {
-                region = this.regions[this.nodeLookup[data.host]];
-                node = region.nodes[data.host];
-            }
-
             const eventType = eventPlaceholders[event];
 
-            // Emit event to node.
-            if (node)
-                node.emitter.emit(events.hostEvent, { type: eventType });
+            // If host reistered or deregistered, we only show the event in the hook.
+            if (event === signalREvents.HostRegistered || event === signalREvents.HostDeregistered) {
+                this.emitter.emit(events.hookEvent, {
+                    type: eventType,
+                    address: data.host
+                });
+            }
+            else {
+                const region = this.regions[this.nodeLookup[data.host]];
+                const node = region.nodes[data.host];
 
-            // Emit event to hook.
-            this.emitter.emit(events.hookEvent, {
-                type: eventType,
-                region: region?.name,
-                address: data.host
-            });
+                if (node)
+                    node.emitter.emit(events.hostEvent, { type: eventType });
+
+                this.emitter.emit(events.hookEvent, {
+                    type: eventType,
+                    region: region?.name,
+                    address: data.host,
+                    nodeId: node?.idx
+                });
+            }
         });
     }
 
@@ -170,10 +157,13 @@ class EvernodeManager {
             if (!region)
                 return;
         }
-        else {
+        else if (!msg.region) {
             const cycleRegions = window.dashboardConfig.regions.filter(r => r.skipCycling !== true);
             const regionIndex = (msg.idx - 1) % cycleRegions.length;
             region = cycleRegions[regionIndex];
+        }
+        else {
+            region = window.dashboardConfig.regions.filter(r => r.id === msg.region)[0];
         }
 
         const node = new HostNode(region.name, region.pos, msg);
@@ -187,35 +177,10 @@ class EvernodeManager {
             isListUpdated = true;
         }
 
-        if (isListUpdated) {
+        if (isListUpdated)
             this.nodeLookup[msg.address] = region.id;
-            this.nextIdx++;
-        }
 
         return isListUpdated ? node : null;
-    }
-
-    removeNode(address) {
-        let isListUpdated = false;
-
-        const regionId = this.nodeLookup[address];
-        if (!regionId)
-            return false;
-
-        delete this.nodeLookup[address];
-        const region = this.regions[regionId];
-
-        if (region && region.nodes[address]) {
-            delete this.regions[regionId].nodes[address];
-            isListUpdated = true;
-        }
-
-        if (region && Object.keys(region.nodes).length === 0) {
-            delete this.regions[regionId];
-            isListUpdated = true;
-        }
-
-        return isListUpdated;
     }
 
     on(event, handler) {

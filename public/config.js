@@ -3,7 +3,7 @@ window.dashboardConfig = {
     tableAccount: "https://sthotpocket.table.core.windows.net",
     tableName: "systemDashboard",
     clusterKey: "systemDashboard",
-    partitionKey: "hosts",
+    partitionKey: "host",
     tableSas: "?sv=2020-08-04&ss=t&srt=o&sp=r&se=2021-10-29T16:10:08Z&st=2021-10-28T16:10:08Z&spr=https&sig=2xTbTCZ0alqbfR9qjE7OwIbGGizFIi2oNJClQBohY3E%3D"
 }
 
@@ -24,19 +24,19 @@ window.dashboardConfig.regions = [
         id: "ams",
         name: "Amsterdam",
         country: "NL",
-        pos: { anchor: "br", top: "35%", left: "48%" }
+        pos: { anchor: "bl", top: "35%", left: "48%" }
     },
     {
         id: "atl",
         name: "Atlanta",
         country: "US",
-        pos: { anchor: "tr", top: "47.5%", left: "22%" }
+        pos: { anchor: "br", top: "47.5%", left: "22%" }
     },
     {
         id: "cdg",
         name: "Paris",
         country: "FR",
-        pos: { anchor: "tr", top: "39.5%", left: "48.5%" }
+        pos: { anchor: "br", top: "39.5%", left: "48.5%" }
     },
     {
         id: "dfw",
@@ -60,7 +60,7 @@ window.dashboardConfig.regions = [
         id: "icn",
         name: "Seoul",
         country: "KR",
-        pos: { anchor: "tl", top: "44%", left: "85%" }
+        pos: { anchor: "bl", top: "44%", left: "85%" }
     },
     {
         id: "lax",
@@ -72,13 +72,13 @@ window.dashboardConfig.regions = [
         id: "lhr",
         name: "London",
         country: "GB",
-        pos: { anchor: "br", top: "36%", left: "46.7%" }
+        pos: { anchor: "bl", top: "36%", left: "46.7%" }
     },
     {
         id: "mia",
         name: "Miami",
         country: "US",
-        pos: { anchor: "tr", top: "52%", left: "23%" }
+        pos: { anchor: "br", top: "52%", left: "23%" }
     },
     {
         id: "nrt",
@@ -120,7 +120,7 @@ window.dashboardConfig.regions = [
         id: "mex",
         name: "Mexico City",
         country: "MX",
-        pos: { anchor: "tr", top: "55.8%", left: "17%" }
+        pos: { anchor: "br", top: "55.8%", left: "17%" }
     },
     {
         id: "col",

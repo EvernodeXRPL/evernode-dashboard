@@ -46,9 +46,10 @@ class MapRegion extends React.Component {
 
         const tabs = nodeList.map((n) => {
             return {
-                name: n.idx,
+                name: `node ${n.idx}`,
                 content: {
-                    region: n.region,
+                    ip: n.ip,
+                    evrBalance: n.evrBalance,
                     xrpAddress: n.address,
                     location: n.location,
                     size: n.size,
@@ -59,7 +60,7 @@ class MapRegion extends React.Component {
 
         const statusList = statuses.map((s, idx) =>
             <span className={"col-12 badge badge-secondary p-1 region-status event-" + s.status} key={idx}>
-                <span className="d-none d-lg-inline">{s.status}</span>
+                <span className="d-inline">{s.status}</span>
             </span>)
 
         const popupPos = {
@@ -69,18 +70,17 @@ class MapRegion extends React.Component {
         return (
             <div className="map-region-container" style={{ top: pos.top, left: pos.left }}>
                 <div onClick={this.onClick}>
-                    {nodeList.map((n, idx) => <MapNode key={idx} regionIdx={idx} node={n} onStatusChange={this.onStatusChange} />)}
+                    {nodeList.map((n, idx) => <MapNode key={idx} regionIdx={idx} node={n} selected={showInfo} onStatusChange={this.onStatusChange} />)}
                 </div>
-                {showInfo && <div className="popup-container"><PopUp onClose={this.onPopUpClose} tabs={tabs} pos={popupPos} /></div>}
-                {statusList && statusList.length > 0 &&
-                    <div className={"row m-1 region-status-container " + (pos.anchor && `anchor-${pos.anchor}`)}>
-                        <CSSTransitionGroup
-                            transitionName="status"
-                            transitionEnterTimeout={500}
-                            transitionLeaveTimeout={500}>
-                            {statusList}
-                        </CSSTransitionGroup>
-                    </div>}
+                {showInfo && <div className="popup-container"><PopUp onClose={this.onPopUpClose} header={region.name} tabs={tabs} pos={popupPos} /></div>}
+                <div className={"row m-1 region-status-container " + (pos.anchor && `anchor-${pos.anchor}`)}>
+                    {statusList && <CSSTransitionGroup
+                        transitionName="status"
+                        transitionEnterTimeout={500}
+                        transitionLeaveTimeout={500}>
+                        {statusList}
+                    </CSSTransitionGroup>}
+                </div>
             </div>
         );
     }

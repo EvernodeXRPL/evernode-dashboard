@@ -24,9 +24,12 @@ else {
         }
     }
 
-    window.onresize = () => {
-        window.adjustMapViewSize();
-    };
+    window.adjustEventListScrollViewSize = function () {
+        const eventListScroll = document.getElementsByClassName("event-scroll-list")[0];
+        if (eventListScroll) {
+            eventListScroll.style.height = (eventListScroll.parentElement.clientHeight - 300) + "px"
+        }
+    }
 
     ReactDOM.render(
         <App />,

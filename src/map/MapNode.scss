@@ -29,9 +29,13 @@ $node-width: 15rem;
         position: sticky;
         z-index: 1;
     }
-
+    
     &.event-active {
         color: $active-bg;
+    }
+
+    &.event-selected {
+        color: $selected-bg;
     }
 
     &.event-host-reg {
