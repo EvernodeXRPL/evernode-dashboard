@@ -1,10 +1,5 @@
 @import "../assets/variables";
 
-$status-line-height: 0.3rem;
-$status-width: 5rem;
-
-$anim: all 500ms ease-in;
-
 .map-region-container {
     width: 0rem;
     height: 0rem;
@@ -94,7 +89,7 @@ $anim: all 500ms ease-in;
 .status-enter.status-enter-active {
     line-height: $status-line-height;
     opacity: 1;
-    transition: $anim;
+    transition: $status-animation;
 }
 
 .status-leave {
@@ -105,5 +100,5 @@ $anim: all 500ms ease-in;
 .status-leave.status-leave-active {
     line-height: 0px;
     opacity: 0;
-    transition: $anim;
+    transition: $status-animation;
 }

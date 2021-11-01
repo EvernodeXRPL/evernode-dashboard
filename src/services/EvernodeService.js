@@ -122,7 +122,7 @@ class EvernodeManager {
 
             const eventType = eventPlaceholders[event];
 
-            // If host reistered or deregistered, we only show the event in the hook.
+            // If host registered or deregistered, we only show the event in the hook.
             if (event === signalREvents.HostRegistered || event === signalREvents.HostDeregistered) {
                 this.emitter.emit(events.hookEvent, {
                     type: eventType,

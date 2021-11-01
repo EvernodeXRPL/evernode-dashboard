@@ -1,7 +1,5 @@
 @import "../../assets/variables";
 
-$anim: all 500ms ease-in;
-
 .event-scroll-list {
     overflow: hidden;
     border: 1px solid $gray-300;
@@ -23,7 +21,7 @@ $anim: all 500ms ease-in;
 .event-enter.event-enter-active {
     height: $event-card-height;
     opacity: 1;
-    transition: $anim;
+    transition: $event-animation;
 }
 
 .event-leave {
@@ -34,5 +32,5 @@ $anim: all 500ms ease-in;
 .event-leave.event-leave-active {
     height: 0px;
     opacity: 0.3;
-    transition: $anim;
+    transition: $event-animation;
 }
