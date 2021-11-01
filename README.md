@@ -1,5 +1,23 @@
-# evernode-dashboard
-Evernode system dashboard
+# Evernode System Dashboard and Streamer
+Evernode system dashboard web app. (ReactJS) and central streamer.
+
+## Dashboard
+
+### Configs
+Edit the `public/config.js` to specify the evernode system dashboard configs.
+Contains the list on regions specified in cluster creation.
+Contains azure signalR and table storage keys.
+
+```
+yarn install
+
+# Production build
+yarn build
+
+# Development server
+yarn start
+```
+
 
 ## Streamer
 
