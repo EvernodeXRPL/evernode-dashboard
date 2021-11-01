@@ -1,0 +1,18 @@
+@import "../assets/variables";
+
+.content {
+    overflow: hidden;
+}
+
+.map-view-container {
+    width: 0rem;
+    height: 0rem;
+    margin: 0rem auto;
+}
+
+.map-view {
+    background-image: url("../assets/map.svg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    transform: translate(-50%, -50%);
+}
