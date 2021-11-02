@@ -59,8 +59,8 @@ class MapRegion extends React.Component {
         });
 
         const statusList = statuses.map((s, idx) =>
-            <span className={"col-12 badge badge-secondary p-1 region-status event-" + s.status} key={idx}>
-                <span className="d-inline">{s.status}</span>
+            <span className={"col-12 badge badge-secondary p-1 region-status event-" + s.status.type} key={idx}>
+                <span className="d-inline">{s.status.name}</span>
             </span>)
 
         const popupPos = {

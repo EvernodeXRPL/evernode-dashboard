@@ -13,15 +13,39 @@ const signalREvents = {
     AuditSuccess: "auditSuccess"
 }
 
-const eventPlaceholders = {
-    hostRegistered: 'host-reg',
-    hostDeregistered: 'host-dereg',
-    redeem: 'redeem-req',
-    redeemSuccess: 'redeem-suc',
-    redeemError: 'redeem-err',
-    refundRequest: 'refund-req',
-    auditRequest: 'audit-req',
-    auditSuccess: 'audit-suc'
+const eventInfo = {
+    hostRegistered: {
+        type: 'host-reg',
+        name: 'Host Registration'
+    },
+    hostDeregistered: {
+        type: 'host-dereg',
+        name: 'Host De-Registration'
+    },
+    redeem: {
+        type: 'redeem-req',
+        name: 'Redeem Request'
+    },
+    redeemSuccess: {
+        type: 'redeem-suc',
+        name: 'Redeem Success'
+    },
+    redeemError: {
+        type: 'redeem-err',
+        name: 'Redeem Error'
+    },
+    refundRequest: {
+        type: 'refund-req',
+        name: 'Refund Request'
+    },
+    auditRequest: {
+        type: 'audit-req',
+        name: 'Audit Request'
+    },
+    auditSuccess: {
+        type: 'audit-suc',
+        name: 'Audit Success'
+    }
 }
 
 const events = {
@@ -120,12 +144,13 @@ class EvernodeManager {
             const event = message.event;
             const data = message.data;
 
-            const eventType = eventPlaceholders[event];
+            const info = eventInfo[event];
 
             // If host registered or deregistered, we only show the event in the hook.
             if (event === signalREvents.HostRegistered || event === signalREvents.HostDeregistered) {
                 this.emitter.emit(events.hookEvent, {
-                    type: eventType,
+                    type: info.type,
+                    name: info.name,
                     address: data.host
                 });
             }
@@ -133,11 +158,16 @@ class EvernodeManager {
                 const region = data.host ? this.regions[this.nodeLookup[data.host]] : null;
                 const node = region?.nodes[data.host];
 
-                if (node)
-                    node.emitter.emit(events.hostEvent, { type: eventType });
+                if (node) {
+                    node.emitter.emit(events.hostEvent, {
+                        type: info.type,
+                        name: info.name
+                    });
+                }
 
                 this.emitter.emit(events.hookEvent, {
-                    type: eventType,
+                    type: info.type,
+                    name: info.name,
                     region: region?.name,
                     address: data.host || data.auditor,
                     nodeId: node?.idx

@@ -21,7 +21,7 @@ class MapNode extends React.Component {
             clearTimeout(this.timeout);
             this.timeout = null;
 
-            this.changeStatus(event.type);
+            this.changeStatus(event);
             // Set status disappear after NOTIFY_LIFE.
             this.timeout = setTimeout(() => {
                 this.changeStatus();
@@ -29,17 +29,20 @@ class MapNode extends React.Component {
         });
     }
 
-    changeStatus(status = null) {
+    changeStatus(event = null) {
         let state = this.state;
-        state.status = status;
+        state.status = event ? {
+            type: event.type,
+            name: event.name
+        } : null;
         this.setState(state);
-        this.props.onStatusChange(this.state.regionIdx, status);
+        this.props.onStatusChange(this.state.regionIdx, state.status);
     }
 
     render() {
         const { regionIdx, status } = this.state;
         return (
-            <div className={"map-node-marker-container event-" + (status ? `${status} front` : (this.props.selected ? "selected" : "active"))}
+            <div className={"map-node-marker-container event-" + (status ? `${status.type} front` : (this.props.selected ? "selected" : "active"))}
                 style={{ marginTop: regionIdx === 0 ? 0 : 2, marginLeft: regionIdx }}>
                 <i className="fas fa-server map-node-marker"></i>
             </div>
