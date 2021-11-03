@@ -83,42 +83,40 @@ class Streamer {
 
     // Get VM list from vultr and match them with hosts from the hook state. Get EVR balance of each host.
     async updateHostsTable() {
-        
+
         this.hostAccounts = {};
-        
+
         const hostObjs = await this.getVultrHosts(this.config.vultr.group);
         if (hostObjs && hostObjs.length > 0) {
             await Promise.all(hostObjs.map(hostObj => this.initHostAccountData(hostObj)))
-            
+
             const latestHosts = await this.evernodeHook.getHosts();
             console.log(`Got ${latestHosts.length} hosts from evernode.`);
-            latestHosts.forEach(host => {
-                const data = this.hostAccounts[host.address];
-                if (data)
-                data.state = {
-                    txHash: host.txHash,
-                    instanceSize: host.instanceSize,
-                    location: host.location
-                };
-            });
-            
             const ent = azure.TableUtilities.entityGenerator;
             const tableBatch = new azure.TableBatch();
-            Object.values(this.hostAccounts).forEach(host => {
-                tableBatch.insertOrReplaceEntity({
-                    PartitionKey: ent.String(HOST_PARTITION_KEY),
-                    RowKey: ent.String(host.nodeid.toString()),
-                    ip: ent.String(host.ip),
-                    region: ent.String(host.region),
-                    address: ent.String(host.hostAccount.address),
-                    token: ent.String(host.hostAccount.token),
-                    evrBalance: ent.String(host.evrBalance),
-                    txHash: ent.String(host.state.txHash),
-                    instanceSize: ent.String(host.state.instanceSize),
-                    location: ent.String(host.state.location)
-                });
+            latestHosts.forEach(host => {
+                const data = this.hostAccounts[host.address];
+                if (data) {
+                    data.state = {
+                        txHash: host.txHash,
+                        instanceSize: host.instanceSize,
+                        location: host.location
+                    };
+                    tableBatch.insertOrReplaceEntity({
+                        PartitionKey: ent.String(HOST_PARTITION_KEY),
+                        RowKey: ent.String(data.nodeid.toString()),
+                        ip: ent.String(data.ip),
+                        region: ent.String(data.region),
+                        address: ent.String(data.hostAccount.address),
+                        token: ent.String(data.hostAccount.token),
+                        evrBalance: ent.String(data.evrBalance),
+                        txHash: ent.String(data.state.txHash),
+                        instanceSize: ent.String(data.state.instanceSize),
+                        location: ent.String(data.state.location)
+                    });
+                }
             });
-            
+
             const tableSvc = azure.createTableServiceWithSas(this.config.azure_table.host, this.config.azure_table.sas);
             tableSvc.executeBatch(this.config.azure_table.table, tableBatch, (err) => err && console.error(err));
             console.log(`Updated ${Object.keys(this.hostAccounts).length} hosts in table storage.`);
