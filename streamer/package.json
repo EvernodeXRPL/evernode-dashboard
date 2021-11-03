@@ -1,0 +1,16 @@
+{
+  "name": "evernode-streamer",
+  "version": "0.0.1",
+  "description": "Central streamer for Evernode system dashboard",
+  "main": "streamer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "azure-storage": "2.10.4",
+    "evernode-js-client": "0.2.4",
+    "node-fetch": "2.6.1"
+  }
+}
