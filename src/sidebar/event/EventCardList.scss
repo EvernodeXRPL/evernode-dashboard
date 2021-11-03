@@ -14,23 +14,23 @@
 }
 
 .event-enter {
-    height: 0px;
+    max-height: 0px;
     opacity: 0.3;
 }
 
 .event-enter.event-enter-active {
-    height: $event-card-height;
+    max-height: $event-card-max-height;
     opacity: 1;
     transition: $event-animation;
 }
 
 .event-leave {
-    height: $event-card-height;
+    max-height: $event-card-max-height;
     opacity: 1;
 }
 
 .event-leave.event-leave-active {
-    height: 0px;
+    max-height: 0px;
     opacity: 0.3;
     transition: $event-animation;
 }

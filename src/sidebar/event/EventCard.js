@@ -5,7 +5,7 @@ const EventCard = (props) => {
     return (
         <div className="event-card border border-dark rounded shadow">
             <div className={"event-header clearfix event-" + (data ? data.type : "active")}>
-                {data.type}
+                {data.name}
             </div>
             <ul className="list-group list-group-flush event-content">
                 {data.region && <li className="list-group-item event-item text-truncate">

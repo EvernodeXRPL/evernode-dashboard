@@ -2,7 +2,7 @@
 
 .event-card {
     background-color: $gray-100;
-    height: $event-card-height;
+    max-height: $event-card-max-height;
     overflow: hidden;
 
     .event-header {
@@ -58,6 +58,8 @@
 
             i {
                 padding-right: 0.8rem;
+                overflow-x: hidden;
+                max-width: 100%;
             }
         }
     }
