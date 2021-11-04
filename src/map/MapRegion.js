@@ -33,35 +33,52 @@ class MapRegion extends React.Component {
 
     onStatusChange(idx, status) {
         let state = this.state;
-        // Remove existing statueses.
-        state.statuses = state.statuses.filter(s => s.idx !== idx);
-        if (status)
-            state.statuses.unshift({ idx: idx, status: status });
+        let nodeStatus = state.statuses.find(s => s.idx === idx);
+        if (!nodeStatus) {
+            state.statuses.unshift({ idx: idx, lastStatus: status, hide: false });
+        }
+        else {
+            if (!status)
+                nodeStatus.hide = true;
+            else {
+                nodeStatus.hide = false;
+                nodeStatus.lastStatus = status;
+            }
+        }
+
         this.setState(state);
     }
 
     render() {
         const { region, nodeList, showInfo, statuses } = this.state;
         const { pos } = region;
+        const statusComponents = statuses.map((s, idx) => {
+            return {
+                idx: s.idx,
+                component: <span className={"col-12 badge badge-secondary p-1 region-status event-" + s.lastStatus.type} key={idx}>
+                    <span className="d-inline">{s.lastStatus.name}<span className="ledger-seq ml-1">({s.lastStatus.ledgerSeq})</span></span>
+                </span>,
+                hide: s.hide
+            }
+        });
 
         const tabs = nodeList.map((n) => {
             return {
-                name: `node ${n.idx}`,
+                idx: n.idx,
+                name: `Host ${n.idx}`,
                 content: {
                     ip: n.ip,
                     evrBalance: n.evrBalance,
                     xrpAddress: n.address,
                     location: n.location,
                     size: n.size,
-                    token: n.token
+                    token: n.token,
+                    lastStatus: statusComponents.find(s => s.idx === n.idx)
                 }
             }
         });
 
-        const statusList = statuses.map((s, idx) =>
-            <span className={"col-12 badge badge-secondary p-1 region-status event-" + s.status.type} key={idx}>
-                <span className="d-inline">{s.status.name}</span>
-            </span>)
+        const statusList = statusComponents.filter(s => !s.hide).map(s => s.component);
 
         const popupPos = {
             anchor: pos.anchor
@@ -70,9 +87,9 @@ class MapRegion extends React.Component {
         return (
             <div className="map-region-container" style={{ top: pos.top, left: pos.left }}>
                 <div onClick={this.onClick}>
-                    {nodeList.map((n, idx) => <MapNode key={idx} regionIdx={idx} node={n} selected={showInfo} onStatusChange={this.onStatusChange} />)}
+                    {nodeList.map((n, idx) => <MapNode key={idx} idx={idx} node={n} selected={showInfo} onStatusChange={this.onStatusChange} />)}
                 </div>
-                {showInfo && <div className="popup-container"><PopUp onClose={this.onPopUpClose} header={region.name} tabs={tabs} pos={popupPos} /></div>}
+                {showInfo && <div className="popup-container"><PopUp onClose={this.onPopUpClose} header={region.name} tabs={tabs} pos={popupPos}/></div>}
                 <div className={"row m-1 region-status-container " + (pos.anchor && `anchor-${pos.anchor}`)}>
                     {statusList && <CSSTransitionGroup
                         transitionName="status"

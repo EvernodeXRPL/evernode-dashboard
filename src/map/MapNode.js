@@ -8,7 +8,7 @@ class MapNode extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            regionIdx: this.props.regionIdx,
+            idx: this.props.idx,
             node: this.props.node,
             selected: this.props.selected,
             status: null
@@ -33,17 +33,18 @@ class MapNode extends React.Component {
         let state = this.state;
         state.status = event ? {
             type: event.type,
-            name: event.name
+            name: event.name,
+            ledgerSeq: event.ledgerSeq
         } : null;
         this.setState(state);
-        this.props.onStatusChange(this.state.regionIdx, state.status);
+        this.props.onStatusChange(this.state.node.idx, state.status);
     }
 
     render() {
-        const { regionIdx, status } = this.state;
+        const { idx, status } = this.state;
         return (
             <div className={"map-node-marker-container event-" + (status ? `${status.type} front` : (this.props.selected ? "selected" : "active"))}
-                style={{ marginTop: regionIdx === 0 ? 0 : 2, marginLeft: regionIdx }}>
+                style={{ marginTop: idx === 0 ? 0 : 3, marginLeft: idx * 4 }}>
                 <i className="fas fa-server map-node-marker"></i>
             </div>
         );

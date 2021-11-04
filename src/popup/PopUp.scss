@@ -2,6 +2,7 @@
 
 .popup {
     background-color: $gray-100;
+    border: 1px solid $gray-500;
     overflow: hidden;
     z-index: 2;
     position: sticky;
@@ -17,58 +18,115 @@
     }
 
     .header {
-        background-color: $gray-300;
-        padding: 0.3rem 0.6rem;
         font-weight: bold;
+        font-size: 0.9rem;
     }
 
-    .tab {
-        background-color: $gray-300;
-        padding: 0.3rem 0.6rem;
-        font-weight: bold;
-        opacity: 0.8;
+    .popup-content {
+        background-color: $gray-200;
 
-        &.active {
+        .badge {
+            margin: 4px;
+        }
+
+        .tab {
             background-color: $gray-200;
-        }
-    }
+            margin: 0.2rem;
+            border: none;
+            border-bottom: 1px solid $gray-500;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: bold;
 
-    .tab-content {
-        .item {
-            background-color: $gray-400;
-            border-bottom: 1px solid $gray-200;
-            padding: 0.3rem 0.6rem;
-            line-height: 1.3;
-
-            &:last-child {
+            &.active {
+                background-color: $gray-300;
+                border: 1px solid $gray-500;
                 border-bottom: none;
-                padding-bottom: 0.6rem;
-            }
-
-            i {
-                padding-right: 0.8rem;
             }
         }
-    }
 
-    .close {
-        font-size: 1.2rem;
-        text-align: center;
+        .tab-content {
+            background-color: $gray-300;
+            border: 1px solid $gray-500;
+            border-top: none;
+            padding: 0.5rem 0.5rem 0 0.5rem;
+
+            .line-1 {
+                position: relative;
+                height: 1.5rem;
+
+                .address {
+                    background-color: #37373a;
+                    padding: 0.3rem;
+                    font-size: 0.7rem;
+                    position: absolute;
+                    top: 0;
+                }
+
+                .token {
+                    background-color: #145375;
+                    padding: 0.5rem;
+                    font-size: 1.2rem;
+                    position: absolute;
+                    right: 0;
+                }
+            }
+
+            .line-2 {
+                position: relative;
+                height: 1.5rem;
+
+                .balance {
+                    background-color: #1d4f7e;
+                    padding: 0.5rem;
+                    font-size: 1.5rem;
+
+                    .text-small {
+                        font-size: 0.8rem;
+                        margin-left: 0.5rem;
+                    }
+                }
+
+                .ip {
+                    font-size: 0.7rem;
+                    position: absolute;
+                    top: 15px;
+                    right: 0;
+                }
+            }
+
+            .line-3 {
+                position: relative;
+                height: 2.5rem;
+
+                .host-info {
+                    position: absolute;
+                    top: 12px;
+                    font-size: 0.8rem;
+                }
+                
+                .status {
+                    position: absolute;
+                    right: 0;
+                    top: 1px
+                }
+            }
+        }
     }
 
     &.anchor-tl {
-        transform: translate(-103%, -103%);
+        transform: translate(-102%, -103%);
     }
 
     &.anchor-tr {
-        transform: translate(3%, -103%);
+        transform: translate(2%, -103%);
     }
 
     &.anchor-br {
-        transform: translate(3%, 3%);
+        transform: translate(2%, 3%);
     }
 
     &.anchor-bl {
-        transform: translate(-103%, 3%);
+        transform: translate(-102%, 3%);
     }
 }

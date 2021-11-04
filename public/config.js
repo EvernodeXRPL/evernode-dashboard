@@ -24,7 +24,7 @@ window.dashboardConfig.regions = [
         id: "ams",
         name: "Amsterdam",
         country: "NL",
-        pos: { anchor: "bl", top: "35%", left: "48%" }
+        pos: { anchor: "tl", top: "35%", left: "48%" }
     },
     {
         id: "atl",
@@ -48,7 +48,7 @@ window.dashboardConfig.regions = [
         id: "ewr",
         name: "New Jersey",
         country: "US",
-        pos: { anchor: "tr", top: "43%", left: "25.3%" }
+        pos: { anchor: "br", top: "43%", left: "25.3%" }
     },
     {
         id: "fra",
@@ -96,7 +96,7 @@ window.dashboardConfig.regions = [
         id: "sea",
         name: "Seattle",
         country: "US",
-        pos: { anchor: "br", top: "37.5%", left: "12.3%" }
+        pos: { anchor: "tr", top: "37.5%", left: "12.3%" }
     },
     {
         id: "sgp",
@@ -108,7 +108,7 @@ window.dashboardConfig.regions = [
         id: "sjc",
         name: "Silicon Valley",
         country: "US",
-        pos: { anchor: "br", top: "31.8%", left: "11.5%" }
+        pos: { anchor: "tr", top: "31.8%", left: "11.5%" }
     },
     {
         id: "sto",

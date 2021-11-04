@@ -10,7 +10,8 @@ const signalREvents = {
     RedeemError: "redeemError",
     RefundRequest: "refundRequest",
     AuditRequest: "auditRequest",
-    AuditSuccess: "auditSuccess"
+    AuditSuccess: "auditSuccess",
+    Reward: "reward"
 }
 
 const eventInfo = {
@@ -45,6 +46,10 @@ const eventInfo = {
     auditSuccess: {
         type: 'audit-suc',
         name: 'Audit Success'
+    },
+    reward: {
+        type: 'reward',
+        name: 'Reward'
     }
 }
 
@@ -62,7 +67,7 @@ class HostNode {
         this.idx = node.idx;
         this.address = node.address;
         this.ip = node.ip;
-        this.evrBalance = node.evrBalance;
+        this.evrBalance = +node.evrBalance;
         this.location = node.location;
         this.size = node.size;
         this.token = node.token;
@@ -92,6 +97,8 @@ class EvernodeManager {
     async start() {
         await this.loadHosts();
         this.connectToSignalR(); // Connect to signalr asynchronously.
+        // This mock listener is used for UI testing to emit mock events
+        // this.mockListener()
     }
 
     async loadHosts() {
@@ -120,6 +127,93 @@ class EvernodeManager {
         if (isListUpdated)
             this.emitter.emit(events.regionListLoaded, this.regions);
     }
+
+    // ----------------- Mock Events -------------------- //
+
+    generateString(length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = ' ';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+
+        return result;
+    }
+
+    mockListener() {
+        const evs = [signalREvents.Redeem,
+        signalREvents.RedeemSuccess,
+        signalREvents.RedeemError,
+        signalREvents.AuditRequest,
+        signalREvents.AuditSuccess,
+        signalREvents.HostDeregistered,
+        signalREvents.HostRegistered,
+        signalREvents.RefundRequest,
+        signalREvents.Reward];
+
+        let ledgerSeq = 1000;
+
+        const interval = setInterval(() => {
+            const iterations = (Math.floor(100000 + Math.random() * 900000)) % 4;
+            for (let i = 0; i < iterations; i++) {
+                const random = (Math.floor(100000 + Math.random() * 900000));
+                const hosts = Object.keys(this.nodeLookup);
+                const host = hosts[random % hosts.length];
+                const event = evs[random % evs.length];
+                ledgerSeq = ledgerSeq + 3;
+
+                const info = eventInfo[event];
+                if (event === signalREvents.HostRegistered || event === signalREvents.HostDeregistered) {
+                    this.emitter.emit(events.hookEvent, {
+                        type: info.type,
+                        name: info.name,
+                        address: host,
+                        ledgerSeq: ledgerSeq
+                    });
+                }
+                else if (event === signalREvents.AuditRequest || event === signalREvents.AuditSuccess) {
+                    this.emitter.emit(events.hookEvent, {
+                        type: info.type,
+                        name: info.name,
+                        address: this.generateString(34),
+                        ledgerSeq: ledgerSeq
+                    });
+                }
+                else {
+                    const region = this.regions[this.nodeLookup[host]];
+                    const node = region.nodes[host];
+                    let amount = 0;
+
+                    if (node) {
+                        // Update the node's ever amount on reward event.
+                        if (event === signalREvents.Reward) {
+                            amount = random % 5;
+                            node.evrBalance = node.evrBalance + amount;
+                        }
+
+                        node.emitter.emit(events.hostEvent, {
+                            type: info.type,
+                            name: info.name,
+                            ledgerSeq: ledgerSeq
+                        });
+                    }
+
+                    this.emitter.emit(events.hookEvent, {
+                        type: info.type,
+                        name: info.name,
+                        region: region.name,
+                        address: host,
+                        amount: amount ? amount : null,
+                        nodeId: node.idx,
+                        ledgerSeq: ledgerSeq
+                    });
+                }
+            }
+        }, 3000);
+    }
+
+    // -------------------------------------------------- //
 
     async connectToSignalR() {
         try {
@@ -151,7 +245,8 @@ class EvernodeManager {
                 this.emitter.emit(events.hookEvent, {
                     type: info.type,
                     name: info.name,
-                    address: data.host
+                    address: data.host,
+                    ledgerSeq: data.ledgerSeq
                 });
             }
             else {
@@ -159,9 +254,14 @@ class EvernodeManager {
                 const node = region?.nodes[data.host];
 
                 if (node) {
+                    // Update the node's ever amount on reward event.
+                    if (event === signalREvents.Reward)
+                        node.evrBalance = data.evrBalance
+
                     node.emitter.emit(events.hostEvent, {
                         type: info.type,
-                        name: info.name
+                        name: info.name,
+                        ledgerSeq: data.ledgerSeq
                     });
                 }
 
@@ -170,7 +270,9 @@ class EvernodeManager {
                     name: info.name,
                     region: region?.name,
                     address: data.host || data.auditor,
-                    nodeId: node?.idx
+                    amount: data.amount,
+                    nodeId: node?.idx,
+                    ledgerSeq: data.ledgerSeq
                 });
             }
         });

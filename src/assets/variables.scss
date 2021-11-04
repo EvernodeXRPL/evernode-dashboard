@@ -1,7 +1,7 @@
 $site-bg: #414141;
 $sidebar-bg: #222;
 $popup-bg: #222;
-$sidebar-hook-bg: rgb(49, 48, 48);
+$sidebar-hook-bg: #313030;
 
 $badge-green: #00bc8c;
 $badge-orange: #f39c12;
@@ -10,7 +10,7 @@ $badge-orange: #f39c12;
 $gray-100: #222;
 $gray-200: #444;
 $gray-300: #555;
-$gray-400: #303030;
+$gray-400: #a7a3a3;
 $gray-500: #c4c4c4;
 
 //blue
@@ -28,18 +28,19 @@ $orange: #e97414;
 
 $active-bg: $green;
 $selected-bg: $green-dark;
-$host-reg-bg: #856e08;
-$host-dereg-bg: #5e5530;
-$redeem-req-bg: #022f69;
-$redeem-suc-bg: #47a01f;
+$host-reg-bg: #603808;
+$host-dereg-bg: #8b5e34;
+$redeem-req-bg: #01497c;
+$redeem-suc-bg: #007f5f;
 $redeem-err-bg: #a02b0e;
-$audit-req-bg: #320a74;
-$audit-suc-bg: #335c04;
+$audit-req-bg: #0d47a1;
+$audit-suc-bg: #2c7da0;
 $refund-req-bg: #066168;
+$reward-bg: #2f094eea;
 
 $sidebar-width: 22rem;
-$popup-width: 22rem;
-$popup-height: 12.7rem;
+$popup-width: 23.4rem;
+$popup-height: 12rem;
 
 $event-card-max-height: 6.5rem;
 
@@ -48,7 +49,6 @@ $marker-size: 0.8rem;
 
 // Region
 $status-line-height: 0.3rem;
-$status-width: 5.5rem;
 
 $status-animation: all 500ms ease-in;
 

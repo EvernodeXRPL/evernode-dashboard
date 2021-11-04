@@ -5,10 +5,7 @@ class PopUp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            header: this.props.header,
-            tabs: this.props.tabs,
-            pos: this.props.pos,
-            selectedTab: this.props.tabs[0],
+            selectedIdx: this.props.tabs[0].idx,
             show: false
         }
 
@@ -23,9 +20,9 @@ class PopUp extends React.Component {
         this.onOpen();
     }
 
-    onTabClick(t) {
+    onTabClick(tabIdx) {
         let state = this.state;
-        state.selectedTab = t;
+        state.selectedIdx = tabIdx;
         this.setState(state);
     }
 
@@ -54,20 +51,48 @@ class PopUp extends React.Component {
     }
 
     render() {
-        const { header, tabs, pos, selectedTab, show } = this.state;
+        const { show } = this.state;
+        const { header, tabs, pos } = this.props;
+        const selectedTab = tabs.find(t => t.idx === this.state.selectedIdx);
 
         return (
-            <div ref={this.popupRef} className={"popup border border-dark rounded shadow " + (pos.anchor && `anchor-${pos.anchor} `) + (show && "show")}>
-                {header && <div className="row m-0">
-                    <div className="col text-center header">{header}</div>
+            <div ref={this.popupRef} className={"rounded shadow popup " + (pos.anchor && `anchor-${pos.anchor} `) + (show && "show")}>
+                {header && <div className="row header">
+                    <span className="col text-center p-1">{header}</span>
                 </div>}
-                <div className="row m-0">
-                    {tabs.map((t, idx) => <div className={"col clearfix tab " + (t === selectedTab && "active")} onClick={() => this.onTabClick(t)} key={idx}>{t.name}</div>)}
+                <div className="flex m-1 p-2 popup-content">
+                    <div className="row m-0">
+                        {tabs.map((t, idx) => <div className={"col m-0 tab " + (t === selectedTab && "active")} onClick={() => this.onTabClick(t.idx)} key={idx}>
+                            {t.name}
+                        </div>)}
+                    </div>
+                    <div className="tab-content">
+                        <div className="d-inline-block w-100 line-1">
+                            <span className="badge badge-secondary address">
+                                {selectedTab.content.xrpAddress}
+                            </span>
+                            <span className="badge badge-pill badge-secondary token">
+                                {selectedTab.content.token}
+                            </span>
+                        </div>
+                        <div className="d-inline-block w-100 line-2">
+                            <span className="badge badge-secondary balance">
+                                {selectedTab.content.evrBalance}<span className="text-small">EVR</span>
+                            </span>
+                            <span className="badge badge-secondary ip">
+                                {selectedTab.content.ip}
+                            </span>
+                        </div>
+                        <div className="d-inline-block w-100 line-3">
+                            <span className="host-info">
+                                <span className="badge badge-secondary p-1">{selectedTab.content.location}</span>
+                                <span className="badge badge-secondary p-1">{selectedTab.content.size}</span>
+                            </span>
+                            {selectedTab.content.lastStatus && <span className="badge status">{selectedTab.content.lastStatus.component}</span>}
+                        </div>
+                    </div>
                 </div>
-                <ul className="list-group list-group-flush tab-content">
-                    {Object.keys(selectedTab.content).map((k, idx) => <li className="list-group-item item text-truncate" key={idx}><i>{k}&nbsp;:&nbsp;{selectedTab.content[k]}</i></li>)}
-                </ul>
-            </div>
+            </div >
         );
     }
 }
