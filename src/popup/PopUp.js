@@ -50,6 +50,10 @@ class PopUp extends React.Component {
         }, 500);
     }
 
+    getDisplayText(text, maxLength) {
+        return text.length > maxLength ? `${text.substring(0, maxLength)}..` : text;
+    }
+
     render() {
         const { show } = this.state;
         const { header, tabs, pos } = this.props;
@@ -85,8 +89,8 @@ class PopUp extends React.Component {
                         </div>
                         <div className="d-inline-block w-100 line-3">
                             <span className="host-info">
-                                <span className="badge badge-secondary p-1">{selectedTab.content.location}</span>
-                                <span className="badge badge-secondary p-1">{selectedTab.content.size}</span>
+                                <span className="badge badge-secondary p-1">{this.getDisplayText(selectedTab.content.location, 12)}</span>
+                                <span className="badge badge-secondary p-1">{this.getDisplayText(selectedTab.content.size, 15)}</span>
                             </span>
                             {selectedTab.content.lastStatus && <span className="badge status">{selectedTab.content.lastStatus.component}</span>}
                         </div>

@@ -9,17 +9,17 @@ const EventCard = (props) => {
                 {data.ledgerSeq && <span className="ledger">(&nbsp;{data.ledgerSeq}&nbsp;)</span>}
             </div>
             <ul className="list-group list-group-flush event-content">
-                {data.amount && <li className="row list-group-item event-item text-truncate">
-                    <i className="col-1 fa fa-map-marker" title="node"></i><span className="col-11">{data.region}</span>
+                {data.region && <li className="row list-group-item event-item text-truncate">
+                    <i className="col-1 fa fa-map-marker"></i><span className="col-11">{data.region}</span>
                 </li>}
                 {data.nodeId && <li className="row list-group-item event-item text-truncate">
-                    <i className="col-1 fas fa-server" title="node"></i><span className="col-11">Host {data.nodeId}</span>
+                    <i className="col-1 fas fa-server"></i><span className="col-11">Host {data.nodeId}</span>
                 </li>}
                 <li className="row list-group-item event-item text-truncate">
-                    <i className="col-1 fa fa-address-card" title="node"></i><span className="col-11">{data.address}</span>
+                    <i className="col-1 fa fa-address-card"></i><span className="col-11">{data.address}</span>
                 </li>
                 {data.amount && <li className="row list-group-item event-item text-truncate">
-                    <i className="col-1 fa fa-money" title="node"></i><span className="col-11">{data.amount}</span>
+                <i className="col-1 fas fa-money-bill-alt"></i><span className="col-11">{data.amount}&nbsp;EVR</span>
                 </li>}
             </ul>
         </div>

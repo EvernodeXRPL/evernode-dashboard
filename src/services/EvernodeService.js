@@ -154,13 +154,12 @@ class EvernodeManager {
 
         let ledgerSeq = 1000;
 
-        const interval = setInterval(() => {
+        setInterval(() => {
             const iterations = (Math.floor(100000 + Math.random() * 900000)) % 4;
             for (let i = 0; i < iterations; i++) {
-                const random = (Math.floor(100000 + Math.random() * 900000));
                 const hosts = Object.keys(this.nodeLookup);
-                const host = hosts[random % hosts.length];
-                const event = evs[random % evs.length];
+                const host = hosts[(Math.floor(100000 + Math.random() * 900000)) % hosts.length];
+                const event = evs[(Math.floor(100000 + Math.random() * 900000)) % evs.length];
                 ledgerSeq = ledgerSeq + 3;
 
                 const info = eventInfo[event];
@@ -188,7 +187,7 @@ class EvernodeManager {
                     if (node) {
                         // Update the node's ever amount on reward event.
                         if (event === signalREvents.Reward) {
-                            amount = random % 5;
+                            amount = (Math.floor(100000 + Math.random() * 900000)) % 5 + 0.1;
                             node.evrBalance = node.evrBalance + amount;
                         }
 

@@ -10,13 +10,21 @@ class SideBar extends React.Component {
         }
 
         this.onToggle = this.onToggle.bind(this);
+        this.onResize = this.onResize.bind(this);
     }
 
     componentDidMount() {
-        window.onresize = () => {
-            if (this.state.hidden)
-                this.onToggle();
-        };
+        window.addEventListener('resize', this.onResize);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.onResize);
+    }
+
+    onResize() {
+        // If the sidebar is hidden, Show it on resize.
+        if (this.state.hidden)
+            this.onToggle();
     }
 
     onToggle() {

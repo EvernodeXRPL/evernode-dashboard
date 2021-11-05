@@ -8,12 +8,6 @@ class App extends React.Component {
 
     componentDidMount() {
         Evernode.evernodeManager.start();
-
-        // Dom manipulations.
-        window.onresize = () => {
-            window.adjustMapViewSize();
-            window.adjustEventListScrollViewSize();
-        };
     }
 
     render() {
