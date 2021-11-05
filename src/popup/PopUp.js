@@ -89,7 +89,7 @@ class PopUp extends React.Component {
                         </div>
                         <div className="d-inline-block w-100 line-3">
                             <span className="host-info">
-                                <span className="badge badge-secondary p-1">{this.getDisplayText(selectedTab.content.location, 12)}</span>
+                                <span className="badge badge-secondary p-1">{this.getDisplayText(selectedTab.content.location, 10)}</span>
                                 <span className="badge badge-secondary p-1">{this.getDisplayText(selectedTab.content.size, 15)}</span>
                             </span>
                             {selectedTab.content.lastStatus && <span className="badge status">{selectedTab.content.lastStatus.component}</span>}

@@ -67,7 +67,7 @@ class HostNode {
         this.idx = node.idx;
         this.address = node.address;
         this.ip = node.ip;
-        this.evrBalance = +node.evrBalance;
+        this.evrBalance = node.evrBalance;
         this.location = node.location;
         this.size = node.size;
         this.token = node.token;
@@ -188,7 +188,7 @@ class EvernodeManager {
                         // Update the node's ever amount on reward event.
                         if (event === signalREvents.Reward) {
                             amount = (Math.floor(100000 + Math.random() * 900000)) % 5 + 0.1;
-                            node.evrBalance = node.evrBalance + amount;
+                            node.evrBalance = +node.evrBalance + amount;
                         }
 
                         node.emitter.emit(events.hostEvent, {
