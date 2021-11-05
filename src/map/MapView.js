@@ -7,7 +7,7 @@ class MapView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            regionList: []
+            regionList: Evernode.evernodeManager.regions
         }
     }
 
@@ -15,9 +15,11 @@ class MapView extends React.Component {
         const onUpdated = (regionList) => {
             this.setState({
                 regionList: regionList
-            })
+            });
         };
         Evernode.evernodeManager.on(Evernode.events.regionListLoaded, onUpdated);
+        // Adjust map-view size on mount.
+        window.adjustMapViewSize();
     }
 
     render() {
