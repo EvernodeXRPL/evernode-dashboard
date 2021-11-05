@@ -4,6 +4,8 @@
   "description": "Central streamer for Evernode system dashboard",
   "main": "streamer.js",
   "scripts": {
+    "build": "ncc build streamer.js -o dist/central",
+    "postbuild": "ncc build host-streamer.js -o dist/host",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
