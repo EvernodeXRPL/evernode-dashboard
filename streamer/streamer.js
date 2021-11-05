@@ -13,57 +13,6 @@ class Streamer {
         this.rippleAPI = new RippleAPIWrapper(rippledServer);
         this.evernodeHook = new EvernodeHook(this.rippleAPI, hookAddress);
         this.hookAddress = this.evernodeHook.account.address;
-        this.evernodeHook.events.on(HookEvents.Redeem, async (ev) => {
-            await this.broadcast(HookEvents.Redeem, {
-                user: ev.user,
-                host: ev.host,
-                token: ev.token,
-                moments: ev.moments,
-                redeemTxHash: ev.transaction.hash,
-                nodeid: this.hostAccounts[ev.host]?.nodeid
-            });
-        });
-        this.evernodeHook.events.on(HookEvents.RedeemSuccess, async (ev) => {
-            await this.broadcast(HookEvents.RedeemSuccess, {
-                host: ev.transaction.Account,
-                redeemTxHash: ev.redeemTxHash,
-                nodeid: this.hostAccounts[ev.transaction.Account]?.nodeid
-            });
-        });
-        this.evernodeHook.events.on(HookEvents.RedeemError, async (ev) => {
-            await this.broadcast(HookEvents.RedeemError, {
-                host: ev.transaction.Account,
-                redeemTxHash: ev.redeemTxHash,
-                reason: ev.reason,
-                nodeid: this.hostAccounts[ev.transaction.Account]?.nodeid
-            });
-        });
-        this.evernodeHook.events.on(HookEvents.HostDeregistered, async (ev) => {
-            await this.broadcast(HookEvents.HostDeregistered, { host: ev.host, nodeid: this.hostAccounts[ev.host]?.nodeid });
-        });
-        this.evernodeHook.events.on(HookEvents.HostRegistered, async (ev) => {
-            await this.broadcast(HookEvents.HostRegistered, {
-                host: ev.host,
-                token: ev.token,
-                instanceSize: ev.instanceSize,
-                location: ev.location,
-                nodeid: this.hostAccounts[ev.host]?.nodeid
-            });
-        });
-        this.evernodeHook.events.on(HookEvents.RefundRequest, async (ev) => {
-            await this.broadcast(HookEvents.RefundRequest, { redeemTxHash: ev.redeemTxHash });
-        });
-        this.evernodeHook.events.on(HookEvents.AuditRequest, async (ev) => {
-            await this.broadcast(HookEvents.AuditRequest, { auditor: ev.auditor });
-        });
-        this.evernodeHook.events.on(HookEvents.AuditSuccess, async (ev) => {
-            await this.broadcast(HookEvents.AuditSuccess, { auditor: ev.auditor });
-        });
-
-        // [Todo]
-        // 1. audit success reward event.
-        // 2. refund success payment.
-
     }
 
     async start() {
@@ -75,10 +24,98 @@ class Streamer {
             !this.config.azure_table.host || !this.config.azure_table.table || !this.config.azure_table.sas)
             throw new Error(`Config file ${CONFIG_PATH} is missing required fields.`);
 
-        await this.rippleAPI.connect();
+        await this.rippleAPI.connect().catch(error => { throw error });
         this.evernodeHook.subscribe();
+        this.tableSvc = azure.createTableServiceWithSas(this.config.azure_table.host, this.config.azure_table.sas);
 
         await this.updateHostsTable();
+
+        this.evernodeHook.events.on(HookEvents.Redeem, async (ev) => {
+            await this.broadcast(HookEvents.Redeem, {
+                user: ev.user,
+                host: ev.host,
+                token: ev.token,
+                moments: ev.moments,
+                redeemTxHash: ev.transaction.hash,
+                nodeid: this.hostAccounts[ev.host]?.nodeid,
+                ledgerSeq: ev.transaction.LastLedgerSequence
+            });
+        });
+        this.evernodeHook.events.on(HookEvents.RedeemSuccess, async (ev) => {
+            await this.broadcast(HookEvents.RedeemSuccess, {
+                host: ev.transaction.Account,
+                redeemTxHash: ev.redeemTxHash,
+                nodeid: this.hostAccounts[ev.transaction.Account]?.nodeid,
+                ledgerSeq: ev.transaction.LastLedgerSequence
+            });
+        });
+        this.evernodeHook.events.on(HookEvents.RedeemError, async (ev) => {
+            await this.broadcast(HookEvents.RedeemError, {
+                host: ev.transaction.Account,
+                redeemTxHash: ev.redeemTxHash,
+                reason: ev.reason,
+                nodeid: this.hostAccounts[ev.transaction.Account]?.nodeid,
+                ledgerSeq: ev.transaction.LastLedgerSequence
+            });
+        });
+        this.evernodeHook.events.on(HookEvents.HostDeregistered, async (ev) => {
+            await this.broadcast(HookEvents.HostDeregistered, {
+                host: ev.host, nodeid: this.hostAccounts[ev.host]?.nodeid,
+                ledgerSeq: ev.transaction.LastLedgerSequence
+            });
+        });
+        this.evernodeHook.events.on(HookEvents.HostRegistered, async (ev) => {
+            await this.broadcast(HookEvents.HostRegistered, {
+                host: ev.host,
+                token: ev.token,
+                instanceSize: ev.instanceSize,
+                location: ev.location,
+                nodeid: this.hostAccounts[ev.host]?.nodeid,
+                ledgerSeq: ev.transaction.LastLedgerSequence
+            });
+        });
+        this.evernodeHook.events.on(HookEvents.RefundRequest, async (ev) => {
+            await this.broadcast(HookEvents.RefundRequest, {
+                redeemTxHash: ev.redeemTxHash,
+                ledgerSeq: ev.transaction.LastLedgerSequence
+            });
+        });
+        this.evernodeHook.events.on(HookEvents.AuditRequest, async (ev) => {
+            await this.broadcast(HookEvents.AuditRequest, {
+                auditor: ev.auditor,
+                ledgerSeq: ev.transaction.LastLedgerSequence
+            });
+        });
+        this.evernodeHook.events.on(HookEvents.AuditSuccess, async (ev) => {
+            await this.broadcast(HookEvents.AuditSuccess, {
+                auditor: ev.auditor,
+                ledgerSeq: ev.transaction.LastLedgerSequence
+            });
+        });
+        this.evernodeHook.events.on(HookEvents.Reward, async (ev) => {
+            const host = this.hostAccounts[ev.host];
+            if (host) {
+                host.evrBalance = await this.getEvrBalance(host.hostAccount.address, host.hostAccount.secret);
+                await this.broadcast(HookEvents.Reward, {
+                    host: ev.host,
+                    amount: ev.amount,
+                    evrBalance: host.evrBalance,
+                    ledgerSeq: ev.transaction.LastLedgerSequence
+                });
+                const ent = azure.TableUtilities.entityGenerator;
+                const rowData = {
+                    PartitionKey: ent.String(HOST_PARTITION_KEY),
+                    RowKey: ent.String(host.nodeid.toString()),
+                    evrBalance: ent.String(host.evrBalance)
+                };
+                // Update the relavent host with the latest EVR balance.
+                this.tableSvc.mergeEntity(this.config.azure_table.table, rowData, (err) => err && console.error(err));
+            }
+        });
+
+        // [Todo]
+        // 1. audit success reward event.
+        // 2. refund success payment.
     }
 
     // Get VM list from vultr and match them with hosts from the hook state. Get EVR balance of each host.
@@ -117,8 +154,7 @@ class Streamer {
                 }
             });
 
-            const tableSvc = azure.createTableServiceWithSas(this.config.azure_table.host, this.config.azure_table.sas);
-            tableSvc.executeBatch(this.config.azure_table.table, tableBatch, (err) => err && console.error(err));
+            this.tableSvc.executeBatch(this.config.azure_table.table, tableBatch, (err) => err && console.error(err));
             console.log(`Updated ${Object.keys(this.hostAccounts).length} hosts in table storage.`);
         }
     }
@@ -132,7 +168,7 @@ class Streamer {
             }
         });
         console.log(`Broadcasting ${event}: ${data.length} bytes`);
-        const res = await fetch(`https://${this.config.azure_function.hostname}${this.config.azure_function.path}`, {
+        await fetch(`https://${this.config.azure_function.hostname}${this.config.azure_function.path}`, {
             port: 443,
             method: 'POST',
             headers: {
@@ -182,14 +218,12 @@ class Streamer {
         }
 
         // Checking EVR balance of hosts.
-        const xrpAcc = new XrplAccount(this.rippleAPI, acc.address, acc.secret);
-        const lines = await xrpAcc.getTrustLines(EVR, this.hookAddress);
         this.hostAccounts[acc.address] = {
             ip: hostObj.ip,
             region: hostObj.region,
             nodeid: hostObj.nodeid,
             hostAccount: acc,
-            evrBalance: lines.length > 0 ? lines[0].state.balance : 0
+            evrBalance: await this.getEvrBalance(acc.address, acc.secret)
         }
     }
 
@@ -200,6 +234,12 @@ class Streamer {
                 resolve(stdout);
             });
         })
+    }
+
+    async getEvrBalance(address, secret) {
+        const xrpAcc = new XrplAccount(this.rippleAPI, address, secret);
+        const lines = await xrpAcc.getTrustLines(EVR, this.hookAddress);
+        return lines.length > 0 ? lines[0].state.balance : '0';
     }
 }
 async function main() {
