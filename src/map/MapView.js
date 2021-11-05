@@ -26,6 +26,7 @@ class MapView extends React.Component {
             <div className="content flex-fill d-flex align-items-center">
                 <div className="map-view-container">
                     <div className="map-view">
+                        <div className="title-container p-3"><h3>Evernode Cluster Dashboard</h3></div>
                         {nodeList.map((n, idx) => <MapRegion key={idx} region={n} />)}
                     </div>
                 </div>

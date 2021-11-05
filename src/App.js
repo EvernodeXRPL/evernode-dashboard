@@ -12,12 +12,9 @@ class App extends React.Component {
 
     render() {
         return (
-            <div>
-                <div className="wrapper d-flex flex-column flex-md-row">
-                    <MapView />
-                    <SideBar />
-                </div>
-                <div className="title-container p-3"><h3>Evernode Cluster Dashboard</h3></div>
+            <div className="wrapper d-flex flex-column flex-md-row">
+                <MapView />
+                <SideBar />
             </div>
         )
     }

@@ -9,7 +9,7 @@ class Hook extends React.Component {
                 <div className="row">
                     <div className="col col-lg-12">
                         <h3 className="sidebar-title">
-                            Hook actions
+                            Hook Actions
                         </h3>
                     </div>
                 </div>
