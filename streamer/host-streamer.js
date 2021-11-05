@@ -3,7 +3,7 @@ const exec = require('child_process').exec;
 const fetch = require('node-fetch');
 
 const logFileName = __dirname + '/log.txt';
-const mbServiceName = 'sashi-mb.service';
+const mbServiceName = 'sashimono-mb-xrpl.service';
 let lastSeen = false;
 let missedChecks = 0;
 let reportedMissing = false;
