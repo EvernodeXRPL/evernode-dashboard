@@ -33,17 +33,16 @@ class MapRegion extends React.Component {
 
     onStatusChange(idx, status) {
         let state = this.state;
-        let nodeStatus = state.statuses.find(s => s.idx === idx);
-        if (!nodeStatus) {
+        if (status) {
+            // Remove existing statueses and add new to the top.
+            state.statuses = state.statuses.filter(s => s.idx !== idx);
             state.statuses.unshift({ idx: idx, lastStatus: status, hide: false });
         }
         else {
-            if (!status)
+            // If there's a last status, set hide flag to true.
+            let nodeStatus = state.statuses.find(s => s.idx === idx);
+            if (nodeStatus)
                 nodeStatus.hide = true;
-            else {
-                nodeStatus.hide = false;
-                nodeStatus.lastStatus = status;
-            }
         }
 
         this.setState(state);
@@ -89,7 +88,7 @@ class MapRegion extends React.Component {
                 <div onClick={this.onClick}>
                     {nodeList.map((n, idx) => <MapNode key={idx} idx={idx} node={n} selected={showInfo} onStatusChange={this.onStatusChange} />)}
                 </div>
-                {showInfo && <div className="popup-container"><PopUp onClose={this.onPopUpClose} header={region.name} tabs={tabs} pos={popupPos}/></div>}
+                {showInfo && <div className="popup-container"><PopUp onClose={this.onPopUpClose} header={region.name} tabs={tabs} pos={popupPos} /></div>}
                 <div className={"row m-1 region-status-container " + (pos.anchor && `anchor-${pos.anchor}`)}>
                     {statusList && <CSSTransitionGroup
                         transitionName="status"
