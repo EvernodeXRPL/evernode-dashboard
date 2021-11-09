@@ -8,7 +8,17 @@ let lastSeen = false;
 let missedChecks = 0;
 let reportedMissing = false;
 const LAST_SEEN_INTERVAL = 60 * 1000; // Every 1 minute.
-const HOST_ADDRESS = process.env.HOST_ADDRESS;
+const INSTANCE_COUNT_INTERVAL = 30 * 1000; // Broadcast instance count every 30 seconds.
+let host_address = null;
+
+const events = {
+    ONLINE: 'host_online',
+    OFFLINE: 'host_offline',
+    CREATION: 'host_create',
+    CREATION_TIMEOUT: 'host_timeout',
+    EXPIRE: 'host_expire',
+    COUNT: 'host_count'
+};
 
 function subscribeForLogs() {
     exec(`journalctl -fu ${mbServiceName} > ${logFileName}`, function (error, stdout, stderr) {
@@ -78,20 +88,20 @@ async function parseLogs(buffer) {
     str.split('\n').forEach(async (line) => {
         if (line.length > 0) {
             if (line.includes('Destroyed ')) {
-                await broadcast('destroyed', {
-                    host: HOST_ADDRESS,
+                await broadcast(events.EXPIRE, {
+                    host: host_address,
                 });
-                console.log('An instance was destroyed.');
+                console.log('An instance was expired.');
             } else if (line.includes('Alive')) {
                 lastSeen = true;
             } else if (line.includes('Instance creation timeout.')) {
-                await broadcast('creation_timeout', {
-                    host: HOST_ADDRESS,
+                await broadcast(events.CREATION_TIMEOUT, {
+                    host: host_address,
                 });
                 console.log('Instance creation timeout.');
             } else if (line.includes('Instance created for')) {
-                await broadcast('creation', {
-                    host: HOST_ADDRESS,
+                await broadcast(events.CREATION, {
+                    host: host_address,
                 });
                 console.log('Instance creation.');
             }
@@ -104,19 +114,18 @@ function monitorLastSeen() {
         if (lastSeen) {
             if (reportedMissing) {
                 reportedMissing = false;
-                await broadcast('online', {
-                    host: HOST_ADDRESS,
+                await broadcast(events.ONLINE, {
+                    host: host_address,
                 });
                 console.log('Reporting sashimono is back up..');
             }
-            // console.log('Sashimono was last seen at ' + new Date());
             missedChecks = 0;
             lastSeen = false;
         } else {
             if (missedChecks > 3) {
                 console.log('Sashimono was not seen in the last 3 checks. Reporting offline status.');
-                await broadcast('offline', {
-                    host: HOST_ADDRESS
+                await broadcast(events.OFFLINE, {
+                    host: host_address
                 });
                 reportedMissing = true;
             }
@@ -125,15 +134,46 @@ function monitorLastSeen() {
     }, LAST_SEEN_INTERVAL);
 }
 
+function monitorInstanceCount() {
+    setInterval(async () => {
+        exec(`/usr/bin/sashi list`, async (error, stdout, stderr) => {
+            if (error || stderr) {
+                console.log(error || stderr);
+                return;
+            }
+
+            if (stdout)
+            {
+                // Remove the last new line character from the string.
+                const str = stdout.substr(0, stdout.length - 1);
+                const arr = str.split('\n');
+                await broadcast(events.COUNT, {
+                    host: host_address,
+                    count: arr.length - 2
+                });
+
+            }
+        });
+    }, INSTANCE_COUNT_INTERVAL);
+}
+
+
 function main() {
-    if (!HOST_ADDRESS)
+    const mb_config_path = '/etc/sashimono/mb-xrpl/mb-xrpl.cfg';
+    if (fs.existsSync(mb_config_path)) {
+        const data = fs.readFileSync(mb_config_path, 'utf-8');
+        const config = JSON.parse(data);
+        host_address = config.xrpl.address;
+    }
+    if (!host_address)
     {
-        console.error('HOST_ADDRESS environment variable is not set.');
+        console.error("Couldn't obtain host address from mb-xrpl.cfg");
         process.exit(1);
     }
-    console.log(`Starting sashimono host monitor for host ${HOST_ADDRESS}`);
+    console.log(`Starting sashimono host monitor for host ${host_address}`);
     subscribeForLogs();
     watchForFileChanges();
     monitorLastSeen();
+    monitorInstanceCount();
 }
 main();

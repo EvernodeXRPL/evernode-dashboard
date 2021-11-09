@@ -21,15 +21,21 @@ yarn start
 
 ## Streamer
 
-Create a config file named `streamer/config.json` in the following format and populate.
+Create a config file named `streamer/config.json` in the following format and populate. Access keys are in project wiki.
 ```json
 {
-    "hostname": "",
-    "path": "",
+    "azure_function": {
+        "hostname": "",
+        "path": ""
+    },
     "azure_table": {
         "host": "",
         "table": "",
         "sas": ""
+    },
+    "vultr": {
+        "api_key": "",
+        "group": ""
     }
 }
 ```

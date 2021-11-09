@@ -154,8 +154,11 @@ class Streamer {
                 }
             });
 
-            this.tableSvc.executeBatch(this.config.azure_table.table, tableBatch, (err) => err && console.error(err));
-            console.log(`Updated ${Object.keys(this.hostAccounts).length} hosts in table storage.`);
+            if (tableBatch.size() > 0) {
+                this.tableSvc.executeBatch(this.config.azure_table.table, tableBatch, (err) => err && console.error(err));
+                console.log(`Updated ${Object.keys(this.hostAccounts).length} hosts in table storage.`);
+            }
+
         }
     }
 
