@@ -12,12 +12,12 @@ const INSTANCE_COUNT_INTERVAL = 30 * 1000; // Broadcast instance count every 30 
 let host_address = null;
 
 const events = {
-    ONLINE: 'host_online',
-    OFFLINE: 'host_offline',
-    CREATION: 'host_create',
-    CREATION_TIMEOUT: 'host_timeout',
-    EXPIRE: 'host_expire',
-    COUNT: 'host_count'
+    ONLINE: 'hostOnline',
+    OFFLINE: 'hostOffline',
+    CREATION: 'hostInstanceCreation',
+    CREATION_TIMEOUT: 'hostInstanceTimeout',
+    EXPIRE: 'hostInstanceExpire',
+    COUNT: 'hostInstanceCount'
 };
 
 function subscribeForLogs() {
@@ -92,7 +92,7 @@ async function parseLogs(buffer) {
                     host: host_address,
                 });
                 console.log('An instance was expired.');
-            } else if (line.includes('Alive')) {
+            } else if (line.includes('Sashimono mb online')) {
                 lastSeen = true;
             } else if (line.includes('Instance creation timeout.')) {
                 await broadcast(events.CREATION_TIMEOUT, {
