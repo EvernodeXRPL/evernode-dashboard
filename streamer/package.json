@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "azure-storage": "2.10.4",
-    "evernode-js-client": "0.2.8",
+    "evernode-js-client": "0.2.7",
     "node-fetch": "2.6.1"
   }
 }
