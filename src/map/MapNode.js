@@ -49,7 +49,7 @@ class MapNode extends React.Component {
         const { status } = this.state;
         return (
             <div className={"map-node-marker-container " + this.getCssClass(status)}
-                style={{ marginTop: this.props.selected === 0 ? 0 : 3, marginLeft: this.props.selected * 4 }}>
+                style={{ marginTop: this.props.idx === 0 ? 0 : 3, marginLeft: this.props.idx * 4 }}>
                 <i className="fas fa-server map-node-marker"></i>
             </div>
         );
