@@ -4,16 +4,10 @@ const fetch = require('node-fetch');
 
 const logFileName = __dirname + '/log.txt';
 const mbServiceName = 'sashimono-mb-xrpl.service';
-let lastSeen = false;
-let missedChecks = 0;
-let reportedMissing = false;
-const LAST_SEEN_INTERVAL = 60 * 1000; // Every 1 minute.
 const INSTANCE_COUNT_INTERVAL = 30 * 1000; // Broadcast instance count every 30 seconds.
 let host_address = null;
 
 const events = {
-    ONLINE: 'hostOnline',
-    OFFLINE: 'hostOffline',
     CREATION: 'hostInstanceCreation',
     CREATION_TIMEOUT: 'hostInstanceTimeout',
     EXPIRE: 'hostInstanceExpire',
@@ -91,48 +85,18 @@ async function parseLogs(buffer) {
                 await broadcast(events.EXPIRE, {
                     host: host_address,
                 });
-                console.log('An instance was expired.');
-            } else if (line.includes('Sashimono mb online')) {
-                lastSeen = true;
             } else if (line.includes('Instance creation timeout.')) {
                 await broadcast(events.CREATION_TIMEOUT, {
                     host: host_address,
                 });
-                console.log('Instance creation timeout.');
             } else if (line.includes('Instance created for')) {
                 await broadcast(events.CREATION, {
                     host: host_address,
                 });
-                console.log('Instance creation.');
             }
         }
     });
 };
-
-function monitorLastSeen() {
-    setInterval(async () => {
-        if (lastSeen) {
-            if (reportedMissing) {
-                reportedMissing = false;
-                await broadcast(events.ONLINE, {
-                    host: host_address,
-                });
-                console.log('Reporting sashimono is back up..');
-            }
-            missedChecks = 0;
-            lastSeen = false;
-        } else {
-            if (missedChecks > 3) {
-                console.log('Sashimono was not seen in the last 3 checks. Reporting offline status.');
-                await broadcast(events.OFFLINE, {
-                    host: host_address
-                });
-                reportedMissing = true;
-            }
-            missedChecks++;
-        }
-    }, LAST_SEEN_INTERVAL);
-}
 
 function monitorInstanceCount() {
     setInterval(async () => {
@@ -173,7 +137,6 @@ function main() {
     console.log(`Starting sashimono host monitor for host ${host_address}`);
     subscribeForLogs();
     watchForFileChanges();
-    monitorLastSeen();
     monitorInstanceCount();
 }
 main();

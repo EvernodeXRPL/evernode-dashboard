@@ -5,7 +5,7 @@
   "main": "streamer.js",
   "scripts": {
     "build": "ncc build streamer.js -o dist/central",
-    "postbuild": "ncc build host-streamer.js -o dist/host",
+    "postbuild": "ncc build sashi-streamer.js -o dist/sashi",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
