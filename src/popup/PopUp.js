@@ -54,6 +54,10 @@ class PopUp extends React.Component {
         return text.length > maxLength ? `${text.substring(0, maxLength)}..` : text;
     }
 
+    getDisplayBalance(balance) {
+        return Number(balance).toFixed(3);
+    }
+
     render() {
         const { show } = this.state;
         const { header, tabs, pos } = this.props;
@@ -64,35 +68,48 @@ class PopUp extends React.Component {
                 {header && <div className="row header">
                     <span className="col text-center p-1">{header}</span>
                 </div>}
-                <div className="flex m-1 p-2 popup-content">
+                <div className="flex m-1 popup-content">
                     <div className="row m-0">
                         {tabs.map((t, idx) => <div className={"col m-0 tab " + (t === selectedTab && "active")} onClick={() => this.onTabClick(t.idx)} key={idx}>
                             {t.name}
                         </div>)}
                     </div>
                     <div className="tab-content">
-                        <div className="d-inline-block w-100 line-1">
-                            <span className="badge badge-secondary address">
-                                {selectedTab.content.xrpAddress}
-                            </span>
-                            <span className="badge badge-pill badge-secondary token">
-                                {selectedTab.content.token}
-                            </span>
+                        <div className="row">
+                            <div className="col text-center">
+                                <span className="badge badge-secondary address">
+                                    {selectedTab.content.xrpAddress}
+                                </span>
+                            </div>
                         </div>
-                        <div className="d-inline-block w-100 line-2">
-                            <span className="badge badge-secondary balance">
-                                {selectedTab.content.evrBalance}<span className="text-small">EVR</span>
-                            </span>
-                            <span className="badge badge-secondary ip">
-                                {selectedTab.content.ip}
-                            </span>
+                        <div className="row">
+                            <ul className="col-5 pr-0 list-group list-group-flush list-content">
+                                <li className="row list-group-item list-item text-truncate">
+                                    <i className="col-1 fas fa-at"></i><span className="col-11">{selectedTab.content.ip}</span>
+                                </li>
+                                <li className="row list-group-item list-item text-truncate">
+                                    <i className="col-1 fa fa-cubes"></i><span className="col-11">{selectedTab.content.instanceCount}</span>
+                                </li>
+                            </ul>
+                            <ul className="col-7 pr-0 list-group list-group-flush list-content">
+                                <li className="row list-group-item list-item text-truncate">
+                                    <i className="col-1 fa fa-location-arrow"></i><span className="col-11">{this.getDisplayText(selectedTab.content.location, 10)}</span>
+                                </li>
+                                <li className="row list-group-item list-item text-truncate">
+                                    <i className="col-1 fa fa-hdd"></i><span className="col-11">{this.getDisplayText(selectedTab.content.size, 15)}</span>
+                                </li>
+                            </ul>
                         </div>
-                        <div className="d-inline-block w-100 line-3">
-                            <span className="host-info">
-                                <span className="badge badge-secondary p-1">{this.getDisplayText(selectedTab.content.location, 10)}</span>
-                                <span className="badge badge-secondary p-1">{this.getDisplayText(selectedTab.content.size, 15)}</span>
-                            </span>
-                            {selectedTab.content.lastStatus && <span className="badge status">{selectedTab.content.lastStatus.component}</span>}
+                        <div className="row">
+                            <div className="col">
+                                <span className="badge badge-secondary balance">
+                                    {this.getDisplayBalance(selectedTab.content.evrBalance)}<span className="text-small">EVR</span>
+                                </span>
+                                <span className="badge badge-secondary token">
+                                    {selectedTab.content.token}
+                                </span>
+                                {selectedTab.content.lastStatus && <span className="badge status">{selectedTab.content.lastStatus.component}</span>}
+                            </div>
                         </div>
                     </div>
                 </div>

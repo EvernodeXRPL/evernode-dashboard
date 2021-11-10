@@ -83,27 +83,39 @@
         &.event-reward {
             background-color: $reward-bg;
         }
+
+        &.event-instance-create {
+            background-color: $instance-create-bg;
+        }
+    
+        &.event-instance-timeout {
+            background-color: $instance-timeout-bg;
+        }
+    
+        &.event-instance-expire {
+            background-color: $instance-expire-bg;
+        }
     }
 }
 
 .status-enter {
-    line-height: 0px !important;
-    opacity: 0;
+    line-height: 0px;
+    opacity: 0.3;
 }
 
-.status-enter.status-enter-active {
+.status-enter-active {
     line-height: $status-line-height;
     opacity: 1;
     transition: $status-animation;
 }
 
-.status-leave {
+.status-exit {
     line-height: $status-line-height;
     opacity: 1;
 }
 
-.status-leave.status-leave-active {
+.status-exit-active {
     line-height: 0px;
-    opacity: 0;
+    opacity: 0.3;
     transition: $status-animation;
 }

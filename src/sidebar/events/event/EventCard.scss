@@ -1,4 +1,4 @@
-@import "../../assets/variables";
+@import "../../../assets/variables";
 
 .event-card {
     background-color: $gray-100;
@@ -49,6 +49,18 @@
 
         &.event-reward {
             background-color: $reward-bg;
+        }
+
+        &.event-instance-create {
+            background-color: $instance-create-bg;
+        }
+    
+        &.event-instance-timeout {
+            background-color: $instance-timeout-bg;
+        }
+    
+        &.event-instance-expire {
+            background-color: $instance-expire-bg;
         }
     }
 

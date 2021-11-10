@@ -1,5 +1,5 @@
 import React from "react"
-import Hook from "./hook/Hook";
+import Events from "./events/Events";
 import './SideBar.scss';
 
 class SideBar extends React.Component {
@@ -37,12 +37,12 @@ class SideBar extends React.Component {
         const { hidden } = this.state;
 
         return (
-            <div className={"d-flex flex-column m-md-2 p-2 pt-lg-3 sidebar " + (hidden && "hidden")}>
+            <div className={"d-flex flex-column m-md-2 p-1 sidebar " + (hidden && "hidden")}>
                 <div className="menu-icon" onClick={this.onToggle}>
                     {hidden ? <i className="fas fa-bars"></i> : <i className="fas fa-times"></i>}
                 </div>
                 <div className={"row m-0 h-100 sidebar-content " + (hidden && "hidden")}>
-                    <Hook />
+                    <Events />
                 </div>
             </div>
         )

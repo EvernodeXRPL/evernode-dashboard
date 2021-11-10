@@ -1,13 +1,11 @@
 $site-bg: #414141;
-$sidebar-bg: #222;
-$popup-bg: #222;
-$sidebar-hook-bg: #313030;
 
 $badge-green: #00bc8c;
 $badge-orange: #f39c12;
 
 //dark theme
-$gray-100: #222;
+$gray-50: #222222;
+$gray-100: #2b2b2b;
 $gray-200: #444;
 $gray-300: #555;
 $gray-400: #a7a3a3;
@@ -27,6 +25,7 @@ $yellow: #ebc51f;
 $orange: #e97414;
 
 $active-bg: $green;
+$inactive-bg: $yellow;
 $selected-bg: $green-dark;
 $host-reg-bg: #603808;
 $host-dereg-bg: #8b5e34;
@@ -37,6 +36,9 @@ $audit-req-bg: #0d47a1;
 $audit-suc-bg: #2c7da0;
 $refund-req-bg: #066168;
 $reward-bg: #2f094eea;
+$instance-create-bg: #074791;
+$instance-timeout-bg: #641e0c;
+$instance-expire-bg: #5c3e38;
 
 $sidebar-width: 22rem;
 $popup-width: 23.4rem;

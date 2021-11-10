@@ -2,7 +2,7 @@
 
 .sidebar {
     width: $sidebar-width;
-    background-color: $sidebar-bg;
+    background-color: $gray-100;
     transition: width 500ms, height 500ms;
     z-index: 1;
 
@@ -16,7 +16,7 @@
     }
 
     .menu-icon {
-        background-color: $sidebar-bg;
+        background-color: $gray-100;
         padding: 1px 5px 1px 5px;
         font-size: 1rem;
         cursor: pointer;

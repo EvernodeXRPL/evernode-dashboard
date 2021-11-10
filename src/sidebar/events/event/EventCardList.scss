@@ -1,11 +1,11 @@
-@import "../../assets/variables";
+@import "../../../assets/variables";
 
 .event-scroll-list {
     overflow: hidden;
-    border: 1px solid $gray-300;
     background-color: $gray-200;
+    border: 1px solid $gray-50;
 
-    .card-list-container{
+    .card-list-container {
         height: 0px;
 
         .card-list {
@@ -19,18 +19,18 @@
     opacity: 0.3;
 }
 
-.event-enter.event-enter-active {
+.event-enter-active {
     max-height: $event-card-max-height;
     opacity: 1;
     transition: $event-animation;
 }
 
-.event-leave {
+.event-exit {
     max-height: $event-card-max-height;
     opacity: 1;
 }
 
-.event-leave.event-leave-active {
+.event-exit-active {
     max-height: 0px;
     opacity: 0.3;
     transition: $event-animation;
