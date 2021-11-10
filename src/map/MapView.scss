@@ -22,6 +22,20 @@
         top: calc((100vh - 100%) / -2);
         left: 0;
         z-index: 1;
+
+        .replicator-link {
+            margin-top: 5px;
+
+            a {
+                color: $gray-500;
+                background-color: #483b53ea;
+                padding: 0.1rem;
+
+                &:hover {
+                    border: 1px solid $gray-400;
+                }
+            }
+        }
     }
 }
 
@@ -36,7 +50,7 @@
         .title-container {
             top: calc((100vh - 140%) / -2);
         }
-        
+
         transform: translate(-50%, -70%) !important;
     }
 }
