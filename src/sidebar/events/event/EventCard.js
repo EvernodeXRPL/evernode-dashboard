@@ -19,7 +19,7 @@ const EventCard = (props) => {
                     <i className="col-1 fa fa-address-card"></i><span className="col-11">{data.address}</span>
                 </li>
                 {data.amount && <li className="row list-group-item event-item text-truncate">
-                <i className="col-1 fas fa-money-bill-alt"></i><span className="col-11">{data.amount}&nbsp;EVR</span>
+                <i className="col-1 fas fa-money-bill-alt"></i><span className="col-11">{data.amount}</span>
                 </li>}
             </ul>
         </div>

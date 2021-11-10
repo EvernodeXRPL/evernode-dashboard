@@ -287,7 +287,8 @@ class EvernodeManager {
                         name: info.name,
                         region: region?.name,
                         address: data.host || data.auditor,
-                        amount: data.amount || data.moments,
+                        amount: (data.amount && `${data.amount} EVR`) ||
+                            (data.moments && `${data.moments} ${node ? node.token : ''}`),
                         nodeId: node?.idx,
                         ledgerSeq: data.ledgerSeq
                     });
@@ -367,7 +368,8 @@ class EvernodeManager {
                     name: info.name,
                     region: region?.name,
                     address: data.host || data.auditor,
-                    amount: data.amount || data.moments,
+                    amount: (data.amount && `${data.amount} EVR`) ||
+                        (data.moments && `${data.moments} ${node ? node.token : ''}`),
                     nodeId: node?.idx,
                     ledgerSeq: data.ledgerSeq
                 });
