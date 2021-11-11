@@ -14,12 +14,14 @@ const signalREvents = {
     AuditSuccess: "auditSuccess",
     Reward: "reward",
     // Host streamer events.
-    HostOnline: 'hostOnline',
-    HostOffline: 'hostOffline',
     HostInstanceCreate: 'hostInstanceCreation',
     HostInstanceTimeout: 'hostInstanceTimeout',
     HostInstanceExpire: 'hostInstanceExpire',
-    HostInstanceCount: 'hostInstanceCount'
+    HostInstanceCount: 'hostInstanceCount',
+    // These events aren't emitted from the host streamer yet.
+    // Anyway the underlying UI is wired up for later use when it's implemented.
+    HostOnline: 'hostOnline',
+    HostOffline: 'hostOffline'
 }
 
 const eventInfo = {
@@ -63,18 +65,6 @@ const eventInfo = {
         name: 'Reward'
     },
     // Host streamer events.
-    hostOnline: {
-        type: 'online',
-        name: 'Online',
-        hookSilent: true,
-        hostSilent: true
-    },
-    hostOffline: {
-        type: 'offline',
-        name: 'Offline',
-        hookSilent: true,
-        hostSilent: true
-    },
     hostInstanceCreation: {
         type: 'instance-create',
         name: 'Instance Create'
@@ -90,6 +80,20 @@ const eventInfo = {
     hostInstanceCount: {
         type: 'instance-count',
         name: 'Host Count Update',
+        hookSilent: true,
+        hostSilent: true
+    },
+    // These events aren't emitted from the host streamer yet.
+    // Anyway the underlying UI is wired up for later use when it's implemented.
+    hostOnline: {
+        type: 'online',
+        name: 'Online',
+        hookSilent: true,
+        hostSilent: true
+    },
+    hostOffline: {
+        type: 'offline',
+        name: 'Offline',
         hookSilent: true,
         hostSilent: true
     }
