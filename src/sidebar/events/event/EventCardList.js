@@ -1,7 +1,7 @@
 import React from "react"
 import EventCard from "./EventCard"
-import Evernode from "../../services/EvernodeService"
-import { CSSTransitionGroup } from 'react-transition-group'
+import Evernode from "../../../services/EvernodeService"
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import './EventCardList.scss';
 
 class EventCardList extends React.Component {
@@ -25,11 +25,11 @@ class EventCardList extends React.Component {
     render() {
         const { events } = this.state;
         const eventList = events.map((event, idx) =>
-            <div key={idx}>
+            <CSSTransition key={idx} timeout={500} classNames="event">
                 <div className="m-1">
                     <EventCard data={event} />
                 </div>
-            </div>
+            </CSSTransition>
         );
         return (
             <div className="event-scroll-list d-flex flex-column p-1 flex-fill">
@@ -38,13 +38,7 @@ class EventCardList extends React.Component {
                 </div>
                 <div className="card-list-container">
                     <div className="card-list pb-1">
-                        {eventList &&
-                            <CSSTransitionGroup
-                                transitionName="event"
-                                transitionEnterTimeout={500}
-                                transitionLeaveTimeout={500}>
-                                {eventList}
-                            </CSSTransitionGroup>}
+                        {eventList && <TransitionGroup>{eventList}</TransitionGroup>}
                     </div>
                 </div>
             </div>

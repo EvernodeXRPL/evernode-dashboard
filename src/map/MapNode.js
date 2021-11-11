@@ -8,15 +8,12 @@ class MapNode extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            regionIdx: this.props.regionIdx,
-            node: this.props.node,
-            selected: this.props.selected,
             status: null
         }
     }
 
     componentDidMount() {
-        const { node } = this.state;
+        const { node } = this.props;
         node.on(Evernode.events.hostEvent, (event) => {
             clearTimeout(this.timeout);
             this.timeout = null;
@@ -27,23 +24,32 @@ class MapNode extends React.Component {
                 this.changeStatus();
             }, NOTIFY_LIFE);
         });
+
+        node.on(Evernode.events.hostUpdate, () => {
+            this.props.onHostUpdate();
+        });
     }
 
     changeStatus(event = null) {
         let state = this.state;
         state.status = event ? {
             type: event.type,
-            name: event.name
+            name: event.name,
+            ledgerSeq: event.ledgerSeq
         } : null;
         this.setState(state);
-        this.props.onStatusChange(this.state.regionIdx, state.status);
+        this.props.onStatusChange(this.props.node.idx, state.status);
+    }
+
+    getCssClass(status) {
+        return !this.props.node.online ? "inactive" : (status ? `event-${status.type} front` : (this.props.selected ? "selected" : "active"));
     }
 
     render() {
-        const { regionIdx, status } = this.state;
+        const { status } = this.state;
         return (
-            <div className={"map-node-marker-container event-" + (status ? `${status.type} front` : (this.props.selected ? "selected" : "active"))}
-                style={{ marginTop: regionIdx === 0 ? 0 : 2, marginLeft: regionIdx }}>
+            <div className={"map-node-marker-container " + this.getCssClass(status)}
+                style={{ marginTop: this.props.idx === 0 ? 0 : 3, marginLeft: this.props.idx * 4 }}>
                 <i className="fas fa-server map-node-marker"></i>
             </div>
         );

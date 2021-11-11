@@ -6,69 +6,118 @@
     z-index: 2;
     position: sticky;
     width: 0;
-    height: 0;
+    max-height: 0;
     opacity: 0;
-    transition: width 500ms, height 500ms, opacity 500ms;
+    transition: width 500ms, max-height 500ms, opacity 500ms;
 
     &.show {
         width: $popup-width;
-        height: $popup-height;
+        max-height: $popup-height;
         opacity: 1;
     }
 
     .header {
-        background-color: $gray-300;
-        padding: 0.3rem 0.6rem;
         font-weight: bold;
+        font-size: 0.9rem;
     }
 
-    .tab {
-        background-color: $gray-300;
-        padding: 0.3rem 0.6rem;
-        font-weight: bold;
-        opacity: 0.8;
-
-        &.active {
-            background-color: $gray-200;
+    .popup-content {
+        .badge {
+            margin: 4px;
         }
-    }
 
-    .tab-content {
-        .item {
-            background-color: $gray-400;
-            border-bottom: 1px solid $gray-200;
-            padding: 0.3rem 0.6rem;
-            line-height: 1.3;
+        .tab {
+            background-color: $gray-100;
+            border: none;
+            border-bottom: 1px solid $gray-50;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: bold;
 
-            &:last-child {
+            &.active {
+                background-color: $gray-200;
+                border: 1px solid $gray-50;
                 border-bottom: none;
-                padding-bottom: 0.6rem;
-            }
-
-            i {
-                padding-right: 0.8rem;
+                margin-bottom: -1px !important;
             }
         }
-    }
 
-    .close {
-        font-size: 1.2rem;
-        text-align: center;
+        .tab-content {
+            background-color: $gray-200;
+            border: 1px solid $gray-50;
+            border-top: none;
+            padding: 0.5rem;
+
+            .address {
+                background-color: transparent;
+                padding: 0.3rem;
+                font-size: 0.8rem;
+                font-weight: 100;
+            }
+
+            .host-info {
+                font-size: 0.8rem;
+            }
+
+            .balance {
+                background-color: #1d4f7e;
+                padding: 0.5rem;
+                font-size: 1.5rem;
+
+                .text-small {
+                    font-size: 0.8rem;
+                    margin-left: 0.5rem;
+                }
+            }
+
+            .token {
+                background-color: #1d4f7e;
+                padding: 0.5rem;
+                font-size: 1.5rem;
+            }
+
+            .status {
+                margin: -2px 15px -2px -2px; 
+                position: absolute;
+                bottom: 0;
+                right: 0;
+            }
+
+            .list-content {
+                .list-item {
+                    background-color: transparent;
+                    border: 1px solid transparent;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    line-height: 1.3;
+        
+                    &:last-child {
+                        border-bottom: none;
+                        padding-bottom: 0.3rem;
+                    }
+        
+                    i {
+                        padding-right: 0.8rem;
+                        overflow-x: hidden;
+                    }
+                }
+            }
+        }
     }
 
     &.anchor-tl {
-        transform: translate(-103%, -103%);
+        transform: translate(-102%, -103%);
     }
 
     &.anchor-tr {
-        transform: translate(3%, -103%);
+        transform: translate(2%, -103%);
     }
 
     &.anchor-br {
-        transform: translate(3%, 3%);
+        transform: translate(2%, 3%);
     }
 
     &.anchor-bl {
-        transform: translate(-103%, 3%);
+        transform: translate(-102%, 3%);
     }
 }

@@ -27,11 +27,15 @@
         z-index: 1;
     }
     
-    &.event-active {
+    &.active {
         color: $active-bg;
     }
 
-    &.event-selected {
+    &.inactive {
+        color: $inactive-bg;
+    }
+
+    &.selected {
         color: $selected-bg;
     }
 
@@ -65,5 +69,21 @@
 
     &.event-refund-req {
         color: $refund-req-bg;
+    }
+
+    &.event-reward {
+        color: $reward-bg;
+    }
+
+    &.event-instance-create {
+        color: $instance-create-bg;
+    }
+
+    &.event-instance-timeout {
+        color: $instance-timeout-bg;
+    }
+
+    &.event-instance-expire {
+        color: $instance-expire-bg;
     }
 }

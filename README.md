@@ -18,6 +18,9 @@ yarn build
 yarn start
 ```
 
+### URL
+Must use "evernode" sub directory (eg. http://localhost:3000/evernode). This is controlled in `.env` file.
+
 
 ## Central Streamer
 

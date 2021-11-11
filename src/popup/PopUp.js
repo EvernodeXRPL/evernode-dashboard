@@ -5,10 +5,7 @@ class PopUp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            header: this.props.header,
-            tabs: this.props.tabs,
-            pos: this.props.pos,
-            selectedTab: this.props.tabs[0],
+            selectedIdx: this.props.tabs[0].idx,
             show: false
         }
 
@@ -23,9 +20,9 @@ class PopUp extends React.Component {
         this.onOpen();
     }
 
-    onTabClick(t) {
+    onTabClick(tabIdx) {
         let state = this.state;
-        state.selectedTab = t;
+        state.selectedIdx = tabIdx;
         this.setState(state);
     }
 
@@ -53,21 +50,70 @@ class PopUp extends React.Component {
         }, 500);
     }
 
+    getDisplayText(text, maxLength) {
+        return text.length > maxLength ? `${text.substring(0, maxLength)}..` : text;
+    }
+
+    getDisplayBalance(balance) {
+        return Number(balance).toFixed(3);
+    }
+
     render() {
-        const { header, tabs, pos, selectedTab, show } = this.state;
+        const { show } = this.state;
+        const { header, tabs, pos } = this.props;
+        const selectedTab = tabs.find(t => t.idx === this.state.selectedIdx);
 
         return (
-            <div ref={this.popupRef} className={"popup border border-dark rounded shadow " + (pos.anchor && `anchor-${pos.anchor} `) + (show && "show")}>
-                {header && <div className="row m-0">
-                    <div className="col text-center header">{header}</div>
+            <div ref={this.popupRef} className={"rounded shadow popup " + (pos.anchor && `anchor-${pos.anchor} `) + (show && "show")}>
+                {header && <div className="row header">
+                    <span className="col text-center p-1">{header}</span>
                 </div>}
-                <div className="row m-0">
-                    {tabs.map((t, idx) => <div className={"col clearfix tab " + (t === selectedTab && "active")} onClick={() => this.onTabClick(t)} key={idx}>{t.name}</div>)}
+                <div className="flex m-1 popup-content">
+                    <div className="row m-0">
+                        {tabs.map((t, idx) => <div className={"col m-0 tab " + (t === selectedTab && "active")} onClick={() => this.onTabClick(t.idx)} key={idx}>
+                            {t.name}
+                        </div>)}
+                    </div>
+                    <div className="tab-content">
+                        <div className="row">
+                            <div className="col text-center">
+                                <span className="badge badge-secondary address">
+                                    {selectedTab.content.xrpAddress}
+                                </span>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <ul className="col-5 pr-0 list-group list-group-flush list-content">
+                                <li className="row list-group-item list-item text-truncate">
+                                    <i className="col-1 fas fa-at"></i><span className="col-11">{selectedTab.content.ip}</span>
+                                </li>
+                                <li className="row list-group-item list-item text-truncate">
+                                    <i className="col-1 fa fa-cubes"></i><span className="col-11">{selectedTab.content.instanceCount}</span>
+                                </li>
+                            </ul>
+                            <ul className="col-7 pr-0 list-group list-group-flush list-content">
+                                <li className="row list-group-item list-item text-truncate">
+                                    <i className="col-1 fa fa-location-arrow"></i><span className="col-11">{this.getDisplayText(selectedTab.content.location, 10)}</span>
+                                </li>
+                                <li className="row list-group-item list-item text-truncate">
+                                    <i className="col-1 fa fa-hdd"></i><span className="col-11">{this.getDisplayText(selectedTab.content.size, 15)}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <span className="badge badge-secondary balance">
+                                    {this.getDisplayBalance(selectedTab.content.evrBalance)}<span className="text-small">EVR</span>
+                                </span>
+                                <span className="badge badge-secondary token">
+                                    {selectedTab.content.token}
+                                </span>
+                                {selectedTab.content.lastStatus && <span className="badge status">{selectedTab.content.lastStatus.component}</span>}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <ul className="list-group list-group-flush tab-content">
-                    {Object.keys(selectedTab.content).map((k, idx) => <li className="list-group-item item text-truncate" key={idx}><i>{k}&nbsp;:&nbsp;{selectedTab.content[k]}</i></li>)}
-                </ul>
-            </div>
+            </div >
         );
     }
 }

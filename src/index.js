@@ -9,18 +9,32 @@ if (window.isUnsupportedBrowser) {
 }
 else {
     window.adjustMapViewSize = function () {
+        const w = 255;
+        const h = 150;
         const mapView = document.getElementsByClassName("map-view")[0];
-        if (mapView) {
-            const w = 255;
-            const h = 150;
+        const parent = mapView.parentElement.parentElement;
 
-            const parent = mapView.parentElement.parentElement;
+        const calculateRatio = function () {
             const maxw = parent.clientWidth;
             const maxh = parent.clientHeight;
-            const ratio = Math.min(maxw / w, maxh / h);
+            return Math.min(maxw / w, maxh / h);
+        }
 
-            mapView.style.width = (w * ratio) + "px";
-            mapView.style.height = (h * ratio) + "px";
+        if (mapView) {
+            let ratio = calculateRatio();
+            // If ratio is 0, calculate the ratio again after 500ms.
+            // Because the map-view parent might not've resized yet.
+            if (ratio === 0) {
+                setTimeout(() => {
+                    ratio = calculateRatio();
+                    mapView.style.width = (w * ratio) + "px";
+                    mapView.style.height = (h * ratio) + "px";
+                }, 500);
+            }
+            else {
+                mapView.style.width = (w * ratio) + "px";
+                mapView.style.height = (h * ratio) + "px";
+            }
         }
     }
 
@@ -30,6 +44,11 @@ else {
             eventListScroll.style.height = (eventListScroll.parentElement.clientHeight - 300) + "px"
         }
     }
+
+    window.onresize = () => {
+        window.adjustMapViewSize();
+        window.adjustEventListScrollViewSize();
+    };
 
     ReactDOM.render(
         <App />,

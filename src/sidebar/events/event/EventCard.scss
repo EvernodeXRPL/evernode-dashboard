@@ -1,4 +1,4 @@
-@import "../../assets/variables";
+@import "../../../assets/variables";
 
 .event-card {
     background-color: $gray-100;
@@ -10,6 +10,10 @@
         padding: 0.3rem 0.6rem;
         font-weight: bold;
         opacity: 0.8;
+
+        .ledger {
+            float: right;
+        }
 
         &.event-host-reg {
             background-color: $host-reg-bg;
@@ -42,11 +46,27 @@
         &.event-refund-req {
             background-color: $refund-req-bg;
         }
+
+        &.event-reward {
+            background-color: $reward-bg;
+        }
+
+        &.event-instance-create {
+            background-color: $instance-create-bg;
+        }
+    
+        &.event-instance-timeout {
+            background-color: $instance-timeout-bg;
+        }
+    
+        &.event-instance-expire {
+            background-color: $instance-expire-bg;
+        }
     }
 
     .event-content {
         .event-item {
-            background-color: $gray-400;
+            background-color: $gray-100;
             border-bottom: 1px solid $gray-200;
             padding: 0.3rem 0.6rem;
             line-height: 1.3;
@@ -59,7 +79,6 @@
             i {
                 padding-right: 0.8rem;
                 overflow-x: hidden;
-                max-width: 100%;
             }
         }
     }

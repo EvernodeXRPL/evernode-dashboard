@@ -3,6 +3,7 @@ const { TableClient, AzureSASCredential } = require("@azure/data-tables");
 const signalR = require("@microsoft/signalr");
 
 const signalREvents = {
+    // Central streamer events.
     HostRegistered: "hostRegistered",
     HostDeregistered: "hostDeregistered",
     Redeem: "redeem",
@@ -10,17 +11,30 @@ const signalREvents = {
     RedeemError: "redeemError",
     RefundRequest: "refundRequest",
     AuditRequest: "auditRequest",
-    AuditSuccess: "auditSuccess"
+    AuditSuccess: "auditSuccess",
+    Reward: "reward",
+    // Host streamer events.
+    HostInstanceCreate: 'hostInstanceCreation',
+    HostInstanceTimeout: 'hostInstanceTimeout',
+    HostInstanceExpire: 'hostInstanceExpire',
+    HostInstanceCount: 'hostInstanceCount',
+    // These events aren't emitted from the host streamer yet.
+    // Anyway the underlying UI is wired up for later use when it's implemented.
+    HostOnline: 'hostOnline',
+    HostOffline: 'hostOffline'
 }
 
 const eventInfo = {
+    // Central streamer events.
     hostRegistered: {
         type: 'host-reg',
-        name: 'Host Registration'
+        name: 'Host Registration',
+        hostSilent: true
     },
     hostDeregistered: {
         type: 'host-dereg',
-        name: 'Host De-Registration'
+        name: 'Host De-Registration',
+        hostSilent: true
     },
     redeem: {
         type: 'redeem-req',
@@ -45,12 +59,50 @@ const eventInfo = {
     auditSuccess: {
         type: 'audit-suc',
         name: 'Audit Success'
+    },
+    reward: {
+        type: 'reward',
+        name: 'Reward'
+    },
+    // Host streamer events.
+    hostInstanceCreation: {
+        type: 'instance-create',
+        name: 'Instance Create'
+    },
+    hostInstanceTimeout: {
+        type: 'instance-timeout',
+        name: 'Instance Timeout'
+    },
+    hostInstanceExpire: {
+        type: 'instance-expire',
+        name: 'Instance Expire'
+    },
+    hostInstanceCount: {
+        type: 'instance-count',
+        name: 'Host Count Update',
+        hookSilent: true,
+        hostSilent: true
+    },
+    // These events aren't emitted from the host streamer yet.
+    // Anyway the underlying UI is wired up for later use when it's implemented.
+    hostOnline: {
+        type: 'online',
+        name: 'Online',
+        hookSilent: true,
+        hostSilent: true
+    },
+    hostOffline: {
+        type: 'offline',
+        name: 'Offline',
+        hookSilent: true,
+        hostSilent: true
     }
 }
 
 const events = {
     regionListLoaded: "regionListLoaded",
     hostEvent: "hostEvent",
+    hostUpdate: "hostUpdate",
     hookEvent: "hookEvent"
 }
 
@@ -66,6 +118,8 @@ class HostNode {
         this.location = node.location;
         this.size = node.size;
         this.token = node.token;
+        this.instanceCount = 0;
+        this.online = true;
 
         this.emitter = new EventEmitter();
     }
@@ -92,6 +146,8 @@ class EvernodeManager {
     async start() {
         await this.loadHosts();
         this.connectToSignalR(); // Connect to signalr asynchronously.
+        // This mock listener is used for UI testing to emit mock events
+        // this.mockListener()
     }
 
     async loadHosts() {
@@ -121,6 +177,132 @@ class EvernodeManager {
             this.emitter.emit(events.regionListLoaded, this.regions);
     }
 
+    // ----------------- Mock Events -------------------- //
+
+    generateString(length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = ' ';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+
+        return result;
+    }
+
+    mockListener() {
+        const evs = [signalREvents.Redeem,
+        signalREvents.RedeemSuccess,
+        signalREvents.RedeemError,
+        signalREvents.AuditRequest,
+        signalREvents.AuditSuccess,
+        signalREvents.HostDeregistered,
+        signalREvents.HostRegistered,
+        signalREvents.RefundRequest,
+        signalREvents.Reward,
+        signalREvents.HostInstanceCount,
+        signalREvents.HostInstanceCreate,
+        signalREvents.HostInstanceExpire,
+        signalREvents.HostInstanceTimeout];
+
+        let ledgerSeq = 1000;
+
+        setInterval(() => {
+            const iterations = (Math.floor(100000 + Math.random() * 900000)) % 4;
+            for (let i = 0; i < iterations; i++) {
+                const hosts = Object.keys(this.nodeLookup);
+                let event = evs[(Math.floor(100000 + Math.random() * 900000)) % evs.length];
+                ledgerSeq = ledgerSeq + 3;
+
+                let data = {
+                    host: (event === signalREvents.HostRegistered || event === signalREvents.HostDeregistered) ? this.generateString(34) :
+                        ((event !== signalREvents.AuditRequest && event !== signalREvents.AuditSuccess) ? hosts[(Math.floor(100000 + Math.random() * 900000)) % hosts.length] : null),
+                    auditor: (event === signalREvents.AuditRequest || event === signalREvents.AuditSuccess) ? this.generateString(34) : null,
+                    ledgerSeq: (event === signalREvents.HostRegistered || event === signalREvents.HostDeregistered || !event.startsWith('host')) ? ledgerSeq : null,
+                    evrBalance: null,
+                    count: null,
+                    amount: null,
+                    moments: null
+                }
+
+                let info = eventInfo[event];
+                // If info map object is not found for this event, Return without handling.
+                if (!info)
+                    return;
+
+                const region = data.host ? this.regions[this.nodeLookup[data.host]] : null;
+                const node = region?.nodes[data.host];
+
+                if (node) {
+                    if (!node.online) {
+                        event = signalREvents.HostOnline;
+                        info = eventInfo[event];
+                    }
+
+                    if (event === signalREvents.Reward) {
+                        data.amount = (Math.floor(100000 + Math.random() * 900000)) % 5 + 0.1;
+                        data.evrBalance = +node.evrBalance + data.amount;
+                    }
+                    else if (event === signalREvents.Redeem) {
+                        data.moments = ((Math.floor(100000 + Math.random() * 900000)) + 1) % 10;
+                    }
+                    else if (event === signalREvents.HostInstanceCount) {
+                        const count = (Math.floor(100000 + Math.random() * 900000)) % 5;
+                        data.count = count;
+                    }
+                }
+
+
+                if (node) {
+                    let hostUpdated = false;
+                    if (event === signalREvents.Reward) {
+                        node.evrBalance = data.evrBalance;
+                        hostUpdated = true;
+                    }
+                    else if (event === signalREvents.HostOnline) {
+                        node.online = true;
+                        hostUpdated = true;
+                    }
+                    else if (event === signalREvents.HostOffline) {
+                        node.online = false;
+                        hostUpdated = true;
+                    }
+                    else if (event === signalREvents.HostInstanceCount) {
+                        node.instanceCount = data.count;
+                        hostUpdated = true;
+                    }
+
+                    if (!info.hostSilent) {
+                        node.emitter.emit(events.hostEvent, {
+                            type: info.type,
+                            name: info.name,
+                            ledgerSeq: data.ledgerSeq
+                        });
+                    }
+                    // If the event is host silent, but host object is updated we send hostUpdate event.
+                    else if (hostUpdated) {
+                        node.emitter.emit(events.hostUpdate);
+                    }
+                }
+
+                if (!info.hookSilent) {
+                    this.emitter.emit(events.hookEvent, {
+                        type: info.type,
+                        name: info.name,
+                        region: region?.name,
+                        address: data.host || data.auditor,
+                        amount: (data.amount && `${data.amount} EVR`) ||
+                            (data.moments && `${data.moments} ${node ? node.token : ''}`),
+                        nodeId: node?.idx,
+                        ledgerSeq: data.ledgerSeq
+                    });
+                }
+            }
+        }, 3000);
+    }
+
+    // -------------------------------------------------- //
+
     async connectToSignalR() {
         try {
             this.signalRConnection = new signalR.HubConnectionBuilder()
@@ -144,33 +326,56 @@ class EvernodeManager {
             const event = message.event;
             const data = message.data;
 
-            const info = eventInfo[event];
+            let info = eventInfo[event];
+            // If info map object is not found for this event, Return without handling.
+            if (!info)
+                return;
 
-            // If host registered or deregistered, we only show the event in the hook.
-            if (event === signalREvents.HostRegistered || event === signalREvents.HostDeregistered) {
-                this.emitter.emit(events.hookEvent, {
-                    type: info.type,
-                    name: info.name,
-                    address: data.host
-                });
-            }
-            else {
-                const region = data.host ? this.regions[this.nodeLookup[data.host]] : null;
-                const node = region?.nodes[data.host];
+            const region = data.host ? this.regions[this.nodeLookup[data.host]] : null;
+            const node = region?.nodes[data.host];
 
-                if (node) {
-                    node.emitter.emit(events.hostEvent, {
-                        type: info.type,
-                        name: info.name
-                    });
+            if (node) {
+                let hostUpdated = false;
+                if (event === signalREvents.Reward) {
+                    node.evrBalance = data.evrBalance;
+                    hostUpdated = true;
+                }
+                else if (event === signalREvents.HostOnline) {
+                    node.online = true;
+                    hostUpdated = true;
+                }
+                else if (event === signalREvents.HostOffline) {
+                    node.online = false;
+                    hostUpdated = true;
+                }
+                else if (event === signalREvents.HostInstanceCount) {
+                    node.instanceCount = data.count;
+                    hostUpdated = true;
                 }
 
+                if (!info.hostSilent) {
+                    node.emitter.emit(events.hostEvent, {
+                        type: info.type,
+                        name: info.name,
+                        ledgerSeq: data.ledgerSeq
+                    });
+                }
+                // If the event is host silent, but host object is updated we send hostUpdate event.
+                else if (hostUpdated) {
+                    node.emitter.emit(events.hostUpdate);
+                }
+            }
+
+            if (!info.hookSilent) {
                 this.emitter.emit(events.hookEvent, {
                     type: info.type,
                     name: info.name,
                     region: region?.name,
                     address: data.host || data.auditor,
-                    nodeId: node?.idx
+                    amount: (data.amount && `${data.amount} EVR`) ||
+                        (data.moments && `${data.moments} ${node ? node.token : ''}`),
+                    nodeId: node?.idx,
+                    ledgerSeq: data.ledgerSeq
                 });
             }
         });
