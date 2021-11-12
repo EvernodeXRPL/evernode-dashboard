@@ -99,6 +99,13 @@ const eventInfo = {
     }
 }
 
+const sashiErrorCodes = {
+    internal_error: 'Internal error occured.',
+    max_alloc_reached: 'Max instance count reached.',
+    contractid_bad_format: 'Provided invalid contract id format.',
+    docker_image_invalid: 'Provided invalid docker image.'
+}
+
 const events = {
     regionListLoaded: "regionListLoaded",
     hostEvent: "hostEvent",
@@ -222,7 +229,8 @@ class EvernodeManager {
                     evrBalance: null,
                     count: null,
                     amount: null,
-                    moments: null
+                    moments: null,
+                    reason: event === signalREvents.RedeemError ? 'max_alloc_reached' : null
                 }
 
                 let info = eventInfo[event];
@@ -291,6 +299,7 @@ class EvernodeManager {
                         name: info.name,
                         region: region?.name,
                         address: data.host || data.auditor,
+                        message: data.reason && sashiErrorCodes[data.reason],
                         amount: (data.amount && `${data.amount} EVR`) ||
                             (data.moments && `${data.moments} ${node ? node.token : ''}`),
                         nodeId: node?.idx,
@@ -372,6 +381,7 @@ class EvernodeManager {
                     name: info.name,
                     region: region?.name,
                     address: data.host || data.auditor,
+                    message: data.reason && sashiErrorCodes[data.reason],
                     amount: (data.amount && `${data.amount} EVR`) ||
                         (data.moments && `${data.moments} ${node ? node.token : ''}`),
                     nodeId: node?.idx,
