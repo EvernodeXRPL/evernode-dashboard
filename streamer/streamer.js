@@ -1,4 +1,5 @@
-const { EvernodeHook, HookEvents, RippleAPIWrapper, XrplAccount } = require('evernode-js-client');
+const { Defaults, HookClient, HookEvents, XrplAccount, XrplApi } = require("evernode-js-client");
+
 const fs = require('fs');
 const azure = require('azure-storage');
 const fetch = require('node-fetch');
@@ -10,9 +11,13 @@ const EVR = 'EVR';
 
 class Streamer {
     constructor(hookAddress = null, rippledServer = null) {
-        this.rippleAPI = new RippleAPIWrapper(rippledServer);
-        this.evernodeHook = new EvernodeHook(this.rippleAPI, hookAddress);
-        this.hookAddress = this.evernodeHook.account.address;
+        const xrplApi = new XrplApi(rippledServer);
+        // Override defaults the library uses.
+        Defaults.set({
+            hookAddress: hookAddress,
+            xrplApi: xrplApi
+        });
+        this.evernodeHook = new HookClient(hookAddress);
     }
 
     async start() {
@@ -24,8 +29,10 @@ class Streamer {
             !this.config.azure_table.host || !this.config.azure_table.table || !this.config.azure_table.sas)
             throw new Error(`Config file ${CONFIG_PATH} is missing required fields.`);
 
-        await this.rippleAPI.connect().catch(error => { throw error });
-        this.evernodeHook.subscribe();
+        console.log('connectinggg')
+        await this.evernodeHook.connect().catch(error => { throw error });
+        console.log('connected')
+        await this.evernodeHook.subscribe();
         this.tableSvc = azure.createTableServiceWithSas(this.config.azure_table.host, this.config.azure_table.sas);
 
         await this.updateHostsTable();
@@ -80,6 +87,18 @@ class Streamer {
                 ledgerSeq: ev.transaction.LastLedgerSequence
             });
         });
+
+        this.evernodeHook.events.on(HookEvents.RefundSuccess, async (ev) => {
+            console.log(ev)
+            await this.broadcast(HookEvents.RefundSuccess, {
+                host: ev.transaction.Destination,
+                amount: ev.amount,
+                issuer: ev.issuer,
+                currency: ev.currency,
+                ledgerSeq: ev.transaction.LastLedgerSequence
+            });
+        });
+
         this.evernodeHook.events.on(HookEvents.AuditRequest, async (ev) => {
             await this.broadcast(HookEvents.AuditRequest, {
                 auditor: ev.auditor,
@@ -113,9 +132,17 @@ class Streamer {
             }
         });
 
-        // [Todo]
-        // 1. audit success reward event.
-        // 2. refund success payment.
+        this.evernodeHook.events.on(HookEvents.Recharge, async (ev) => {
+            console.log(ev);
+            await this.broadcast(HookEvents.Recharge, {
+                host: ev.host,
+                amount: ev.value,
+                issuer: ev.issuer,
+                currency: ev.currency,
+                ledgerSeq: ev.transaction.LastLedgerSequence
+            });
+        });
+
     }
 
     // Get VM list from vultr and match them with hosts from the hook state. Get EVR balance of each host.
@@ -127,7 +154,7 @@ class Streamer {
         if (hostObjs && hostObjs.length > 0) {
             await Promise.all(hostObjs.map(hostObj => this.initHostAccountData(hostObj)))
 
-            const latestHosts = await this.evernodeHook.getHosts();
+            const latestHosts = await this.evernodeHook.getAllHosts();
             console.log(`Got ${latestHosts.length} hosts from evernode.`);
             const ent = azure.TableUtilities.entityGenerator;
             const tableBatch = new azure.TableBatch();
@@ -135,9 +162,15 @@ class Streamer {
                 const data = this.hostAccounts[host.address];
                 if (data) {
                     data.state = {
-                        txHash: host.txHash,
-                        instanceSize: host.instanceSize,
-                        location: host.location
+                        cpuMicroSec: host.cpuMicroSec,
+                        ramMb: host.ramMb,
+                        diskMb: host.diskMb,
+                        location: host.countryCode,
+                        description: host.description,
+                        lastHeartbeatLedgerIndex: host.lastHeartbeatLedgerIndex,
+                        accumulatedAmount: host.accumulatedAmount,
+                        lockedTokenAmount: host.lockedTokenAmount,
+                        active: host.active
                     };
                     tableBatch.insertOrReplaceEntity({
                         PartitionKey: ent.String(HOST_PARTITION_KEY),
@@ -147,9 +180,15 @@ class Streamer {
                         address: ent.String(data.hostAccount.address),
                         token: ent.String(data.hostAccount.token),
                         evrBalance: ent.String(data.evrBalance),
-                        txHash: ent.String(data.state.txHash),
-                        instanceSize: ent.String(data.state.instanceSize),
-                        location: ent.String(data.state.location)
+                        cpuMicroSec: ent.Int32(data.state.cpuMicroSec),
+                        ramMb: ent.Int32(data.state.ramMb),
+                        diskMb: ent.Int32(data.state.diskMb),
+                        location: ent.String(data.state.countryCode),
+                        description: ent.String(data.state.description),
+                        lastHeartbeatLedgerIndex: ent.Int64(data.state.lastHeartbeatLedgerIndex),
+                        accumulatedAmount: ent.Double(data.state.accumulatedAmount),
+                        lockedTokenAmount: ent.Int64(data.state.lockedTokenAmount),
+                        active: ent.Boolean(data.state.active)
                     });
                 }
             });
@@ -240,9 +279,9 @@ class Streamer {
     }
 
     async getEvrBalance(address, secret) {
-        const xrpAcc = new XrplAccount(this.rippleAPI, address, secret);
-        const lines = await xrpAcc.getTrustLines(EVR, this.hookAddress);
-        return lines.length > 0 ? lines[0].state.balance : '0';
+        const xrpAcc = new XrplAccount(address, secret);
+        const lines = await xrpAcc.getTrustLines(EVR, this.evernodeHook.hookAddress);
+        return lines.length > 0 ? lines[0].balance : '0';
     }
 }
 async function main() {
