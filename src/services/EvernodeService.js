@@ -4,15 +4,18 @@ const signalR = require("@microsoft/signalr");
 
 const signalREvents = {
     // Central streamer events.
-    HostRegistered: "hostRegistered",
-    HostDeregistered: "hostDeregistered",
-    Redeem: "redeem",
-    RedeemSuccess: "redeemSuccess",
-    RedeemError: "redeemError",
-    RefundRequest: "refundRequest",
-    AuditRequest: "auditRequest",
-    AuditSuccess: "auditSuccess",
-    Reward: "reward",
+    HostRegistered: "HostRegistered",
+    HostDeregistered: "HostDeregistered",
+    Redeem: "Redeem",
+    RedeemSuccess: "RredeemSuccess",
+    RedeemError: "RedeemError",
+    Refund: "Refund",
+    Audit: "Audit",
+    AuditAssignment: "AuditAssignment",
+    AuditSuccess: "AuditSuccess",
+    Reward: "Reward",
+    Recharge: "Recharge",
+    Offline: "Offline",
     // Host streamer events.
     HostInstanceCreate: 'hostInstanceCreation',
     HostInstanceTimeout: 'hostInstanceTimeout',
@@ -26,43 +29,55 @@ const signalREvents = {
 
 const eventInfo = {
     // Central streamer events.
-    hostRegistered: {
+    HostRegistered: {
         type: 'host-reg',
         name: 'Host Registration',
         hostSilent: true
     },
-    hostDeregistered: {
+    HostDeregistered: {
         type: 'host-dereg',
         name: 'Host De-Registration',
         hostSilent: true
     },
-    redeem: {
+    Redeem: {
         type: 'redeem-req',
         name: 'Redeem Request'
     },
-    redeemSuccess: {
+    RedeemSuccess: {
         type: 'redeem-suc',
         name: 'Redeem Success'
     },
-    redeemError: {
+    RedeemError: {
         type: 'redeem-err',
         name: 'Redeem Error'
     },
-    refundRequest: {
+    Refund: {
         type: 'refund-req',
         name: 'Refund Request'
     },
-    auditRequest: {
+    Audit: {
         type: 'audit-req',
         name: 'Audit Request'
     },
-    auditSuccess: {
+    AuditSuccess: {
         type: 'audit-suc',
         name: 'Audit Success'
     },
-    reward: {
+    Reward: {
         type: 'reward',
         name: 'Reward'
+    },
+    Offline: {
+        type: 'offline',
+        name: 'Offline',
+        hookSilent: true,
+        hostSilent: true
+    },
+    Recharge: {
+        type: 'recharge',
+        name: 'Recharge',
+        hookSilent: true,
+        hostSilent: true
     },
     // Host streamer events.
     hostInstanceCreation: {
@@ -123,10 +138,15 @@ class HostNode {
         this.ip = node.ip;
         this.evrBalance = node.evrBalance;
         this.location = node.location;
-        this.size = node.size;
         this.token = node.token;
         this.instanceCount = 0;
-        this.online = true;
+        this.online = node.active;
+        this.cpuMicroSec = node.cpuMicroSec;
+        this.description = node.description;
+        this.diskMb = node.diskMb;
+        this.lastHeartbeatLedgerIndex = node.lastHeartbeatLedgerIndex;
+        this.lockedTokenAmount = node.lockedTokenAmount
+        this.ramMb = node.ramMb;
 
         this.emitter = new EventEmitter();
     }
@@ -164,18 +184,24 @@ class EvernodeManager {
             new AzureSASCredential(window.dashboardConfig.tableSas));
 
         const rows = await tableClient.listEntities({ queryOptions: { filter: `PartitionKey eq '${window.dashboardConfig.partitionKey}'` } });
-
         let isListUpdated = false;
         for await (const row of rows) {
             if (this.addNode({
                 idx: parseInt(row.rowKey) + 1,
-                address: row.address,
-                region: row.region,
-                evrBalance: row.evrBalance,
                 ip: row.ip,
-                location: row.location,
-                size: row.instanceSize,
+                region: row.region,
+                address: row.address,
                 token: row.token,
+                evrBalance: row.evrBalance,
+                location: row.location,
+                cpuMicroSec: row.cpuMicroSec,
+                ramMb: row.ramMb,
+                diskMb: row.diskMb,
+                description: row.description,
+                lastHeartbeatLedgerIndex: row.lastHeartbeatLedgerIndex,
+                accumulatedAmount: row.accumulatedAmount,
+                lockedTokenAmount: row.lockedTokenAmount,
+                active: row.active
             })) {
                 isListUpdated = true;
             }
@@ -201,11 +227,11 @@ class EvernodeManager {
         const evs = [signalREvents.Redeem,
         signalREvents.RedeemSuccess,
         signalREvents.RedeemError,
-        signalREvents.AuditRequest,
+        signalREvents.Audit,
         signalREvents.AuditSuccess,
         signalREvents.HostDeregistered,
         signalREvents.HostRegistered,
-        signalREvents.RefundRequest,
+        signalREvents.Refund,
         signalREvents.Reward,
         signalREvents.HostInstanceCount,
         signalREvents.HostInstanceCreate,
@@ -340,6 +366,18 @@ class EvernodeManager {
             if (!info)
                 return;
 
+            // Handle offline event seperately since it's receiving an array of host addresses.
+            if (event === signalREvents.Offline) {
+                console.log(`${info.name} event received.`);
+                data.forEach(host => {
+                    const region = this.regions[this.nodeLookup[host]];
+                    const node = region?.nodes[host];
+                    node.online = false;
+                    node.emitter.emit(events.hostUpdate);
+                });
+                return;
+            }
+
             const region = data.host ? this.regions[this.nodeLookup[data.host]] : null;
             const node = region?.nodes[data.host];
 
@@ -359,6 +397,9 @@ class EvernodeManager {
                 }
                 else if (event === signalREvents.HostInstanceCount) {
                     node.instanceCount = data.count;
+                    hostUpdated = true;
+                } else if (event === signalREvents.Recharge) {
+                    node.online = true;
                     hostUpdated = true;
                 }
 
@@ -380,7 +421,7 @@ class EvernodeManager {
                     type: info.type,
                     name: info.name,
                     region: region?.name,
-                    address: data.host || data.auditor,
+                    address: event === signalREvents.Refund ? data.redeemRefId : (data.host || data.auditor), // Refund event only has tx id. Add it to address field for display.
                     message: data.reason && sashiErrorCodes[data.reason],
                     amount: (data.amount && `${data.amount} EVR`) ||
                         (data.moments && `${data.moments} ${node ? node.token : ''}`),

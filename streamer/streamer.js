@@ -1,4 +1,4 @@
-const { Defaults, HookClient, HookEvents, XrplAccount, XrplApi } = require("evernode-js-client");
+const { Defaults, HookClient, HookEvents, XrplAccount, XrplApiEvents, XrplApi } = require("../../evernode-js-lib/dist");
 
 const fs = require('fs');
 const azure = require('azure-storage');
@@ -29,13 +29,47 @@ class Streamer {
             !this.config.azure_table.host || !this.config.azure_table.table || !this.config.azure_table.sas)
             throw new Error(`Config file ${CONFIG_PATH} is missing required fields.`);
 
-        console.log('connectinggg')
         await this.evernodeHook.connect().catch(error => { throw error });
-        console.log('connected')
         await this.evernodeHook.subscribe();
         this.tableSvc = azure.createTableServiceWithSas(this.config.azure_table.host, this.config.azure_table.sas);
 
         await this.updateHostsTable();
+
+        let lastCheckedMoment = null;
+
+        this.evernodeHook.xrplApi.on(XrplApiEvents.LEDGER, async (e) => {
+            const currentMoment = await this.evernodeHook.getMoment(e.ledger_index);
+            if (currentMoment % this.evernodeHook.hookConfig.hostHeartbeatFreq === 0 && currentMoment !== lastCheckedMoment) {
+                lastCheckedMoment = currentMoment;
+                const allHosts = await this.evernodeHook.getAllHosts();
+                const offlineHosts = allHosts.filter(h => !h.active);
+                console.log(`Found ${offlineHosts.length} offline hosts.`); 
+                if (offlineHosts.length > 0) {
+                    const addresses = offlineHosts.map(h => h.address);
+                    await this.broadcast('Offline', addresses);
+
+                    const ent = azure.TableUtilities.entityGenerator;
+                    const tableBatch = new azure.TableBatch();
+                    offlineHosts.forEach(host => {
+                        const data = this.hostAccounts[host.address];
+                        if (data) {
+                            if (data.state.active) {
+                                data.state.active = false;
+                                tableBatch.mergeEntity({
+                                    PartitionKey: ent.String(HOST_PARTITION_KEY),
+                                    RowKey: ent.String(data.nodeid.toString()),
+                                    active: ent.Boolean(data.state.active)
+                                });
+                            }
+                        }
+                    });
+                    if (tableBatch.size() > 0) {
+                        this.tableSvc.executeBatch(this.config.azure_table.table, tableBatch, (err) => err && console.error(err));
+                        console.log(`Updated ${tableBatch.size()} hosts in table storage for offline status.`);
+                    }
+                }
+            }
+        });
 
         this.evernodeHook.events.on(HookEvents.Redeem, async (ev) => {
             await this.broadcast(HookEvents.Redeem, {
@@ -81,26 +115,15 @@ class Streamer {
                 ledgerSeq: ev.transaction.LastLedgerSequence
             });
         });
-        this.evernodeHook.events.on(HookEvents.RefundRequest, async (ev) => {
-            await this.broadcast(HookEvents.RefundRequest, {
-                redeemTxHash: ev.redeemTxHash,
+        this.evernodeHook.events.on(HookEvents.Refund, async (ev) => {
+            await this.broadcast(HookEvents.Refund, {
+                redeemRefId: ev.redeemRefId,
                 ledgerSeq: ev.transaction.LastLedgerSequence
             });
         });
 
-        this.evernodeHook.events.on(HookEvents.RefundSuccess, async (ev) => {
-            console.log(ev)
-            await this.broadcast(HookEvents.RefundSuccess, {
-                host: ev.transaction.Destination,
-                amount: ev.amount,
-                issuer: ev.issuer,
-                currency: ev.currency,
-                ledgerSeq: ev.transaction.LastLedgerSequence
-            });
-        });
-
-        this.evernodeHook.events.on(HookEvents.AuditRequest, async (ev) => {
-            await this.broadcast(HookEvents.AuditRequest, {
+        this.evernodeHook.events.on(HookEvents.Audit, async (ev) => {
+            await this.broadcast(HookEvents.Audit, {
                 auditor: ev.auditor,
                 ledgerSeq: ev.transaction.LastLedgerSequence
             });
@@ -133,7 +156,21 @@ class Streamer {
         });
 
         this.evernodeHook.events.on(HookEvents.Recharge, async (ev) => {
-            console.log(ev);
+            const host = this.hostAccounts[ev.host];
+            if (host) {
+                if (!host.state.active) {
+                    // Update table storage as well.
+                    host.state.active = true;
+                    const ent = azure.TableUtilities.entityGenerator;
+                    const rowData = {
+                        PartitionKey: ent.String(HOST_PARTITION_KEY),
+                        RowKey: ent.String(host.nodeid.toString()),
+                        active: ent.Boolean(host.state.active)
+                    };
+                    // Update the relavent host with the latest active status.
+                    this.tableSvc.mergeEntity(this.config.azure_table.table, rowData, (err) => err && console.error(err));
+                }
+            }
             await this.broadcast(HookEvents.Recharge, {
                 host: ev.host,
                 amount: ev.value,
@@ -183,7 +220,7 @@ class Streamer {
                         cpuMicroSec: ent.Int32(data.state.cpuMicroSec),
                         ramMb: ent.Int32(data.state.ramMb),
                         diskMb: ent.Int32(data.state.diskMb),
-                        location: ent.String(data.state.countryCode),
+                        location: ent.String(data.state.location),
                         description: ent.String(data.state.description),
                         lastHeartbeatLedgerIndex: ent.Int64(data.state.lastHeartbeatLedgerIndex),
                         accumulatedAmount: ent.Double(data.state.accumulatedAmount),

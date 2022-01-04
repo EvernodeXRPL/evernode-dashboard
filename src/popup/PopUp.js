@@ -96,7 +96,7 @@ class PopUp extends React.Component {
                                     <i className="col-1 fa fa-location-arrow"></i><span className="col-11">{this.getDisplayText(selectedTab.content.location, 10)}</span>
                                 </li>
                                 <li className="row list-group-item list-item text-truncate">
-                                    <i className="col-1 fa fa-hdd"></i><span className="col-11">{this.getDisplayText(selectedTab.content.size, 15)}</span>
+                                    <i className="col-1 fa fa-hdd"></i><span className="col-11">{this.getDisplayText(`CPU:${selectedTab.content.cpuMicroSec};RAM:${selectedTab.content.ramMb};Disk:${selectedTab.content.diskMb}`, 15)}</span>
                                 </li>
                             </ul>
                         </div>

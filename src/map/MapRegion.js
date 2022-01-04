@@ -69,13 +69,18 @@ class MapRegion extends React.Component {
         const tabs = nodeList.map((n) => {
             return {
                 idx: n.idx,
-                name: `Host ${n.idx}`,
+                name: `Host ${n.idx} (${n.description})`,
                 content: {
                     ip: n.ip,
                     evrBalance: n.evrBalance,
                     xrpAddress: n.address,
                     location: n.location,
-                    size: n.size,
+                    cpuMicroSec: n.cpuMicroSec,
+                    description: n.description,
+                    diskMb: n.diskMb,
+                    ramMb: n.ramMb,
+                    lastHeartbeatLedgerIndex: n.lastHeartbeatLedgerIndex,
+                    lockedTokenAmount: n.lockedTokenAmount,
                     token: n.token,
                     instanceCount: n.instanceCount,
                     lastStatus: statusComponents.find(s => s.idx === n.idx)
