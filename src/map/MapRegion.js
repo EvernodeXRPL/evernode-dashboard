@@ -69,7 +69,7 @@ class MapRegion extends React.Component {
         const tabs = nodeList.map((n) => {
             return {
                 idx: n.idx,
-                name: `Host ${n.idx} (${n.description})`,
+                name: `Host ${n.idx}`,
                 content: {
                     ip: n.ip,
                     evrBalance: n.evrBalance,

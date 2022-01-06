@@ -84,19 +84,25 @@ class PopUp extends React.Component {
                         </div>
                         <div className="row">
                             <ul className="col-5 pr-0 list-group list-group-flush list-content">
-                                <li className="row list-group-item list-item text-truncate">
+                                <li className="row list-group-item list-item text-truncate" data-toggle="tooltip" data-placement="top" title="IP">
                                     <i className="col-1 fas fa-at"></i><span className="col-11">{selectedTab.content.ip}</span>
                                 </li>
-                                <li className="row list-group-item list-item text-truncate">
-                                    <i className="col-1 fa fa-cubes"></i><span className="col-11">{selectedTab.content.instanceCount}</span>
+                                <li className="row list-group-item list-item text-truncate" data-toggle="tooltip" data-placement="top" title="CPU micro seconds">
+                                    <i className="col-1 fas fa-microchip"></i><span className="col-11">{selectedTab.content.cpuMicroSec} &#181;s</span>
                                 </li>
+                                <li className="row list-group-item list-item text-truncate" data-toggle="tooltip" data-placement="top" title="Disk">
+                                    <i className="col-1 fa fa-hdd"></i><span className="col-11">{selectedTab.content.diskMb} MB</span>
+                                </li>                                
                             </ul>
                             <ul className="col-7 pr-0 list-group list-group-flush list-content">
-                                <li className="row list-group-item list-item text-truncate">
+                                <li className="row list-group-item list-item text-truncate" data-toggle="tooltip" data-placement="top" title="Location">
                                     <i className="col-1 fa fa-location-arrow"></i><span className="col-11">{this.getDisplayText(selectedTab.content.location, 10)}</span>
                                 </li>
-                                <li className="row list-group-item list-item text-truncate">
-                                    <i className="col-1 fa fa-hdd"></i><span className="col-11">{this.getDisplayText(`CPU:${selectedTab.content.cpuMicroSec};RAM:${selectedTab.content.ramMb};Disk:${selectedTab.content.diskMb}`, 15)}</span>
+                                <li className="row list-group-item list-item text-truncate" data-toggle="tooltip" data-placement="top" title="RAM">
+                                    <i className="col-1 fas fa-memory"></i><span className="col-11">{selectedTab.content.ramMb} MB</span>
+                                </li>
+                                <li className="row list-group-item list-item text-truncate" data-toggle="tooltip" data-placement="top" title="Description">
+                                    <i className="col-1 fas fa-book"></i><span className="col-11">{this.getDisplayText(selectedTab.content.description, 26)}</span>
                                 </li>
                             </ul>
                         </div>

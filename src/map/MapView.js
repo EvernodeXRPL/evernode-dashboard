@@ -30,7 +30,7 @@ class MapView extends React.Component {
                     <div className="map-view">
                         <div className="title-container p-3 d-inline-flex">
                             <h3>Evernode Dashboard</h3>
-                            <h5 className="pl-3 replicator-link"><a className="badge badge-secondary" href="https://hpdemo.evernode.org/replicator"><i className="fa fa-link mr-1"></i>Replicator Cluster Dashboard</a></h5>
+                            <h5 className="pl-3 replicator-link"><a className="badge badge-secondary" href="https://hpdemo.evernode.org/replicator" target={'_blank'} rel="noreferrer"><i className="fa fa-link mr-1"></i>Replicator Cluster Dashboard</a></h5>
                         </div>
                         {nodeList.map((n, idx) => <MapRegion key={idx} region={n} />)}
                     </div>
