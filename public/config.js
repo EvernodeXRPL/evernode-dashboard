@@ -7,133 +7,97 @@ window.dashboardConfig = {
     tableSas: "?sv=2018-03-28&si=dashboard&tn=systemdashboard&sig=X4t%2BXnQN%2FR923y8YzfF66eOX8uf6GA6tXVQSdqs0dEA%3D"
 }
 
-window.dashboardConfig.regions = [
+window.dashboardConfig.countries = [
     {
-        id: "syd",
-        name: "Sydney",
-        country: "AU",
-        pos: { anchor: "tl", top: "86%", left: "92.5%" }
+        name: "Australia",
+        code: "AU",
+        pos: { anchor: "tl", top: "82%", left: "88.5%" }
     },
     {
-        id: "yto",
-        name: "Toronto",
-        country: "CA",
-        pos: { anchor: "tr", top: "40%", left: "22.5%" }
+        name: "Canada",
+        code: "CA",
+        pos: { anchor: "tr", top: "30%", left: "18.5%" }
     },
     {
-        id: "ams",
-        name: "Amsterdam",
-        country: "NL",
-        pos: { anchor: "tl", top: "35%", left: "48%" }
+        name: "Netherlands",
+        code: "NL",
+        pos: { anchor: "tl", top: "35%", left: "49%" }
     },
     {
-        id: "atl",
-        name: "Atlanta",
-        country: "US",
-        pos: { anchor: "br", top: "47.5%", left: "22%" }
+        name: "United States",
+        code: "US",
+        pos: { anchor: "tr", top: "43.5%", left: "18%" }
     },
     {
-        id: "cdg",
-        name: "Paris",
-        country: "FR",
+        name: "France",
+        code: "FR",
         pos: { anchor: "br", top: "39.5%", left: "48.5%" }
     },
     {
-        id: "dfw",
-        name: "Dallas",
-        country: "US",
-        pos: { anchor: "tr", top: "47%", left: "19%" }
-    },
-    {
-        id: "ewr",
-        name: "New Jersey",
-        country: "US",
-        pos: { anchor: "br", top: "43%", left: "25.3%" }
-    },
-    {
-        id: "fra",
-        name: "Frankfurt",
-        country: "DE",
+        name: "Germany",
+        code: "DE",
         pos: { anchor: "br", top: "37%", left: "49.5%" }
     },
     {
-        id: "icn",
-        name: "Seoul",
-        country: "KR",
+        name: "Korea",
+        code: "KR",
         pos: { anchor: "bl", top: "44%", left: "85%" }
     },
     {
-        id: "lax",
-        name: "Los Angeles",
-        country: "US",
-        pos: { anchor: "tr", top: "47.5%", left: "12.5%" }
-    },
-    {
-        id: "lhr",
-        name: "London",
-        country: "GB",
+        name: "United Kingdom",
+        code: "GB",
         pos: { anchor: "bl", top: "36%", left: "46.7%" }
     },
     {
-        id: "mia",
-        name: "Miami",
-        country: "US",
-        pos: { anchor: "br", top: "52%", left: "23%" }
-    },
-    {
-        id: "nrt",
-        name: "Tokyo",
-        country: "JP",
+        name: "Japan",
+        code: "JP",
         pos: { anchor: "tl", top: "44%", left: "88.5%" }
     },
     {
-        id: "ord",
-        name: "Chicago",
-        country: "US",
-        pos: { anchor: "tr", top: "42%", left: "21.8%" }
-    },
-    {
-        id: "sea",
-        name: "Seattle",
-        country: "US",
-        pos: { anchor: "tr", top: "37.5%", left: "12.3%" }
-    },
-    {
-        id: "sgp",
         name: "Singapore",
-        country: "SG",
+        code: "SG",
         pos: { anchor: "tl", top: "65%", left: "79%" }
     },
     {
-        id: "sjc",
-        name: "Silicon Valley",
-        country: "US",
-        pos: { anchor: "tr", top: "31.8%", left: "11.5%" }
+        name: "Sweden",
+        code: "SE",
+        pos: { anchor: "br", top: "28%", left: "51%" }
     },
     {
-        id: "sto",
-        name: "Stockholm",
-        country: "SE",
-        pos: { anchor: "br", top: "30.8%", left: "52%" }
-    },
-    {
-        id: "mex",
-        name: "Mexico City",
-        country: "MX",
+        name: "Mexico",
+        code: "MX",
         pos: { anchor: "br", top: "55.8%", left: "17%" }
     },
     {
-        id: "col",
-        name: "Colombo",
-        country: "LK",
-        pos: { anchor: "tl", top: "62.8%", left: "71.5%" },
-        skipCycling: true
+        name: "Sri Lanka",
+        code: "LK",
+        pos: { anchor: "tl", top: "62.8%", left: "71.5%" }
+    },
+    {
+        name: "India",
+        code: "IN",
+        pos: { anchor: "tl", top: "57%", left: "71%" }
+    },
+    {
+        name: "Russia",
+        code: "RU",
+        pos: { anchor: "tl", top: "25%", left: "71%" }
+    },
+    {
+        name: "Saudi Arabia",
+        code: "SA",
+        pos: { anchor: "br", top: "54%", left: "61%" }
+    },
+    {
+        name: "China",
+        code: "CN",
+        pos: { anchor: "tl", top: "48%", left: "76%" }
     }
 ];
 
-window.dashboardConfig.specialRegionAssignments = [
-    {
-        idx: 41,
-        regionId: "col"
-    }
-]
+// Un mapped countries will be assigned to this and will show in a map corner.
+window.dashboardConfig.defCountry = {
+    name: "Unrecognized",
+    code: "Unrecognized",
+    pos: { anchor: "tr", top: "82%", left: "10%" }
+};

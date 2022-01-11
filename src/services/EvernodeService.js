@@ -21,10 +21,6 @@ const signalREvents = {
     HostInstanceTimeout: 'hostInstanceTimeout',
     HostInstanceExpire: 'hostInstanceExpire',
     HostInstanceCount: 'hostInstanceCount',
-    // These events aren't emitted from the host streamer yet.
-    // Anyway the underlying UI is wired up for later use when it's implemented.
-    HostOnline: 'hostOnline',
-    HostOffline: 'hostOffline'
 }
 
 const eventInfo = {
@@ -75,9 +71,7 @@ const eventInfo = {
     },
     Recharge: {
         type: 'recharge',
-        name: 'Recharge',
-        hookSilent: true,
-        hostSilent: true
+        name: 'Recharge'
     },
     // Host streamer events.
     hostInstanceCreation: {
@@ -122,22 +116,21 @@ const sashiErrorCodes = {
 }
 
 const events = {
-    regionListLoaded: "regionListLoaded",
+    countryListLoaded: "countryListLoaded",
     hostEvent: "hostEvent",
     hostUpdate: "hostUpdate",
     hookEvent: "hookEvent"
 }
 
 class HostNode {
-    constructor(region, pos, node) {
-        this.region = region;
+    constructor(country, pos, node) {
+        this.country = country;
         this.pos = pos;
 
         this.idx = node.idx;
         this.address = node.address;
-        this.ip = node.ip;
         this.evrBalance = node.evrBalance;
-        this.location = node.location;
+        this.countryCode = node.countryCode;
         this.token = node.token;
         this.instanceCount = 0;
         this.online = node.active;
@@ -165,9 +158,10 @@ class EvernodeManager {
     constructor() {
         this.emitter = new EventEmitter();
 
-        this.regions = {};
+        this.countries = {};
         this.nodeLookup = {};
         this.nextIdx = 1;
+        this.maxNodes = 0;
     }
 
     async start() {
@@ -188,12 +182,10 @@ class EvernodeManager {
         for await (const row of rows) {
             if (this.addNode({
                 idx: parseInt(row.rowKey) + 1,
-                ip: row.ip,
-                region: row.region,
                 address: row.address,
                 token: row.token,
                 evrBalance: row.evrBalance,
-                location: row.location,
+                countryCode: row.countryCode,
                 cpuMicroSec: row.cpuMicroSec,
                 ramMb: row.ramMb,
                 diskMb: row.diskMb,
@@ -206,8 +198,19 @@ class EvernodeManager {
                 isListUpdated = true;
             }
         }
+        const r = Object.values(this.countries).map(c => {
+            return c.nodes ? Object.keys(c.nodes).length : 0;
+        })
+        this.maxNodes = Math.max(...r);
         if (isListUpdated)
-            this.emitter.emit(events.regionListLoaded, this.regions);
+            this.emitter.emit(events.countryListLoaded, this.countries);
+    }
+
+    getMarkerSize(nodeCount) {
+        const minSize = 0.8;
+        const dif = 1.7;
+        const size = minSize + (nodeCount / this.maxNodes) * dif;
+        return size;
     }
 
     // ----------------- Mock Events -------------------- //
@@ -264,8 +267,8 @@ class EvernodeManager {
                 if (!info)
                     return;
 
-                const region = data.host ? this.regions[this.nodeLookup[data.host]] : null;
-                const node = region?.nodes[data.host];
+                const country = data.host ? this.countries[this.nodeLookup[data.host]] : null;
+                const node = country?.nodes[data.host];
 
                 if (node) {
                     if (!node.online) {
@@ -307,7 +310,9 @@ class EvernodeManager {
                     }
 
                     if (!info.hostSilent) {
-                        node.emitter.emit(events.hostEvent, {
+                        this.emitter.emit(events.hostEvent, {
+                            countryCode: country.code,
+                            idx: node.idx,
                             type: info.type,
                             name: info.name,
                             ledgerSeq: data.ledgerSeq
@@ -315,7 +320,7 @@ class EvernodeManager {
                     }
                     // If the event is host silent, but host object is updated we send hostUpdate event.
                     else if (hostUpdated) {
-                        node.emitter.emit(events.hostUpdate);
+                        this.emitter.emit(events.hostUpdate, { countryCode: country.code });
                     }
                 }
 
@@ -323,10 +328,10 @@ class EvernodeManager {
                     this.emitter.emit(events.hookEvent, {
                         type: info.type,
                         name: info.name,
-                        region: region?.name,
+                        county: country?.name,
                         address: data.host || data.auditor,
                         message: data.reason && sashiErrorCodes[data.reason],
-                        amount: (data.amount && `${data.amount} EVR`) ||
+                        amount: (data.amount && `${data.amount} ${data.token ? data.token : 'EVR'}`) ||
                             (data.moments && `${data.moments} ${node ? node.token : ''}`),
                         nodeId: node?.idx,
                         ledgerSeq: data.ledgerSeq
@@ -370,29 +375,20 @@ class EvernodeManager {
             if (event === signalREvents.Offline) {
                 console.log(`${info.name} event received.`);
                 data.forEach(host => {
-                    const region = this.regions[this.nodeLookup[host]];
-                    const node = region?.nodes[host];
+                    const country = this.countries[this.nodeLookup[host]];
+                    const node = country?.nodes[host];
                     node.online = false;
-                    node.emitter.emit(events.hostUpdate);
+                    this.emitter.emit(events.hostUpdate, { countryCode: country.code });
                 });
                 return;
             }
 
-            const region = data.host ? this.regions[this.nodeLookup[data.host]] : null;
-            const node = region?.nodes[data.host];
-
+            const country = data.host ? this.countries[this.nodeLookup[data.host]] : null;
+            const node = country?.nodes[data.host];
             if (node) {
                 let hostUpdated = false;
                 if (event === signalREvents.Reward) {
                     node.evrBalance = data.evrBalance;
-                    hostUpdated = true;
-                }
-                else if (event === signalREvents.HostOnline) {
-                    node.online = true;
-                    hostUpdated = true;
-                }
-                else if (event === signalREvents.HostOffline) {
-                    node.online = false;
                     hostUpdated = true;
                 }
                 else if (event === signalREvents.HostInstanceCount) {
@@ -404,7 +400,9 @@ class EvernodeManager {
                 }
 
                 if (!info.hostSilent) {
-                    node.emitter.emit(events.hostEvent, {
+                    this.emitter.emit(events.hostEvent, {
+                        countryCode: country.code,
+                        idx: node.idx,
                         type: info.type,
                         name: info.name,
                         ledgerSeq: data.ledgerSeq
@@ -412,7 +410,7 @@ class EvernodeManager {
                 }
                 // If the event is host silent, but host object is updated we send hostUpdate event.
                 else if (hostUpdated) {
-                    node.emitter.emit(events.hostUpdate);
+                    this.emitter.emit(events.hostUpdate, { countryCode: country.code });
                 }
             }
 
@@ -420,10 +418,10 @@ class EvernodeManager {
                 this.emitter.emit(events.hookEvent, {
                     type: info.type,
                     name: info.name,
-                    region: region?.name,
+                    country: country?.name,
                     address: event === signalREvents.Refund ? data.redeemRefId : (data.host || data.auditor), // Refund event only has tx id. Add it to address field for display.
                     message: data.reason && sashiErrorCodes[data.reason],
-                    amount: (data.amount && `${data.amount} EVR`) ||
+                    amount: (data.amount && `${data.amount} ${data.token ? data.token : 'EVR'}`) ||
                         (data.moments && `${data.moments} ${node ? node.token : ''}`),
                     nodeId: node?.idx,
                     ledgerSeq: data.ledgerSeq
@@ -434,41 +432,26 @@ class EvernodeManager {
 
     addNode(msg) {
         let isListUpdated = false;
-        let region = null;
+        let country = null;
 
-        // Check whether there's a special region assignment for this node index.
-        // If region exists in the message, assign to that region directly.
-        // Otherwise take from the cycle regions.
-        const specialAssignment = window.dashboardConfig.specialRegionAssignments.filter(a => a.idx === msg.idx)[0];
-        if (specialAssignment) {
-            region = window.dashboardConfig.regions.filter(r => r.id === specialAssignment.regionId)[0];
-            if (!region)
-                return;
+        if (msg.countryCode) {
+            country = window.dashboardConfig.countries.filter(r => r.code === msg.countryCode)[0];
+            if (!country)
+                country = window.dashboardConfig.defCountry;
         }
-        else if (msg.region) {
-            region = window.dashboardConfig.regions.filter(r => r.id === msg.region)[0];
-            if (!region)
-                return;
-        }
-        else {
-            const cycleRegions = window.dashboardConfig.regions.filter(r => r.skipCycling !== true);
-            const regionIndex = (msg.idx - 1) % cycleRegions.length;
-            region = cycleRegions[regionIndex];
-        }
-
-        const node = new HostNode(region.name, region.pos, msg);
-        if (!this.regions[region.id]) {
-            this.regions[region.id] = region;
-            this.regions[region.id].nodes = {};
-            this.regions[region.id].nodes[msg.address] = node;
+        const node = new HostNode(country.name, country.pos, msg);
+        if (!this.countries[country.code]) {
+            this.countries[country.code] = country;
+            this.countries[country.code].nodes = {};
+            this.countries[country.code].nodes[msg.address] = node;
             isListUpdated = true;
-        } else if (!this.regions[region.id].nodes[msg.address]) {
-            this.regions[region.id].nodes[msg.address] = node;
+        } else if (!this.countries[country.code].nodes[msg.address]) {
+            this.countries[country.code].nodes[msg.address] = node;
             isListUpdated = true;
         }
 
         if (isListUpdated)
-            this.nodeLookup[msg.address] = region.id;
+            this.nodeLookup[msg.address] = country.code;
 
         return isListUpdated ? node : null;
     }

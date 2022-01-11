@@ -9,8 +9,8 @@ const EventCard = (props) => {
                 {data.ledgerSeq && <span className="ledger">(&nbsp;{data.ledgerSeq}&nbsp;)</span>}
             </div>
             <ul className="list-group list-group-flush event-content">
-                {data.region && <li className="row list-group-item event-item text-truncate">
-                    <i className="col-1 fa fa-map-marker"></i><span className="col-11">{data.region}</span>
+                {data.country && <li className="row list-group-item event-item text-truncate">
+                    <i className="col-1 fa fa-map-marker"></i><span className="col-11">{data.country}</span>
                 </li>}
                 {data.nodeId && <li className="row list-group-item event-item text-truncate">
                     <i className="col-1 fas fa-server"></i><span className="col-11">Host {data.nodeId}</span>
