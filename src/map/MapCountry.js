@@ -121,7 +121,6 @@ class MapCountry extends React.Component {
             statusList = [<CSSTransition key={0} timeout={500} classNames="status">
                 {statusList[0]?.component}
             </CSSTransition>];
-
         }
 
         const popupPos = {
