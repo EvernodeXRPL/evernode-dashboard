@@ -33,12 +33,22 @@
             text-align: center;
             font-size: 0.8rem;
             font-weight: bold;
+            flex-grow: 0;
+            flex-basis: 3rem;
 
             &.active {
                 background-color: $gray-200;
                 border: 1px solid $gray-50;
                 border-bottom: none;
                 margin-bottom: -1px !important;
+            }
+
+            &.online {
+                color: $green;
+            }
+
+            &.offline {
+                color: $yellow;
             }
         }
 
@@ -88,7 +98,7 @@
                     background-color: transparent;
                     border: 1px solid transparent;
                     padding-top: 0;
-                    padding-bottom: 0;
+                    padding-bottom: 0.1rem;
                     line-height: 1.3;
         
                     &:last-child {
@@ -101,6 +111,14 @@
                         overflow-x: hidden;
                     }
                 }
+                .online {
+                    color: $green;
+                }
+    
+                .offline {
+                    color: $yellow;
+                }
+
             }
         }
     }

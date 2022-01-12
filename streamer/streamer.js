@@ -1,18 +1,23 @@
-const { EvernodeHook, HookEvents, RippleAPIWrapper, XrplAccount } = require('evernode-js-client');
+const { Defaults, HookClient, HookEvents, XrplAccount, XrplApiEvents, XrplApi } = require("../../evernode-js-lib/dist");
+
 const fs = require('fs');
 const azure = require('azure-storage');
 const fetch = require('node-fetch');
-const { exec } = require('child_process');
 
 const CONFIG_PATH = __dirname + '/config.json';
 const HOST_PARTITION_KEY = 'host';
 const EVR = 'EVR';
+const offlineEvent = 'Offline';
 
 class Streamer {
     constructor(hookAddress = null, rippledServer = null) {
-        this.rippleAPI = new RippleAPIWrapper(rippledServer);
-        this.evernodeHook = new EvernodeHook(this.rippleAPI, hookAddress);
-        this.hookAddress = this.evernodeHook.account.address;
+        const xrplApi = new XrplApi(rippledServer);
+        // Override defaults the library uses.
+        Defaults.set({
+            hookAddress: hookAddress,
+            xrplApi: xrplApi
+        });
+        this.evernodeHook = new HookClient(hookAddress);
     }
 
     async start() {
@@ -24,11 +29,47 @@ class Streamer {
             !this.config.azure_table.host || !this.config.azure_table.table || !this.config.azure_table.sas)
             throw new Error(`Config file ${CONFIG_PATH} is missing required fields.`);
 
-        await this.rippleAPI.connect().catch(error => { throw error });
-        this.evernodeHook.subscribe();
+        await this.evernodeHook.connect().catch(error => { throw error });
+        await this.evernodeHook.subscribe();
         this.tableSvc = azure.createTableServiceWithSas(this.config.azure_table.host, this.config.azure_table.sas);
 
         await this.updateHostsTable();
+
+        let lastCheckedMoment = null;
+
+        this.evernodeHook.xrplApi.on(XrplApiEvents.LEDGER, async (e) => {
+            const currentMoment = await this.evernodeHook.getMoment(e.ledger_index);
+            if (currentMoment % this.evernodeHook.hookConfig.hostHeartbeatFreq === 0 && currentMoment !== lastCheckedMoment) {
+                lastCheckedMoment = currentMoment;
+                const allHosts = await this.evernodeHook.getAllHosts();
+                const offlineHosts = allHosts.filter(h => !h.active);
+                console.log(`Found ${offlineHosts.length} offline hosts.`);
+                if (offlineHosts.length > 0) {
+                    const ent = azure.TableUtilities.entityGenerator;
+                    const tableBatch = new azure.TableBatch();
+                    const addresses = [];
+                    offlineHosts.forEach(host => {
+                        const data = this.hostAccounts[host.address];
+                        if (data && data.active) {
+                                data.active = false;
+                                tableBatch.mergeEntity({
+                                    PartitionKey: ent.String(HOST_PARTITION_KEY),
+                                    RowKey: ent.String(data.nodeid.toString()),
+                                    active: ent.Boolean(data.active)
+                                });
+                                addresses.push(data.address);
+                        }
+                    });
+                    if (addresses.length > 0) {
+                        await this.broadcast(offlineEvent, addresses);
+                    }
+                    if (tableBatch.size() > 0) {
+                        this.tableSvc.executeBatch(this.config.azure_table.table, tableBatch, (err) => err && console.error(err));
+                        console.log(`Updated ${tableBatch.size()} hosts in table storage for offline status.`);
+                    }
+                }
+            }
+        });
 
         this.evernodeHook.events.on(HookEvents.Redeem, async (ev) => {
             await this.broadcast(HookEvents.Redeem, {
@@ -74,14 +115,15 @@ class Streamer {
                 ledgerSeq: ev.transaction.LastLedgerSequence
             });
         });
-        this.evernodeHook.events.on(HookEvents.RefundRequest, async (ev) => {
-            await this.broadcast(HookEvents.RefundRequest, {
-                redeemTxHash: ev.redeemTxHash,
+        this.evernodeHook.events.on(HookEvents.Refund, async (ev) => {
+            await this.broadcast(HookEvents.Refund, {
+                redeemRefId: ev.redeemRefId,
                 ledgerSeq: ev.transaction.LastLedgerSequence
             });
         });
-        this.evernodeHook.events.on(HookEvents.AuditRequest, async (ev) => {
-            await this.broadcast(HookEvents.AuditRequest, {
+
+        this.evernodeHook.events.on(HookEvents.Audit, async (ev) => {
+            await this.broadcast(HookEvents.Audit, {
                 auditor: ev.auditor,
                 ledgerSeq: ev.transaction.LastLedgerSequence
             });
@@ -113,52 +155,65 @@ class Streamer {
             }
         });
 
-        // [Todo]
-        // 1. audit success reward event.
-        // 2. refund success payment.
+        this.evernodeHook.events.on(HookEvents.Recharge, async (ev) => {
+            const host = this.hostAccounts[ev.host];
+            if (host && !host.active) {
+                    // Update table storage as well.
+                    host.active = true;
+                    const ent = azure.TableUtilities.entityGenerator;
+                    const rowData = {
+                        PartitionKey: ent.String(HOST_PARTITION_KEY),
+                        RowKey: ent.String(host.nodeid.toString()),
+                        active: ent.Boolean(host.active)
+                    };
+                    // Update the relavent host with the latest active status.
+                    this.tableSvc.mergeEntity(this.config.azure_table.table, rowData, (err) => err && console.error(err));
+            }
+            await this.broadcast(HookEvents.Recharge, {
+                host: ev.host,
+                amount: ev.amount,
+                issuer: ev.issuer,
+                token: ev.currency,
+                ledgerSeq: ev.transaction.LastLedgerSequence
+            });
+        });
+
     }
 
-    // Get VM list from vultr and match them with hosts from the hook state. Get EVR balance of each host.
+    // Get host list from evernode hook and getting EVR balance of each host.
     async updateHostsTable() {
 
         this.hostAccounts = {};
 
-        const hostObjs = await this.getVultrHosts(this.config.vultr.group);
-        if (hostObjs && hostObjs.length > 0) {
-            await Promise.all(hostObjs.map(hostObj => this.initHostAccountData(hostObj)))
-
-            const latestHosts = await this.evernodeHook.getHosts();
-            console.log(`Got ${latestHosts.length} hosts from evernode.`);
-            const ent = azure.TableUtilities.entityGenerator;
-            const tableBatch = new azure.TableBatch();
-            latestHosts.forEach(host => {
-                const data = this.hostAccounts[host.address];
-                if (data) {
-                    data.state = {
-                        txHash: host.txHash,
-                        instanceSize: host.instanceSize,
-                        location: host.location
-                    };
-                    tableBatch.insertOrReplaceEntity({
-                        PartitionKey: ent.String(HOST_PARTITION_KEY),
-                        RowKey: ent.String(data.nodeid.toString()),
-                        ip: ent.String(data.ip),
-                        region: ent.String(data.region),
-                        address: ent.String(data.hostAccount.address),
-                        token: ent.String(data.hostAccount.token),
-                        evrBalance: ent.String(data.evrBalance),
-                        txHash: ent.String(data.state.txHash),
-                        instanceSize: ent.String(data.state.instanceSize),
-                        location: ent.String(data.state.location)
-                    });
-                }
+        const latestHosts = await this.evernodeHook.getAllHosts();
+        console.log(`Got ${latestHosts.length} hosts from evernode.`);
+        const ent = azure.TableUtilities.entityGenerator;
+        const tableBatch = new azure.TableBatch();
+        let rowKey = 0;
+        for await (const host of latestHosts) {
+            this.hostAccounts[host.address] = host;
+            host.evrBalance = await this.getEvrBalance(host.address);
+            host.nodeid = rowKey++;
+            tableBatch.insertOrReplaceEntity({
+                PartitionKey: ent.String(HOST_PARTITION_KEY),
+                RowKey: ent.String(host.nodeid.toString()),
+                address: ent.String(host.address),
+                token: ent.String(host.token),
+                evrBalance: ent.String(host.evrBalance),
+                cpuMicroSec: ent.Int32(host.cpuMicroSec),
+                ramMb: ent.Int32(host.ramMb),
+                diskMb: ent.Int32(host.diskMb),
+                countryCode: ent.String(host.countryCode),
+                description: ent.String(host.description),
+                lastHeartbeatLedgerIndex: ent.Int64(host.lastHeartbeatLedgerIndex),
+                accumulatedAmount: ent.Double(host.accumulatedAmount),
+                lockedTokenAmount: ent.Int64(host.lockedTokenAmount),
+                active: ent.Boolean(host.active)
             });
-
-            if (tableBatch.size() > 0) {
-                this.tableSvc.executeBatch(this.config.azure_table.table, tableBatch, (err) => err && console.error(err));
-                console.log(`Updated ${Object.keys(this.hostAccounts).length} hosts in table storage.`);
-            }
-
+        }
+        if (tableBatch.size() > 0) {
+            this.tableSvc.executeBatch(this.config.azure_table.table, tableBatch, (err) => err && console.error(err));
+            console.log(`Updated ${Object.keys(this.hostAccounts).length} hosts in table storage.`);
         }
     }
 
@@ -182,67 +237,67 @@ class Streamer {
         }).catch(error => { console.error(error) });
     }
 
-    getVultrHosts(group) {
+    // getVultrHosts(group) {
 
-        return new Promise(async (resolve) => {
+    //     return new Promise(async (resolve) => {
 
-            if (!group || group.trim().length === 0)
-                resolve([]);
+    //         if (!group || group.trim().length === 0)
+    //             resolve([]);
 
-            const resp = await fetch(`https://api.vultr.com/v2/instances?tag=${group}`, {
-                method: 'GET',
-                headers: { "Authorization": `Bearer ${this.config.vultr.api_key}` }
-            });
+    //         const resp = await fetch(`https://api.vultr.com/v2/instances?tag=${group}`, {
+    //             method: 'GET',
+    //             headers: { "Authorization": `Bearer ${this.config.vultr.api_key}` }
+    //         });
 
-            const vms = (await resp.json()).instances;
-            if (!vms) {
-                console.log("Failed to get vultr instances.");
-                resolve([]);
-                return;
-            }
-            const hosts = vms.sort((a, b) => (a.label < b.label) ? -1 : 1).map((i, index) => { return { ip: i.main_ip, region: i.region, nodeid: index } });
-            console.log(`${hosts.length} hosts retrieved from Vultr.`)
-            resolve(hosts);
-        })
-    }
+    //         const vms = (await resp.json()).instances;
+    //         if (!vms) {
+    //             console.log("Failed to get vultr instances.");
+    //             resolve([]);
+    //             return;
+    //         }
+    //         const hosts = vms.sort((a, b) => (a.label < b.label) ? -1 : 1).map((i, index) => { return { ip: i.main_ip, region: i.region, nodeid: index } });
+    //         console.log(`${hosts.length} hosts retrieved from Vultr.`)
+    //         resolve(hosts);
+    //     })
+    // }
 
-    async initHostAccountData(hostObj) {
-        const output = await this.execSsh(hostObj.ip, "cat /etc/sashimono/mb-xrpl/mb-xrpl.cfg");
-        if (!output || output.trim() === "") {
-            console.log(`ERROR: No output from mb-xrpl config read. IP: ${hostObj.ip}`);
-            return;
-        }
+    // async initHostAccountData(hostObj) {
+    //     const output = await this.execSsh(hostObj.ip, "cat /etc/sashimono/mb-xrpl/mb-xrpl.cfg");
+    //     if (!output || output.trim() === "") {
+    //         console.log(`ERROR: No output from mb-xrpl config read. IP: ${hostObj.ip}`);
+    //         return;
+    //     }
 
-        const conf = JSON.parse(output);
-        const acc = {
-            address: conf.xrpl.address,
-            secret: conf.xrpl.secret,
-            token: conf.xrpl.token
-        }
+    //     const conf = JSON.parse(output);
+    //     const acc = {
+    //         address: conf.xrpl.address,
+    //         secret: conf.xrpl.secret,
+    //         token: conf.xrpl.token
+    //     }
 
-        // Checking EVR balance of hosts.
-        this.hostAccounts[acc.address] = {
-            ip: hostObj.ip,
-            region: hostObj.region,
-            nodeid: hostObj.nodeid,
-            hostAccount: acc,
-            evrBalance: await this.getEvrBalance(acc.address, acc.secret)
-        }
-    }
+    //     // Checking EVR balance of hosts.
+    //     this.hostAccounts[acc.address] = {
+    //         ip: hostObj.ip,
+    //         region: hostObj.region,
+    //         nodeid: hostObj.nodeid,
+    //         hostAccount: acc,
+    //         evrBalance: await this.getEvrBalance(acc.address, acc.secret)
+    //     }
+    // }
 
-    execSsh(host, command) {
-        return new Promise(resolve => {
-            const cmd = `ssh -o StrictHostKeychecking=no root@${host} ${command}`;
-            exec(cmd, (err, stdout, stderr) => {
-                resolve(stdout);
-            });
-        })
-    }
+    // execSsh(host, command) {
+    //     return new Promise(resolve => {
+    //         const cmd = `ssh -o StrictHostKeychecking=no root@${host} ${command}`;
+    //         exec(cmd, (err, stdout, stderr) => {
+    //             resolve(stdout);
+    //         });
+    //     })
+    // }
 
     async getEvrBalance(address, secret) {
-        const xrpAcc = new XrplAccount(this.rippleAPI, address, secret);
-        const lines = await xrpAcc.getTrustLines(EVR, this.hookAddress);
-        return lines.length > 0 ? lines[0].state.balance : '0';
+        const xrpAcc = new XrplAccount(address, secret);
+        const lines = await xrpAcc.getTrustLines(EVR, this.evernodeHook.hookAddress);
+        return lines.length > 0 ? lines[0].balance : '0';
     }
 }
 async function main() {
