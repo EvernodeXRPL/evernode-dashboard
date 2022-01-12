@@ -95,7 +95,7 @@ window.dashboardConfig.countries = [
     }
 ];
 
-// Un mapped countries will be assigned to this and will show in a map corner.
+// Unmapped countries will be assigned to this and will show in a map corner.
 window.dashboardConfig.defCountry = {
     name: "Unrecognized",
     code: "Unrecognized",
