@@ -1,23 +1,25 @@
-import React from "react"
-import Evernode from "./services/EvernodeService"
-import MapView from "./map/MapView"
-import SideBar from "./sidebar/SideBar"
-import './App.scss';
+import { Provider } from 'react-redux';
+import configureStore from './config/configureStore';
+import './App.css';
+import { BrowserRouter } from 'react-router-dom';
+import { CssBaseline } from '@material-ui/core';
+import ScrollToTop from './utils/ScrollToTop';
+import Routes from './Routes';
+import './assets/base.scss';
 
-class App extends React.Component {
+const store = configureStore();
 
-    componentDidMount() {
-        Evernode.evernodeManager.start();
-    }
-
-    render() {
-        return (
-            <div className="wrapper d-flex flex-column flex-md-row">
-                <MapView />
-                <SideBar />
-            </div>
-        )
-    }
+function App() {
+  return (
+    <Provider store={store}>
+      <BrowserRouter basename="/evernode-host-dashboard/">
+        <CssBaseline />
+        <ScrollToTop>
+          <Routes />
+        </ScrollToTop>
+      </BrowserRouter>
+    </Provider>
+  );
 }
 
 export default App;
