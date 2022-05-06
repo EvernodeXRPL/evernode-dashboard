@@ -17,7 +17,7 @@ export default function Profile() {
       />
       <Grid container spacing={4}>
         <Grid item xs={12} sm={6} md={4}>
-          <Card className="mb-4">
+          <Card className="card-box mb-4 bg-neutral-info text-dark">
             <CardContent className="p-3">
               <h5 className="card-title font-weight-bold font-size-lg">
                 Card title
@@ -28,7 +28,7 @@ export default function Profile() {
               </p>
             </CardContent>
           </Card>
-          <Card className="mb-4">
+          <Card className="card-box mb-4 bg-neutral-info text-dark">
             <CardContent className="p-3">
               <h5 className="card-title font-weight-bold font-size-lg">
                 Card title
@@ -43,8 +43,8 @@ export default function Profile() {
         <Grid item xs={12} sm={6} md={4}>
           <Leases />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card className="mb-4">
+        <Grid item xs={12} md={6} lg={4}>
+          <Card className="card-box mb-4 bg-premium-dark border-0 text-light">
             <CardContent className="p-3">
               <h5 className="card-title font-weight-bold font-size-lg">
                 Card title
