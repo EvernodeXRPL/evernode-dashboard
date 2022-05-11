@@ -14,7 +14,7 @@ const MuiTheme = createMuiTheme({
       A100: vars.inheritDefault2
     },
     secondary: {
-      main: vars.secondary
+      main: vars.bladeRunnerBlue
     },
     error: {
       main: vars.red
