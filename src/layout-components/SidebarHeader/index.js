@@ -27,7 +27,7 @@ const SidebarHeader = props => {
         <Box
           className="header-logo-wrapper"
           title="Evernod Host Dashboard with Material-UI Free">
-          <Link to="/DashboardDefault" className="header-logo-wrapper-link">
+          <Link to="/" className="header-logo-wrapper-link">
             <IconButton
               color="primary"
               size="medium"

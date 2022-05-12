@@ -11,10 +11,13 @@ import {
 } from '@material-ui/core';
 
 import avatar1 from '../../assets/images/avatars/avatar1.jpg';
-import avatar2 from '../../assets/images/avatars/avatar2.jpg';
-import avatar3 from '../../assets/images/avatars/avatar3.jpg';
 
-export default function Table() {
+export default function Table(props) {
+  const {
+    values,
+    onRowClick,
+  } = props;
+
   return (
     <Fragment>
       <Card className="card-box mb-4">
@@ -29,99 +32,39 @@ export default function Table() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <div className="d-flex align-items-center">
-                      <Avatar alt="..." src={avatar2} className="mr-2" />
-                      <div>
-                        <a
-                          href="#/"
-                          onClick={e => e.preventDefault()}
-                          className="font-weight-bold text-black"
-                          title="...">
-                          Shanelle Wynn
-                        </a>
-                        <span className="text-black-50 d-block">
-                          UI Engineer, Apple Inc.
-                        </span>
+                {values.map((value, i) => {
+                  return <tr key={i} onClick={() => { onRowClick(value) }}>
+                    <td>
+                      <div className="d-flex align-items-center">
+                        <Avatar alt="..." src={avatar1} className="mr-2" />
+                        <div>
+                          <a
+                            href="#/"
+                            onClick={e => e.preventDefault()}
+                            className="font-weight-bold text-black"
+                            title="...">
+                            Shanelle Wynn
+                          </a>
+                          <span className="text-black-50 d-block">
+                            UI Engineer, Apple Inc.
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <div className="h-auto py-0 px-3 badge badge-warning">
-                      Pending
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <Box>
-                      <IconButton color="primary" size="small">
-                        <FontAwesomeIcon icon={['fas', 'ellipsis-h']} />
-                      </IconButton>
-                    </Box>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div className="d-flex align-items-center">
-                      <Avatar alt="..." src={avatar1} className="mr-2" />
-                      <div>
-                        <a
-                          href="#/"
-                          onClick={e => e.preventDefault()}
-                          className="font-weight-bold text-black"
-                          title="...">
-                          Beck Simpson
-                        </a>
-                        <span className="text-black-50 d-block">
-                          Frontend Developer
-                        </span>
+                    </td>
+                    <td className="text-center">
+                      <div className="h-auto py-0 px-3 badge badge-warning">
+                        Pending
                       </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <div className="badge badge-success h-auto py-0 px-3">
-                      Completed
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <Box>
-                      <IconButton color="primary" size="small">
-                        <FontAwesomeIcon icon={['fas', 'ellipsis-h']} />
-                      </IconButton>
-                    </Box>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div className="d-flex align-items-center">
-                      <Avatar alt="..." src={avatar3} className="mr-2" />
-                      <div>
-                        <a
-                          href="#/"
-                          onClick={e => e.preventDefault()}
-                          className="font-weight-bold text-black"
-                          title="...">
-                          Regan Norris
-                        </a>
-                        <span className="text-black-50 d-block">
-                          Senior Project Manager
-                        </span>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <div className="h-auto py-0 px-3 badge badge-danger">
-                      Declined
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <Box>
-                      <IconButton color="primary" size="small">
-                        <FontAwesomeIcon icon={['fas', 'ellipsis-h']} />
-                      </IconButton>
-                    </Box>
-                  </td>
-                </tr>
+                    </td>
+                    <td className="text-center">
+                      <Box>
+                        <IconButton color="primary" size="small">
+                          <FontAwesomeIcon icon={['fas', 'ellipsis-h']} />
+                        </IconButton>
+                      </Box>
+                    </td>
+                  </tr>
+                })}
               </tbody>
             </table>
           </div>

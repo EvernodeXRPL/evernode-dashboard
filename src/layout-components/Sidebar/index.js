@@ -13,7 +13,6 @@ import SidebarMenu from '../../layout-components/SidebarMenu';
 import navItems from './navItems';
 
 import { setSidebarToggleMobile } from '../../reducers/ThemeOptions';
-import { useEvernode } from '../../services/evernode';
 
 const Sidebar = props => {
   const {
@@ -23,13 +22,7 @@ const Sidebar = props => {
     sidebarShadow
   } = props;
 
-  const evernode = useEvernode();
-
   const closeDrawer = () => setSidebarToggleMobile(!sidebarToggleMobile);
-
-  let profileRoute = navItems[0].content.find(r => r.to === '/profile');
-  if (profileRoute)
-    profileRoute.to = `${profileRoute.to}/${evernode.defHostAddress}`;
 
   const sidebarMenuContent = (
     <div>
