@@ -53,7 +53,7 @@ const Routes = () => {
               <Redirect exact from="/" to="/hosts" />
               <Route
                 path={[
-                  '/profile/:address',
+                  '/profile/:address?',
                   '/hosts'
                 ]}>
                 <LeftSidebar>
@@ -69,7 +69,7 @@ const Routes = () => {
                         component={Hosts}
                       />
                       <Route
-                        path="/profile/:address"
+                        path="/profile/:address?"
                         component={Profile}
                       />
                     </motion.div>

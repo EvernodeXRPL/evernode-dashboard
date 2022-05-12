@@ -1,7 +1,5 @@
 import React, { Fragment } from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import {
   Avatar,
   IconButton,
@@ -59,7 +57,6 @@ export default function Table(props) {
                     <td className="text-center">
                       <Box>
                         <IconButton color="primary" size="small">
-                          <FontAwesomeIcon icon={['fas', 'ellipsis-h']} />
                         </IconButton>
                       </Box>
                     </td>
