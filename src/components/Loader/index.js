@@ -5,7 +5,11 @@ import {
   Grid
 } from '@material-ui/core';
 
-export default function Loader() {
+export default function Loader(props) {
+  const {
+    className,
+    size } = props;
+
   return (
     <Grid
       container
@@ -16,8 +20,8 @@ export default function Loader() {
       justifycontent="center"
       xs={12}
       sx={{ display: 'flex' }}
-      className="p-4">
-      <CircularProgress />
+      className={className}>
+      <CircularProgress size={size} />
     </Grid>
   );
 }

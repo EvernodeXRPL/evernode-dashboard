@@ -6,7 +6,8 @@ import RegularTable from '../../components/RegularTable';
 import {
   Grid,
   Card,
-  CardContent
+  CardContent,
+  Typography
 } from '@material-ui/core';
 import Leases from './Leases';
 
@@ -134,7 +135,8 @@ export default function Profile(props) {
     <Fragment>
       <PageTitle
         titleHeading={address}
-        titleDescription={info ? info.hostInfo.nfTokenId : ''} />
+        titleDescription={(info && <Typography type="p">{info.hostInfo.nfTokenId}</Typography>) ||
+          <Loader className="p-0" size="1rem" />} />
       <Grid container spacing={4} className="profile">
         <Grid item xs={12} sm={12} md={5}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
@@ -147,7 +149,7 @@ export default function Profile(props) {
                 values={info.tableValues}
                 highlight={['key']}
                 hideHeadings />) ||
-                <Loader />}
+                <Loader className="p-4" />}
             </CardContent>
           </Card>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
@@ -160,7 +162,7 @@ export default function Profile(props) {
                 values={configs.tableValues}
                 highlight={['key']}
                 hideHeadings />) ||
-                <Loader />}
+                <Loader className="p-4" />}
             </CardContent>
           </Card>
         </Grid>
@@ -183,7 +185,7 @@ export default function Profile(props) {
               <span className="font-weight-normal ml-1 evr">
                 EVR
               </span>
-            </CardContent>) || <Loader />}
+            </CardContent>) || <Loader className="p-4" />}
           </Card>
         </Grid>
       </Grid>
