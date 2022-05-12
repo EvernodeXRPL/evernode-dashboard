@@ -1,59 +1,161 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PageTitle from '../../layout-components/PageTitle';
+
+import PublicIcon from '@material-ui/icons/Public';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import StorageIcon from '@material-ui/icons/Storage';
+import SettingsIcon from '@material-ui/icons/Settings';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import HowToRegIcon from '@material-ui/icons/HowToReg';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import HistoryIcon from '@material-ui/icons/History';
 
 import {
   Grid,
   Card,
-  CardContent
+  CardContent,
+  List,
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  ListItemText
 } from '@material-ui/core';
 import Leases from './Leases';
 
-export default function Profile() {
+import { useEvernode } from '../../services/evernode';
+import Loader from '../../components/Loader';
+
+export default function Profile(props) {
+  const address = props.match.params.address;
+
+  const [info, setInfo] = React.useState(null);
+  const [configs, setConfigs] = React.useState(null);
+
+  const evernode = useEvernode();
+
+  useEffect(() => {
+    const fetchHostInfo = async () => {
+      const hostInfo = await evernode.getHostInfo(address);
+      const evrBalance = await evernode.getEVRBalance(address);
+      setInfo({ evrBalance: evrBalance, ...hostInfo });
+    }
+
+    const fetchConfigs = async () => {
+      const config = await evernode.getConfigs();
+      setConfigs(config);
+    }
+
+    if (!info)
+      fetchHostInfo();
+
+    if (!configs)
+      fetchConfigs();
+  }, [address, evernode, info, configs]);
+
   return (
     <Fragment>
       <PageTitle
         titleHeading="Profile"
-        titleDescription="XRPL Address"
+        titleDescription={address}
       />
-      <Grid container spacing={4}>
-        <Grid item xs={12} sm={6} md={4}>
+      <Grid container spacing={4} className="profile">
+        <Grid item xs={12} sm={12} md={5}>
           <Card className="card-box mb-4 bg-neutral-info text-dark">
             <CardContent className="p-3">
               <h5 className="card-title font-weight-bold font-size-lg">
-                Card title
+                Registration Info
               </h5>
-              <p className="card-text">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </p>
+              {(info && <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                <ListItem>
+                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={info.nfTokenId} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><PublicIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={info.countryCode} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><StorageIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={info.noOfActiveInstances + " out of " + info.noOfTotalInstances} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><SettingsIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={info.cpuMicrosec + "us " + info.ramMb + "MB " + info.diskMb + "MB"} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><FavoriteBorderIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={info.lastHeartbeatLedger} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><HowToRegIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={info.registrationLedger} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><AttachMoneyIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={info.registrationFee} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><HistoryIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={info.version} />
+                </ListItem>
+              </List>) || <Loader />}
             </CardContent>
           </Card>
           <Card className="card-box mb-4 bg-neutral-info text-dark">
             <CardContent className="p-3">
               <h5 className="card-title font-weight-bold font-size-lg">
-                Card title
+                Configurations
               </h5>
-              <p className="card-text">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </p>
+              {(configs && <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                <ListItem>
+                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={configs.evrIssuerAddress} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={configs.foundationAddress} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={configs.hostHeartbeatFreq} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={configs.hostRegFee} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={configs.leaseAcquireWindow} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={configs.momentBaseIdx} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={configs.momentSize} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
+                  <ListItemText primary={configs.purchaserTargetPrice} />
+                </ListItem>
+              </List>) || <Loader />}
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Leases />
+        <Grid item xs={12} sm={6} md={5}>
+          <Leases address={address} />
         </Grid>
-        <Grid item xs={12} md={6} lg={4}>
+        <Grid item xs={12} sm={6} md={2}>
           <Card className="card-box mb-4 bg-premium-dark border-0 text-light">
-            <CardContent className="p-3">
-              <h5 className="card-title font-weight-bold font-size-lg">
-                Card title
-              </h5>
-              <p className="card-text">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </p>
-            </CardContent>
+            {(info && <CardContent className="p-3 text-center wallet-balance">
+              <span className="font-weight-bold amount">
+                {info.evrBalance}
+              </span>
+              <span className="font-weight-normal ml-1 evr">
+                EVR
+              </span>
+            </CardContent>) || <Loader />}
           </Card>
         </Grid>
       </Grid>

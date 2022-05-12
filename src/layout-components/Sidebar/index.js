@@ -13,24 +13,30 @@ import SidebarMenu from '../../layout-components/SidebarMenu';
 import navItems from './navItems';
 
 import { setSidebarToggleMobile } from '../../reducers/ThemeOptions';
+import { useEvernode } from '../../services/evernode';
 
 const Sidebar = props => {
   const {
     setSidebarToggleMobile,
     sidebarToggleMobile,
     sidebarFixed,
-
     sidebarShadow
   } = props;
 
+  const evernode = useEvernode();
+
   const closeDrawer = () => setSidebarToggleMobile(!sidebarToggleMobile);
+
+  let profileRoute = navItems[0].content.find(r => r.to === '/profile');
+  if (profileRoute)
+    profileRoute.to = `${profileRoute.to}/${evernode.defHostAddress}`;
 
   const sidebarMenuContent = (
     <div>
-      {navItems.map(list => (
+      {navItems.map((list, i) => (
         <SidebarMenu
           component="div"
-          key={list.label}
+          key={list.label || i}
           pages={list.content}
           title={list.label}
         />
