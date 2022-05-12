@@ -1,24 +1,12 @@
 import React, { Fragment, useEffect } from 'react';
-import PageTitle from '../../layout-components/PageTitle';
 
-import PublicIcon from '@material-ui/icons/Public';
-import PermIdentityIcon from '@material-ui/icons/PermIdentity';
-import StorageIcon from '@material-ui/icons/Storage';
-import SettingsIcon from '@material-ui/icons/Settings';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import HowToRegIcon from '@material-ui/icons/HowToReg';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import HistoryIcon from '@material-ui/icons/History';
+import PageTitle from '../../layout-components/PageTitle';
+import RegularTable from '../../components/RegularTable';
 
 import {
   Grid,
   Card,
-  CardContent,
-  List,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText
+  CardContent
 } from '@material-ui/core';
 import Leases from './Leases';
 
@@ -34,19 +22,109 @@ export default function Profile(props) {
   const evernode = useEvernode();
 
   useEffect(() => {
-    const fetchHostInfo = async () => {
+    const fetchInfo = async () => {
       const hostInfo = await evernode.getHostInfo(address);
+      const tableHeadings = {
+        key: 'Key',
+        value: 'Value'
+      }
+      const tableValues = [
+        {
+          key: 'Country Code',
+          value: hostInfo.countryCode
+        },
+        {
+          key: 'Instances',
+          value: `${hostInfo.noOfActiveInstances} out of ${hostInfo.noOfTotalInstances}`
+        },
+        {
+          key: 'CPU',
+          value: `${hostInfo.cpuMicrosec}us`
+        },
+        {
+          key: 'RAM',
+          value: `${hostInfo.ramMb}MB`
+        },
+        {
+          key: 'Disk',
+          value: `${hostInfo.diskMb}MB`
+        },
+        {
+          key: 'Last Heartbeat Ledger',
+          value: hostInfo.lastHeartbeatLedger
+        },
+        {
+          key: 'Reg Ledger',
+          value: hostInfo.registrationLedger
+        },
+        {
+          key: 'Reg Fee',
+          value: hostInfo.registrationFee
+        },
+        {
+          key: 'Version',
+          value: hostInfo.version
+        }
+      ];
       const evrBalance = await evernode.getEVRBalance(address);
-      setInfo({ evrBalance: evrBalance, ...hostInfo });
+      setInfo({
+        evrBalance: evrBalance,
+        hostInfo: hostInfo,
+        tableHeadings: tableHeadings,
+        tableValues: tableValues
+      });
     }
 
     const fetchConfigs = async () => {
       const config = await evernode.getConfigs();
-      setConfigs(config);
+      const tableHeadings = {
+        key: 'Key',
+        value: 'Value'
+      }
+      const tableValues = [
+        {
+          key: 'EVR Issuer',
+          value: config.evrIssuerAddress
+        },
+        {
+          key: 'Foundation',
+          value: config.foundationAddress
+        },
+        {
+          key: 'Heartbeat Freq',
+          value: config.hostHeartbeatFreq
+        },
+        {
+          key: 'Reg Fee',
+          value: config.hostRegFee
+        },
+        {
+          key: 'Lease Acquire Window',
+          value: config.leaseAcquireWindow
+        },
+        {
+          key: 'Moment Base Idx',
+          value: config.momentBaseIdx
+        },
+        {
+          key: 'Moment Size',
+          value: config.momentSize
+        }
+        ,
+        {
+          key: 'Purchaser Taget Price',
+          value: config.purchaserTargetPrice
+        }
+      ];
+      setConfigs({
+        configs: config,
+        tableHeadings: tableHeadings,
+        tableValues: tableValues
+      });
     }
 
     if (!info)
-      fetchHostInfo();
+      fetchInfo();
 
     if (!configs)
       fetchConfigs();
@@ -55,96 +133,46 @@ export default function Profile(props) {
   return (
     <Fragment>
       <PageTitle
-        titleHeading="Profile"
-        titleDescription={address}
-      />
+        titleHeading={address}
+        titleDescription={info ? info.hostInfo.nfTokenId : ''} />
       <Grid container spacing={4} className="profile">
         <Grid item xs={12} sm={12} md={5}>
-          <Card className="card-box mb-4 bg-neutral-info text-dark">
-            <CardContent className="p-3">
-              <h5 className="card-title font-weight-bold font-size-lg">
+          <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
+            <CardContent className="p-0">
+              <h5 className="card-title font-weight-bold font-size-md">
                 Registration Info
               </h5>
-              {(info && <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                <ListItem>
-                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={info.nfTokenId} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><PublicIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={info.countryCode} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><StorageIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={info.noOfActiveInstances + " out of " + info.noOfTotalInstances} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><SettingsIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={info.cpuMicrosec + "us " + info.ramMb + "MB " + info.diskMb + "MB"} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><FavoriteBorderIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={info.lastHeartbeatLedger} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><HowToRegIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={info.registrationLedger} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><AttachMoneyIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={info.registrationFee} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><HistoryIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={info.version} />
-                </ListItem>
-              </List>) || <Loader />}
+              {(info && <RegularTable
+                headings={info.tableHeadings}
+                values={info.tableValues}
+                highlight={['key']}
+                hideHeadings />) ||
+                <Loader />}
             </CardContent>
           </Card>
-          <Card className="card-box mb-4 bg-neutral-info text-dark">
-            <CardContent className="p-3">
-              <h5 className="card-title font-weight-bold font-size-lg">
+          <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
+            <CardContent className="p-0">
+              <h5 className="card-title font-weight-bold font-size-md">
                 Configurations
               </h5>
-              {(configs && <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                <ListItem>
-                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={configs.evrIssuerAddress} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={configs.foundationAddress} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={configs.hostHeartbeatFreq} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={configs.hostRegFee} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={configs.leaseAcquireWindow} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={configs.momentBaseIdx} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={configs.momentSize} />
-                </ListItem>
-                <ListItem>
-                  <ListItemAvatar><Avatar><PermIdentityIcon /></Avatar></ListItemAvatar>
-                  <ListItemText primary={configs.purchaserTargetPrice} />
-                </ListItem>
-              </List>) || <Loader />}
+              {(configs && <RegularTable
+                headings={configs.tableHeadings}
+                values={configs.tableValues}
+                highlight={['key']}
+                hideHeadings />) ||
+                <Loader />}
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} md={5}>
-          <Leases address={address} />
+          <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
+            <CardContent className="p-0">
+              <h5 className="card-title font-weight-bold font-size-md">
+                Leases
+              </h5>
+              <Leases address={address} />
+            </CardContent>
+          </Card>
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
           <Card className="card-box mb-4 bg-premium-dark border-0 text-light">
@@ -159,6 +187,6 @@ export default function Profile(props) {
           </Card>
         </Grid>
       </Grid>
-    </Fragment>
+    </Fragment >
   );
 }

@@ -13,8 +13,11 @@ export const EvernodeProvider = (props) => {
         getHostInfo: props.getHostInfo || getHostInfo,
         getConfigs: props.getConfigs || getConfigs,
         getLeases: props.getLeases || getLeases,
-        getEVRBalance: props.getEVRBalance || getEVRBalance
+        getEVRBalance: props.getEVRBalance || getEVRBalance,
+        onLedger: props.onLedger || onLedger
     }
+
+    xrplApi.connect();
 
     return (
         <EvernodeContext.Provider value={value}>
@@ -37,21 +40,18 @@ evernode.Defaults.set({
 });
 
 const getHostInfo = async (address) => {
-    await xrplApi.connect();
     const client = new evernode.HostClient(address);
     await client.connect();
     return await client.getRegistration();
 }
 
 const getConfigs = async () => {
-    await xrplApi.connect();
     const client = new evernode.RegistryClient();
     await client.connect();
     return client.config;
 }
 
 const getLeases = async (address = defHostAddress) => {
-    await xrplApi.connect();
     const client = new evernode.HostClient(address);
     await client.connect();
 
@@ -65,9 +65,24 @@ const getLeases = async (address = defHostAddress) => {
 }
 
 const getEVRBalance = async (address = defHostAddress) => {
-    await xrplApi.connect();
     const client = new evernode.HostClient(address);
     await client.connect();
 
     return await client.getEVRBalance();
+}
+
+const onLedger = async (callback) => {
+    const client = new evernode.RegistryClient();
+    await client.connect();
+
+    xrplApi.on(evernode.XrplApiEvents.LEDGER, async (e) => {
+
+        const ledgerIndex = e.ledger_index;
+        const moment = await client.getMoment(ledgerIndex);
+        callback({
+            ledgerIndex: ledgerIndex,
+            moment: moment
+        })
+    });
+
 }

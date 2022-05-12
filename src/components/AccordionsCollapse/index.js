@@ -8,7 +8,13 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 export default function AccordionsCollapse(props) {
-  const id = props.id;
+  const {
+    id,
+    summary,
+    panelClassName,
+    panelSummaryClassName,
+    panelDetailClassName,
+  } = props;
 
   const [expanded, setExpanded] = React.useState(props.expanded ? id : false);
 
@@ -21,15 +27,15 @@ export default function AccordionsCollapse(props) {
       <ExpansionPanel
         expanded={expanded === id}
         onChange={handleChange(id)}
-        className="bg-midnight-bloom text-light">
+        className={panelClassName}>
         <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={<ExpandMoreIcon className={panelSummaryClassName} />}
           aria-controls="panel1bh-content"
           id="panel1bh-header">
-          <Typography>{props.summary}</Typography>
+          <Typography>{summary}</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails
-          className="bg-happy-fisher text-light">
+          className={`${panelDetailClassName} p-0`}>
           <Typography component={'span'}>
             {props.children}
           </Typography>
