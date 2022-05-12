@@ -31,7 +31,7 @@ export default function Lease(props) {
         id={lease.nfTokenId}
         summary={`${lease.nfTokenId.substring(0, 10)}......${lease.nfTokenId.substring(lease.nfTokenId.length - 10)}`}
         expanded="true"
-        panelClassName="bg-premium-dark text-light"
+        panelClassName="bg-midnight-bloom text-light"
         panelSummaryClassName="text-light"
         panelDetailClassName="text-light overflow-auto">
         <RegularTable

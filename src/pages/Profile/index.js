@@ -177,7 +177,10 @@ export default function Profile(props) {
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
-          <Card className="card-box mb-4 bg-premium-dark border-0 text-light">
+          <h5 className="card-title font-weight-bold font-size-md">
+            Wallet
+          </h5>
+          <Card className="card-box mb-4 bg-midnight-bloom border-0 text-light">
             {(info && <CardContent className="p-3 text-center wallet-balance">
               <span className="font-weight-bold amount">
                 {info.evrBalance}
