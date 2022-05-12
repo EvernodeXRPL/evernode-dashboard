@@ -12,6 +12,7 @@ import {
   Divider
 } from '@material-ui/core';
 
+import Loader from '../../components/Loader';
 
 import { connect } from 'react-redux';
 
@@ -74,9 +75,8 @@ const Header = props => {
               </Tooltip>
             </Box>
           </Box>
-          {ledger &&
-            <Box className="d-flex align-items m-2 pr-1 pl-1">
-              {/* <List disablePadding>
+          <Box className="d-flex align-items m-2 pr-1 pl-1">
+            {/* <List disablePadding>
               <ListItem className="p-0 m-0">
                 <ListItemIcon style={{ minWidth: "0" }} className="mr-2">
                   <ListIcon className="text-white" fontSize="small" />
@@ -96,26 +96,28 @@ const Header = props => {
                 />
               </ListItem>
             </List> */}
-              <Card className="card-box">
-                <CardContent className="p-3">
-                  <div className="align-box-row align-items-start">
-                    <div className="font-weight-bold mr-3">
-                      <small className="text-black-50 d-block mb-1 text-uppercase">
-                        Last Closed Ledger
-                      </small>
-                      <span className="font-size-l mt-1">{ledger.ledgerIndex}</span>
+            <Card className="card-box">
+              {ledger ?
+                (
+                  <CardContent className="p-3">
+                    <div className="align-box-row align-items-start">
+                      <div className="font-weight-bold mr-3">
+                        <small className="text-black-50 d-block mb-1 text-uppercase">
+                          Last Closed Ledger
+                        </small>
+                        <span className="font-size-l mt-1">{ledger.ledgerIndex}</span>
+                      </div>
+                      <Divider orientation="vertical" flexItem />
+                      <div className="ml-3">
+                        <small className="text-black-50 d-block mb-1 text-uppercase">
+                          Moment
+                        </small>
+                        <span className="font-size-m mt-1">{ledger.moment}</span>
+                      </div>
                     </div>
-                    <Divider orientation="vertical" flexItem />
-                    <div className="ml-3">
-                      <small className="text-black-50 d-block mb-1 text-uppercase">
-                        Moment
-                      </small>
-                      <span className="font-size-m mt-1">{ledger.moment}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </Box>}
+                  </CardContent>) : <Loader className="p-3" size="1rem" />}
+            </Card>
+          </Box>
         </Box>
       </AppBar>
     </Fragment>
