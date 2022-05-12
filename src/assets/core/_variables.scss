@@ -1231,17 +1231,13 @@ $box-shadow-layout-left:
         -0.25rem 0 0.53125rem rgba($gray-900,.05),
         -0.125rem 0 0.1875rem rgba($gray-900,.03);
 
-// Carolina React Admin Dashboard with Material-UI Free Layout Components
-
 @import "../layout-components/Header/variables";
 @import "../layout-components/Sidebar/variables";
 @import "../layout-components/Footer/variables";
 
-// Carolina React Admin Dashboard with Material-UI Free Layout Blueprints
-
 @import "../layout-blueprints/LeftSidebar/variables";
 
-// Carolina React Admin Dashboard with Material-UI Free Components
-
 @import "../components/NavigationMenus/NavigationMenusVerticalBasic/variables";
+
+@import "../pages/Profile/variables";
 
