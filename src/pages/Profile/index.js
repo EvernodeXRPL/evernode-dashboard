@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect } from 'react';
+import { useHistory } from "react-router-dom";
 
 import PageTitle from '../../layout-components/PageTitle';
 import RegularTable from '../../components/RegularTable';
@@ -13,14 +14,39 @@ import Leases from './Leases';
 
 import { useEvernode } from '../../services/evernode';
 import Loader from '../../components/Loader';
+import { StorageKeys } from '../../common/constants';
 
 export default function Profile(props) {
-  const address = props.match.params.address;
+  const history = useHistory();
+  const evernode = useEvernode();
+
+  let address = props.match.params.address;
+  let selfAddress = localStorage.getItem(StorageKeys.hostAddress);
+  let redirect;
+  if (!address) {
+    if (!selfAddress) {
+      let input;
+      while (!/^r[a-zA-Z0-9]{24,34}$/g.test(input)) {
+        input = prompt("Please enter host address");
+        if (!input) break;
+      }
+
+      if (input) {
+        selfAddress = input;
+        localStorage.setItem(StorageKeys.hostAddress, selfAddress);
+      }
+    }
+    if (selfAddress)
+      address = selfAddress
+  }
+  else if (address === selfAddress)
+    redirect = '/profile';
+
+  if (!address)
+    redirect = '/';
 
   const [info, setInfo] = React.useState(null);
   const [configs, setConfigs] = React.useState(null);
-
-  const evernode = useEvernode();
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -124,12 +150,15 @@ export default function Profile(props) {
       });
     }
 
-    if (!info)
-      fetchInfo();
-
-    if (!configs)
-      fetchConfigs();
-  }, [address, evernode, info, configs]);
+    if (redirect)
+      history.push(redirect);
+    else {
+      if (!info)
+        fetchInfo();
+      if (!configs)
+        fetchConfigs();
+    }
+  }, [address, redirect, history, evernode, info, configs]);
 
   return (
     <Fragment>
@@ -172,12 +201,15 @@ export default function Profile(props) {
               <h5 className="card-title font-weight-bold font-size-md">
                 Leases
               </h5>
-              <Leases address={address} />
+              {address && <Leases address={address} />}
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
-          <Card className="card-box mb-4 bg-premium-dark border-0 text-light">
+          <h5 className="card-title font-weight-bold font-size-md">
+            Wallet
+          </h5>
+          <Card className="card-box mb-4 bg-midnight-bloom border-0 text-light">
             {(info && <CardContent className="p-3 text-center wallet-balance">
               <span className="font-weight-bold amount">
                 {info.evrBalance}

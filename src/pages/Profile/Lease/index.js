@@ -13,21 +13,25 @@ export default function Lease(props) {
   const tableValues = [
     {
       key: 'NFToken Id',
-      value: lease.NFTokenID
+      value: lease.nfTokenId
+    },
+    {
+      key: 'URI',
+      value: lease.uri
     },
     {
       key: 'Offer Index',
-      value: lease.index
+      value: lease.offerIndex
     }
   ];
 
   return (
     <Grid item xs={12} className="pb-2">
       <AccordionsCollapse
-        id={lease.NFTokenID}
-        summary={`${lease.NFTokenID.substring(0, 20)}...`}
+        id={lease.nfTokenId}
+        summary={`${lease.nfTokenId.substring(0, 10)}......${lease.nfTokenId.substring(lease.nfTokenId.length - 10)}`}
         expanded="true"
-        panelClassName="bg-premium-dark text-light"
+        panelClassName="bg-midnight-bloom text-light"
         panelSummaryClassName="text-light"
         panelDetailClassName="text-light overflow-auto">
         <RegularTable

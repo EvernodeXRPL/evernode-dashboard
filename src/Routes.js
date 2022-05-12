@@ -6,12 +6,12 @@ import { ThemeProvider } from '@material-ui/styles';
 
 import MuiTheme from './theme';
 import LeftSidebar from './layout-blueprints/LeftSidebar';
-import Profile from './pages/Profile';
-import Hosts from './pages/Hosts';
 
 import { EvernodeProvider } from './services/evernode';
+import Loader from './components/Loader';
 
-const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Hosts = lazy(() => import('./pages/Hosts'));
+const Profile = lazy(() => import('./pages/Profile'));
 
 const Routes = () => {
   const location = useLocation();
@@ -45,16 +45,15 @@ const Routes = () => {
             fallback={
               <div className="d-flex align-items-center vh-100 justify-content-center text-center font-weight-bold font-size-lg py-3">
                 <div className="w-50 mx-auto">
-                  Please wait while we load the live preview examples
+                  <Loader size="5rem" />
                 </div>
               </div>
             }>
             <Switch>
-              <Redirect exact from="/" to="/dashboard" />
+              <Redirect exact from="/" to="/hosts" />
               <Route
                 path={[
-                  '/dashboard',
-                  '/profile/:address',
+                  '/profile/:address?',
                   '/hosts'
                 ]}>
                 <LeftSidebar>
@@ -66,21 +65,18 @@ const Routes = () => {
                       variants={pageVariants}
                       transition={pageTransition}>
                       <Route
-                        path="/dashboard"
-                        component={Dashboard}
-                      />
-                      <Route
-                        path="/profile/:address"
-                        component={Profile}
-                      />
-                      <Route
                         path="/hosts"
                         component={Hosts}
+                      />
+                      <Route
+                        path="/profile/:address?"
+                        component={Profile}
                       />
                     </motion.div>
                   </Switch>
                 </LeftSidebar>
               </Route>
+              <Redirect exact from="*" to="/" />
             </Switch>
           </Suspense>
         </AnimatePresence>

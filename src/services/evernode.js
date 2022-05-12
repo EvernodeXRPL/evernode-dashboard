@@ -9,7 +9,6 @@ const EvernodeContext = createContext(null);
 export const EvernodeProvider = (props) => {
     const value = {
         registryAddress: props.registryAddress || registryAddress,
-        defHostAddress: props.defHostAddress || defHostAddress,
         getHostInfo: props.getHostInfo || getHostInfo,
         getConfigs: props.getConfigs || getConfigs,
         getLeases: props.getLeases || getLeases,
@@ -31,7 +30,6 @@ export const useEvernode = () => {
 }
 
 const registryAddress = process.env.REACT_APP_REGISTRY_ADDRESS;
-const defHostAddress = process.env.REACT_APP_DEF_HOST_ADDRESS;
 
 const xrplApi = new evernode.XrplApi();
 evernode.Defaults.set({
@@ -51,7 +49,7 @@ const getConfigs = async () => {
     return client.config;
 }
 
-const getLeases = async (address = defHostAddress) => {
+const getLeases = async (address) => {
     const client = new evernode.HostClient(address);
     await client.connect();
 
@@ -59,12 +57,21 @@ const getLeases = async (address = defHostAddress) => {
     const leaseNfts = nfts.filter(n => n.URI.startsWith(evernode.EvernodeConstants.LEASE_NFT_PREFIX_HEX));
 
     const offers = await client.xrplAcc.getNftOffers();
-    const leaseOffers = offers.filter(o => leaseNfts.map(l => l.NFTokenID).includes(o.NFTokenID));
+    let leaseOffers = [];
+    for (const offer of offers) {
+        const nft = leaseNfts.find(l => l.NFTokenID === offer.NFTokenID);
+        if (nft)
+            leaseOffers.push({
+                nfTokenId: nft.NFTokenID,
+                offerIndex: offer.index,
+                uri: nft.URI
+            });
+    }
 
     return leaseOffers;
 }
 
-const getEVRBalance = async (address = defHostAddress) => {
+const getEVRBalance = async (address) => {
     const client = new evernode.HostClient(address);
     await client.connect();
 
