@@ -16,7 +16,7 @@ import { useEvernode } from '../../services/evernode';
 import Loader from '../../components/Loader';
 import { StorageKeys } from '../../common/constants';
 
-export default function Profile(props) {
+export default function Host(props) {
   const history = useHistory();
   const evernode = useEvernode();
 
@@ -40,7 +40,7 @@ export default function Profile(props) {
       address = selfAddress
   }
   else if (address === selfAddress)
-    redirect = '/profile';
+    redirect = '/host';
 
   if (!address)
     redirect = '/';
@@ -177,7 +177,7 @@ export default function Profile(props) {
           </CardContent>) || <Loader className="mt-1 p-2" size="1.5rem" />}
         </Card>
       </PageTitle>
-      <Grid container spacing={4} className="profile">
+      <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
             <CardContent className="p-0">

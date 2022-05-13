@@ -16,15 +16,14 @@ export default function Hosts() {
   useEffect(() => {
     async function getData() {
       const data = await evernode.getHosts();
-      console.log(data);
       setIsLoaded(true)
       setHosts(data);
     };
     getData();
-  }, []);
+  }, [evernode]);
 
   const handleRowClick = useCallback((e) => {
-    history.push(`/profile/${e.address}`);
+    history.push(`/host/${e.address}`);
   }, [history]);
 
   return (

@@ -11,7 +11,7 @@ import { EvernodeProvider } from './services/evernode';
 import Loader from './components/Loader';
 
 const Hosts = lazy(() => import('./pages/Hosts'));
-const Profile = lazy(() => import('./pages/Profile'));
+const Host = lazy(() => import('./pages/Host'));
 
 const Routes = () => {
   const location = useLocation();
@@ -53,7 +53,7 @@ const Routes = () => {
               <Redirect exact from="/" to="/hosts" />
               <Route
                 path={[
-                  '/profile/:address?',
+                  '/host/:address?',
                   '/hosts'
                 ]}>
                 <LeftSidebar>
@@ -69,8 +69,8 @@ const Routes = () => {
                         component={Hosts}
                       />
                       <Route
-                        path="/profile/:address?"
-                        component={Profile}
+                        path="/host/:address?"
+                        component={Host}
                       />
                     </motion.div>
                   </Switch>

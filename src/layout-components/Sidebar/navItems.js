@@ -10,9 +10,9 @@ const navItems = [
         to: "/hosts"
       },
       {
-        label: "Profile",
+        label: "My Host",
         icon: DnsIcon,
-        to: "/profile"
+        to: "/host"
       }
     ]
   }];
