@@ -1,26 +1,32 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useCallback } from 'react';
+import { useHistory } from "react-router-dom";
+
 import PageTitle from '../../layout-components/PageTitle';
 import Table from '../../components/Table';
 
 export default function Hosts() {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [hosts, setHosts] = useState([]);
+  const history = useHistory();
 
-  useEffect(() => {
-    async function fetchData() {
-      const res = await fetch('https://firestore.googleapis.com/v1/projects/evernodeindex/databases/(default)/documents/rHQQq5aJ5kxFyNJXE36rAmuhxpDvpLHcWq_hosts');
-      const data = await res.json();
-      setHosts(data.documents);
-      setIsLoaded(true);
+  // This is a dummy data array.
+  const hosts = [
+    {
+      address: "r9T3aBfZemZfWrbdmCzdVS2tp4pAg4XMDt"
+    },
+    {
+      address: "r9T3aBfZemZfWrbdmCzdVS2tp4pAg4XMDt"
     }
-    fetchData();
-  }, []);
+  ];
+
+  const handleRowClick = useCallback((e) => {
+    history.push(`/profile/${e.address}`);
+  }, [history]);
+
   return (
     <Fragment>
       <PageTitle
         titleHeading="Hosts"
       />
-      <Table hosts={hosts} />
+      <Table values={hosts} onRowClick={handleRowClick} />
     </Fragment>
   );
 }

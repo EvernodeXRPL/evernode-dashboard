@@ -19,7 +19,6 @@ const Sidebar = props => {
     setSidebarToggleMobile,
     sidebarToggleMobile,
     sidebarFixed,
-
     sidebarShadow
   } = props;
 
@@ -27,10 +26,10 @@ const Sidebar = props => {
 
   const sidebarMenuContent = (
     <div>
-      {navItems.map(list => (
+      {navItems.map((list, i) => (
         <SidebarMenu
           component="div"
-          key={list.label}
+          key={list.label || i}
           pages={list.content}
           title={list.label}
         />
