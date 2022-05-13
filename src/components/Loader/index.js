@@ -21,7 +21,7 @@ export default function Loader(props) {
       xs={12}
       sx={{ display: 'flex' }}
       className={className}>
-      <CircularProgress size={size} />
+      <CircularProgress color="inherit" size={size} />
     </Grid>
   );
 }

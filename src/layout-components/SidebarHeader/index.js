@@ -7,7 +7,7 @@ import { IconButton, Box, Tooltip } from '@material-ui/core';
 
 import { connect } from 'react-redux';
 
-import projectLogo from '../../assets/images/react.svg';
+import projectLogo from '../../assets/images/logo-white.png';
 
 import { setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 
@@ -29,22 +29,19 @@ const SidebarHeader = props => {
           title="Evernod Host Dashboard with Material-UI Free">
           <Link to="/" className="header-logo-wrapper-link">
             <IconButton
-              color="primary"
-              size="medium"
-              className="header-logo-wrapper-btn">
+              size="medium">
               <img
                 className="app-sidebar-logo"
-                alt="Evernod Host Dashboard with Material-UI Free"
+                alt="Evernode Host Dashboard with Material-UI Free"
                 src={projectLogo}
               />
             </IconButton>
           </Link>
-          <Box className="header-logo-text">Evernode</Box>
         </Box>
         <Box className="app-sidebar-header-btn-mobile">
           <Tooltip title="Toggle Sidebar" placement="right">
             <IconButton
-              color="inherit"
+              color="primary"
               onClick={toggleSidebarMobile}
               size="medium">
               {sidebarToggleMobile ? (

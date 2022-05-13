@@ -53,12 +53,12 @@ body {
     }
 
     font-size: 14px;
-    color: $blue;
+    color: $white;
 
     &.active,
     &:hover {
-      background: none;
-      color: $primary;
+      background-color: $cornflowerBlue;
+      border-radius: 0 50px 50px 0;
     }
   }
 
@@ -83,7 +83,8 @@ body {
   }
 
   .active-item {
-    color: $primary;
     font-weight: 500;
+    background-color: $cornflowerBlue;
+    border-radius: 0 50px 50px 0;
   }
 }
