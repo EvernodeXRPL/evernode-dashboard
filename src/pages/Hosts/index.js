@@ -1,21 +1,27 @@
-import React, { Fragment, useCallback } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
 import PageTitle from '../../layout-components/PageTitle';
 import Table from '../../components/Table';
+import { useEvernode } from '../../services/evernode';
+import Loader from '../../components/Loader';
 
 export default function Hosts() {
   const history = useHistory();
+  const evernode = useEvernode();
 
-  // This is a dummy data array.
-  const hosts = [
-    {
-      address: "r9T3aBfZemZfWrbdmCzdVS2tp4pAg4XMDt"
-    },
-    {
-      address: "r9T3aBfZemZfWrbdmCzdVS2tp4pAg4XMDt"
-    }
-  ];
+  const [hosts, setHosts] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function getData() {
+      const data = await evernode.getHosts();
+      console.log(data);
+      setIsLoaded(true)
+      setHosts(data);
+    };
+    getData();
+  }, []);
 
   const handleRowClick = useCallback((e) => {
     history.push(`/profile/${e.address}`);
@@ -26,7 +32,8 @@ export default function Hosts() {
       <PageTitle
         titleHeading="Hosts"
       />
-      <Table values={hosts} onRowClick={handleRowClick} />
+      {(isLoaded && <Table hosts={hosts} onRowClick={handleRowClick} />) ||
+        <Loader className="p-4" />}
     </Fragment>
   );
 }
