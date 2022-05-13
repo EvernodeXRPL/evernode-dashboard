@@ -26,13 +26,13 @@ const SidebarHeader = props => {
       <div className={clsx('app-sidebar-header', {})}>
         <Box
           className="header-logo-wrapper"
-          title="Evernod Host Dashboard with Material-UI Free">
+          title="Evernod Host Dashboard">
           <Link to="/" className="header-logo-wrapper-link">
             <IconButton
               size="medium">
               <img
                 className="app-sidebar-logo"
-                alt="Evernode Host Dashboard with Material-UI Free"
+                alt="Evernode Host Dashboard"
                 src={projectLogo}
               />
             </IconButton>

@@ -13,14 +13,14 @@ const HeaderLogo = props => {
       <div className={clsx('app-header-logo', {})}>
         <Box
           className="header-logo-wrapper"
-          title="Evernod Host Dashboard with Material-UI Free">
+          title="Evernod Host Dashboard">
           <Link to="/" className="header-logo-wrapper-link">
             <IconButton
               color="primary"
               size="medium">
               <img
                 className="app-header-logo-img"
-                alt="Evernod Host Dashboard with Material-UI Free"
+                alt="Evernod Host Dashboard"
                 src={projectLogo}
               />
             </IconButton>
