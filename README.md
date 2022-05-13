@@ -1,63 +1,34 @@
-# Evernode System Dashboard and Streamer
-Evernode system dashboard web app. (ReactJS) and central streamer.
+# Evernode Host Dashboard
+Evernode host dashboard web app (ReactJS).
 
-## Dashboard
-
-### Configs
-Edit the `public/config.js` to specify the evernode system dashboard configs.
-Contains the list on countries specified in cluster creation.
-Contains azure signalR and table storage keys.
-
+## Environment
+Add `.env.development.local` file in root directory and specify the dev registry address.
+Add `.env.production.local` file in root directory and specify the prod registry address.
 ```
-yarn install
-
-# Production build
-yarn build
-
-# Development server
-yarn start
+REACT_APP_REGISTRY_ADDRESS=<Registry address>
 ```
 
 ### URL
-Must use "evernode" sub directory (eg. http://localhost:3000/evernode). This is controlled in `.env` file.
+Must use "evernode-host-dashboard" sub directory (eg. http://localhost:3000/evernode-host-dashboard). This is controlled in `.env` file.
 
+## Scripts
 
-## Central Streamer
+In the project directory, you can run:
 
-Create a config file named `streamer/config.json` in the following format and populate. Access keys are in project wiki.
-```json
-{
-    "azure_function": {
-        "hostname": "",
-        "path": ""
-    },
-    "azure_table": {
-        "host": "",
-        "table": "",
-        "sas": ""
-    },
-    "vultr": {
-        "api_key": "",
-        "group": ""
-    }
-}
-```
-### Running
+### `npm start`
 
-Default:
-```bash
-node streamer.js
-```
-To override the hook address streamer listens to:
-```bash
-HOOK_ADDRESS='r4Y3oZ22QLbF7m2jQDcdG8byYWe9rxfMq7' node streamer.js
-```
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-## Sashi Streamer
-- Upload the build output of sashi streamer in to the evernode blob storage if any new changes are done.
-- `sashi-streamer-install.sh` script installs sashi streamer as a systemd service in host machine.
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-```bash
-https://sthotpocket.blob.core.windows.net/evernode/sashi-streamer-install.sh | bash
-```
-Use the above command to install sashi streamer on a host machine.
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.

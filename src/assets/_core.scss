@@ -1,0 +1,17 @@
+// Core
+
+@import "widgets/bootstrap/scss/functions";
+
+@import "widgets/bootstrap/scss/variables";
+@import "core/variables";
+
+@import "widgets/bootstrap/scss/mixins";
+
+// Utilities
+
+@import "core/utilities/helpers";
+@import "core/utilities/background";
+
+// Bootstrap base
+
+@import "widgets/bootstrap/base";
