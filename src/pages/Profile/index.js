@@ -166,7 +166,7 @@ export default function Profile(props) {
         titleHeading={address}
         titleDescription={(info && <Typography type="p">{info.hostInfo.nfTokenId}</Typography>) ||
           <Loader className="p-0" size="1rem" />}>
-        <Card className="mt-1 bg-midnight-bloom border-0 text-light">
+        <Card className="mt-1 bg-unicorn border-0 text-light">
           {(info && <CardContent className="pt-1 pb-1 text-center wallet-balance">
             <span className="font-weight-bold amount">
               {info.evrBalance}

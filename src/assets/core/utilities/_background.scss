@@ -2,19 +2,22 @@
 
 // Neutral
 
-@each $color, $value in $theme-colors-neutral {
+@each $color,
+$value in $theme-colors-neutral {
   @include bg-variant(".bg-neutral-#{$color}", $value);
 }
 
 // Brands
 
-@each $color, $value in $brand-colors {
+@each $color,
+$value in $brand-colors {
   @include bg-variant(".bg-brand-#{$color}", $value);
 }
 
 // Text brands
 
-@each $color, $value in $brand-colors {
+@each $color,
+$value in $brand-colors {
   @include text-emphasis-variant(".text-#{$color}", $value);
 }
 
@@ -126,31 +129,38 @@
 }
 
 .bg-skim-blue {
-  background-image: linear-gradient( 135deg, #ABDCFF 10%, #0396FF 100%) !important;;
+  background-image: linear-gradient(135deg, #ABDCFF 10%, #0396FF 100%) !important;
+  ;
 }
 
 .bg-light-pure {
-  background-image: linear-gradient( 135deg, #CE9FFC 10%, #7367F0 100%) !important;;
+  background-image: linear-gradient(135deg, #CE9FFC 10%, #7367F0 100%) !important;
+  ;
 }
 
 .bg-nice-redora {
-  background-image: linear-gradient( 135deg, #F761A1 10%, #8C1BAB 100%) !important;;
+  background-image: linear-gradient(135deg, #F761A1 10%, #8C1BAB 100%) !important;
+  ;
 }
 
 .bg-red-lights {
-  background-image: linear-gradient( 135deg, #F05F57 10%, #360940 100%) !important;;
+  background-image: linear-gradient(135deg, #F05F57 10%, #360940 100%) !important;
+  ;
 }
 
 .bg-serious-blue {
-  background-image: linear-gradient( 135deg, #97ABFF 10%, #123597 100%) !important;;
+  background-image: linear-gradient(135deg, #97ABFF 10%, #123597 100%) !important;
+  ;
 }
 
 .bg-deep-sky {
-  background-image: linear-gradient( 135deg, #6B73FF 10%, #000DFF 100%) !important;;
+  background-image: linear-gradient(135deg, #6B73FF 10%, #000DFF 100%) !important;
+  ;
 }
 
 .bg-sunrise-purple {
-  background-image: linear-gradient( 135deg, #3B2667 10%, #BC78EC 100%) !important;;
+  background-image: linear-gradient(135deg, #3B2667 10%, #BC78EC 100%) !important;
+  ;
 }
 
 // Composed backgrounds
@@ -175,24 +185,28 @@
   background-image: url('../../images/composed-bg/bg5.jpg');
 }
 
+.bg-unicorn {
+  background-image: linear-gradient(-20deg, #07112D 0%, #0037FF 100%) !important;
+}
+
 // Gray variations backgrounds
 
 .bg-gray-100 {
-  background: $gray-100 !important;
+  background: $gray-100  !important;
 }
 
 .bg-gray-200 {
-  background: $gray-200 !important;
+  background: $gray-200  !important;
 }
 
 .bg-gray-300 {
-  background: $gray-300 !important;
+  background: $gray-300  !important;
 }
 
 .bg-gray-400 {
-  background: $gray-400 !important;
+  background: $gray-400  !important;
 }
 
 .bg-gray-500 {
-  background: $gray-500 !important;
+  background: $gray-500  !important;
 }
