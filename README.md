@@ -2,7 +2,7 @@
 Evernode host dashboard web app (ReactJS).
 
 ## Environment
-Add `.env.local` file and specify registry address.
+Add `.env.local` file in root directory and specify the registry address.
 ```
 REACT_APP_REGISTRY_ADDRESS=<Registry address>
 ```
