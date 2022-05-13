@@ -4,18 +4,10 @@ import {
   Card,
   CardContent
 } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
 
 export default function Table(props) {
 
-  const history = useHistory();
-
-  const handleRowClick = (e, address) => {
-    console.log(address);
-    history.push(`/hosts/${address}`);
-    e.preventDefault();
-  }
-  console.log(props.hosts);
+  const { hosts, onRowClick } = props;
   return (
     <Fragment>
       <Card className="card-box mb-4">
@@ -25,6 +17,7 @@ export default function Table(props) {
               <thead className="thead-light">
                 <tr>
                   <th style={{ width: '30%' }}>Address</th>
+                  <th className="text-center">Status</th>
                   <th className="text-center">Country Code</th>
                   <th className="text-center">CPU</th>
                   <th className="text-center">Ram</th>
@@ -34,8 +27,8 @@ export default function Table(props) {
                 </tr>
               </thead>
               <tbody>
-                {props.hosts.map((host, index) => (
-                  <tr key={index} onClick={e => handleRowClick(e, host.fields.address.stringValue)} style={{cursor: 'pointer'}}>
+                {hosts.map((host, index) => (
+                  <tr key={index} onClick={() => onRowClick(host)} style={{ cursor: 'pointer' }}>
                     <td>
                       <div className="d-flex align-items-center">
                         <div>
@@ -43,60 +36,48 @@ export default function Table(props) {
                             href="#/"
                             className="font-weight-bold text-black"
                             title="...">
-                            {host.fields.address.stringValue}
+                            {host.address}
                           </a>
                           <span className="text-black-50 d-block py-1">
                             {
-                              host.fields.version &&
-                              <span>Version: {host.fields.version?.stringValue} | </span>
+                              host.version &&
+                              <span>Version: {host.version} | </span>
                             }
                             {
-                              host.fields.description &&
-                              <span>Description: {host.fields.description?.stringValue}</span>
+                              host.description &&
+                              <span>Description: {host.description}</span>
                             }
                           </span>
                         </div>
                       </div>
                     </td>
                     <td className="text-center">
-                      {/* <div className="h-auto py-0 px-3 badge badge-warning">
-                        Pending
-                      </div> */}
-                      {host.fields.country_code.stringValue}
+                      { (host.active && 
+                        <div className="h-auto py-2 px-3 badge badge-success">
+                        Active
+                      </div>
+                      ) || (<div className="h-auto py-2 px-3 badge badge-warning">
+                      Inactive
+                    </div>)}
+                      
                     </td>
                     <td className="text-center">
-                      {/* <div className="h-auto py-0 px-3 badge badge-warning">
-                        Pending
-                      </div> */}
-                      {host.fields.cpu_microsec.integerValue}
+                      {host.countryCode}
                     </td>
                     <td className="text-center">
-                      {/* <div className="h-auto py-0 px-3 badge badge-warning">
-                        Pending
-                      </div> */}
-                      {host.fields.ram_mb.integerValue}
+                      {host.cpuMicrosec}
                     </td>
                     <td className="text-center">
-                      {/* <div className="h-auto py-0 px-3 badge badge-warning">
-                        Pending
-                      </div> */}
-                      {host.fields.disk_mb.integerValue}
+                      {host.ramMb}
                     </td>
                     <td className="text-center">
-                      {/* <Box>
-                        <IconButton color="primary" size="small">
-                          <FontAwesomeIcon icon={['fas', 'ellipsis-h']} />
-                        </IconButton>
-                      </Box> */}
-                      {host.fields.no_of_total_instances.integerValue}
+                      {host.diskMb}
                     </td>
                     <td className="text-center">
-                      {/* <Box>
-                        <IconButton color="primary" size="small">
-                          <FontAwesomeIcon icon={['fas', 'ellipsis-h']} />
-                        </IconButton>
-                      </Box> */}
-                      {host.fields.no_of_active_instances.integerValue}
+                      {host.noOfTotalInstances}
+                    </td>
+                    <td className="text-center">
+                      {host.noOfActiveInstances}
                     </td>
                   </tr>
                 ))}
