@@ -10,7 +10,7 @@ import {
   Paper
 } from '@material-ui/core';
 
-export default function LivePreviewExample(props) {
+export default function RegularTable(props) {
   const {
     headings,
     values,

@@ -36,9 +36,7 @@ export default function AccordionsCollapse(props) {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails
           className={`${panelDetailClassName} p-0`}>
-          <Typography component={'span'}>
-            {props.children}
-          </Typography>
+          {props.children}
         </ExpansionPanelDetails>
       </ExpansionPanel>
     </Fragment>

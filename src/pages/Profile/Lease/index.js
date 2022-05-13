@@ -29,7 +29,7 @@ export default function Lease(props) {
     <Grid item xs={12} className="pb-2">
       <AccordionsCollapse
         id={lease.nfTokenId}
-        summary={`${lease.nfTokenId.substring(0, 10)}......${lease.nfTokenId.substring(lease.nfTokenId.length - 10)}`}
+        summary={`${lease.nfTokenId.substring(0, 26)}......${lease.nfTokenId.substring(lease.nfTokenId.length - 8)}`}
         expanded="true"
         panelClassName="bg-midnight-bloom text-light"
         panelSummaryClassName="text-light"

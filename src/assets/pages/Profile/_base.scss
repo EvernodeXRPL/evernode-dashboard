@@ -1,14 +1,12 @@
 //  Core
 body {
-    .profile {
-        .wallet-balance {
-            .amount {
-                font-size: 3rem;
-            }
+    .wallet-balance {
+        .amount {
+            font-size: 2rem;
+        }
 
-            .evr {
-                font-size: 1rem;
-            }
+        .evr {
+            font-size: 1rem;
         }
     }
 }

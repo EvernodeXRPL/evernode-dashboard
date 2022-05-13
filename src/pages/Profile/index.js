@@ -165,9 +165,20 @@ export default function Profile(props) {
       <PageTitle
         titleHeading={address}
         titleDescription={(info && <Typography type="p">{info.hostInfo.nfTokenId}</Typography>) ||
-          <Loader className="p-0" size="1rem" />} />
+          <Loader className="p-0" size="1rem" />}>
+        <Card className="mt-1 bg-midnight-bloom border-0 text-light">
+          {(info && <CardContent className="pt-1 pb-1 text-center wallet-balance">
+            <span className="font-weight-bold amount">
+              {info.evrBalance}
+            </span>
+            <span className="font-weight-normal ml-1 evr">
+              EVR
+            </span>
+          </CardContent>) || <Loader className="mt-1 p-2" size="1.5rem" />}
+        </Card>
+      </PageTitle>
       <Grid container spacing={4} className="profile">
-        <Grid item xs={12} sm={12} md={5}>
+        <Grid item xs={12} md={6}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
             <CardContent className="p-0">
               <h5 className="card-title font-weight-bold font-size-md">
@@ -195,7 +206,7 @@ export default function Profile(props) {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={5}>
+        <Grid item xs={12} md={6}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
             <CardContent className="p-0">
               <h5 className="card-title font-weight-bold font-size-md">
@@ -203,21 +214,6 @@ export default function Profile(props) {
               </h5>
               {address && <Leases address={address} />}
             </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={2}>
-          <h5 className="card-title font-weight-bold font-size-md">
-            Wallet
-          </h5>
-          <Card className="card-box mb-4 bg-midnight-bloom border-0 text-light">
-            {(info && <CardContent className="p-3 text-center wallet-balance">
-              <span className="font-weight-bold amount">
-                {info.evrBalance}
-              </span>
-              <span className="font-weight-normal ml-1 evr">
-                EVR
-              </span>
-            </CardContent>) || <Loader className="p-4" />}
           </Card>
         </Grid>
       </Grid>

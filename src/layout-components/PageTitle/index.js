@@ -16,6 +16,7 @@ function PageTitle(props) {
             </div>
           </div>
         </div>
+        {props.children}
       </Paper>
     </Fragment>
   );
