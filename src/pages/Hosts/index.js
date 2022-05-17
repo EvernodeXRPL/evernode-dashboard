@@ -2,7 +2,7 @@ import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
 import PageTitle from '../../layout-components/PageTitle';
-import Table from '../../components/Table';
+import CustomTable from '../../components/CustomTable';
 import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
 
@@ -17,15 +17,15 @@ export default function Hosts() {
     async function getData() {
       const data = await evernode.getHosts();
       setIsLoaded(true);
-      const tableHeadings = {
-        address: "Address",
-        status: "Status",
-        countryCode: "Country Code",
-        cpu: "CPU",
-        ram: "RAM",
-        disk: "Disk",
-        maxInstances: "Max Instances",
-        activeInstances: "Active Instances"
+      const tableColumns = {
+        address: { title: "Address", className: 'text-start' },
+        status: { title: "Status", className: 'text-center' },
+        countryCode: { title: "Country Code", className: 'text-center' },
+        cpu: { title: "CPU", className: 'text-right' },
+        ram: { title: "RAM", className: 'text-right' },
+        disk: { title: "Disk", className: 'text-right' },
+        maxInstances: { title: "Max Instances", className: 'text-right' },
+        activeInstances: { title: "Active Instances", className: 'text-right' }
       };
       const tableValues = data.map(host => {
         return {
@@ -68,7 +68,7 @@ export default function Hosts() {
 
       setHosts({
         hosts: data,
-        tableHeadings: tableHeadings,
+        tableColumns: tableColumns,
         tableValues: tableValues
       });
     };
@@ -84,7 +84,7 @@ export default function Hosts() {
       <PageTitle
         titleHeading="Hosts"
       />
-      {(isLoaded && <Table headings={hosts.tableHeadings} values={hosts.tableValues} onRowClick={handleRowClick} />) ||
+      {(isLoaded && <CustomTable columns={hosts.tableColumns} values={hosts.tableValues} onRowClick={handleRowClick} />) ||
         <Loader className="p-4" />}
     </Fragment>
   );

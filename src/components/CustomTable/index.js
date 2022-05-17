@@ -5,15 +5,15 @@ import {
   CardContent
 } from '@material-ui/core';
 
-export default function Table(props) {
+export default function CustomTable(props) {
   const {
-    headings,
+    columns,
     values,
     hideHeadings,
     onRowClick
   } = props;
 
-  const keys = Object.keys(headings);
+  const keys = Object.keys(columns);
   return (
     <Fragment>
       <Card className="card-box mb-4">
@@ -23,7 +23,7 @@ export default function Table(props) {
               {!hideHeadings && <thead className="thead-light">
                 <tr>
                   {keys.map((k, i) => {
-                    return <th key={i}>{headings[k]}</th>
+                    return <th key={i}  className={columns[k].className}>{columns[k].title}</th>
                   })}
                 </tr>
               </thead>}
@@ -31,7 +31,7 @@ export default function Table(props) {
                 {values.map((value, i) => (
                   <tr key={i} onClick={() => onRowClick(value)} style={{ cursor: 'pointer' }}>
                     {keys.map((k, j) => {
-                      return <td key={j}>
+                      return <td key={j} className={columns[k].className}>
                         {value[k]}
                       </td>
                     })}
