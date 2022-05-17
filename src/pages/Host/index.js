@@ -62,7 +62,7 @@ export default function Host(props) {
         },
         {
           key: 'Instances',
-          value: `${hostInfo.maxInstances} out of ${hostInfo.activeInstances}`
+          value: `${hostInfo.activeInstances} out of ${hostInfo.maxInstances}`
         },
         {
           key: 'CPU',
