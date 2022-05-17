@@ -9,4 +9,16 @@ body {
             font-size: 1rem;
         }
     }
+
+    .online {
+        width: 0.8rem;
+        height: 0.8rem;
+        background: $success;
+    }
+
+    .offline {
+        width: 0.8rem;
+        height: 0.8rem;
+        background: $warning;
+    }
 }
