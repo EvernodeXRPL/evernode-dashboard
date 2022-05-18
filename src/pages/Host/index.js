@@ -46,7 +46,6 @@ export default function Host(props) {
     redirect = '/';
 
   const [info, setInfo] = React.useState(null);
-  const [configs, setConfigs] = React.useState(null);
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -56,6 +55,10 @@ export default function Host(props) {
         value: 'Value'
       }
       const tableValues = [
+        {
+          key: 'Registration Token Id',
+          value: hostInfo.nfTokenId
+        },
         {
           key: 'Country Code',
           value: hostInfo.countryCode
@@ -81,11 +84,11 @@ export default function Host(props) {
           value: hostInfo.lastHeartbeatLedger
         },
         {
-          key: 'Reg Ledger',
+          key: 'Registered on XRPL Ledger',
           value: hostInfo.registrationLedger
         },
         {
-          key: 'Reg Fee',
+          key: 'Registration Fee',
           value: hostInfo.registrationFee
         },
         {
@@ -102,63 +105,13 @@ export default function Host(props) {
       });
     }
 
-    const fetchConfigs = async () => {
-      const config = await evernode.getConfigs();
-      const tableHeadings = {
-        key: 'Key',
-        value: 'Value'
-      }
-      const tableValues = [
-        {
-          key: 'EVR Issuer',
-          value: config.evrIssuerAddress
-        },
-        {
-          key: 'Foundation',
-          value: config.foundationAddress
-        },
-        {
-          key: 'Heartbeat Freq',
-          value: config.hostHeartbeatFreq
-        },
-        {
-          key: 'Reg Fee',
-          value: config.hostRegFee
-        },
-        {
-          key: 'Lease Acquire Window',
-          value: config.leaseAcquireWindow
-        },
-        {
-          key: 'Moment Base Idx',
-          value: config.momentBaseIdx
-        },
-        {
-          key: 'Moment Size',
-          value: config.momentSize
-        }
-        ,
-        {
-          key: 'Purchaser Taget Price',
-          value: config.purchaserTargetPrice
-        }
-      ];
-      setConfigs({
-        configs: config,
-        tableHeadings: tableHeadings,
-        tableValues: tableValues
-      });
-    }
-
     if (redirect)
       history.push(redirect);
     else {
       if (!info)
         fetchInfo();
-      if (!configs)
-        fetchConfigs();
     }
-  }, [address, redirect, history, evernode, info, configs]);
+  }, [address, redirect, history, evernode, info]);
 
   return (
     <Fragment>
@@ -172,7 +125,7 @@ export default function Host(props) {
             </div>}
           </Typography>
         }
-        titleDescription={(info && <Typography type="p">{info.hostInfo.nfTokenId}</Typography>) ||
+        titleDescription={(info && <Typography type="p">{info.hostInfo.description}</Typography>) ||
           <Loader className="p-0" size="1rem" />}>
         <Card className="mt-1 bg-unicorn border-0 text-light">
           {(info && <CardContent className="pt-1 pb-1 text-center wallet-balance">
@@ -200,25 +153,12 @@ export default function Host(props) {
                 <Loader className="p-4" />}
             </CardContent>
           </Card>
-          <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
-            <CardContent className="p-0">
-              <h5 className="card-title font-weight-bold font-size-md">
-                Configurations
-              </h5>
-              {(configs && <RegularTable
-                headings={configs.tableHeadings}
-                values={configs.tableValues}
-                highlight={['key']}
-                hideHeadings />) ||
-                <Loader className="p-4" />}
-            </CardContent>
-          </Card>
         </Grid>
         <Grid item xs={12} md={6}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
             <CardContent className="p-0">
               <h5 className="card-title font-weight-bold font-size-md">
-                Leases
+                Available Leases
               </h5>
               {address && <Leases address={address} />}
             </CardContent>

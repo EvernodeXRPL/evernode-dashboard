@@ -26,6 +26,8 @@ import { useEvernode } from '../../services/Evernode';
 
 const Header = props => {
   const [ledger, setLedger] = React.useState(null);
+  const [environment, setEnvironment] = React.useState(null);
+  const [momentSize, setMomentSize] = React.useState(null);
 
   const evernode = useEvernode();
 
@@ -36,9 +38,19 @@ const Header = props => {
       })
     }
 
-    if (!ledger)
-      listen();
-  }, [evernode, ledger]);
+    const loadEnvironmet = () => {
+      setEnvironment(evernode.getEnvironment());
+    }
+
+    const loadMomentSize = async () => {
+      const config = await evernode.getConfigs();
+      setMomentSize(config.momentSize);
+    }
+
+    listen();
+    loadEnvironmet();
+    loadMomentSize();
+  }, [evernode]);
 
   const toggleSidebarMobile = () => {
     setSidebarToggleMobile(!sidebarToggleMobile);
@@ -76,26 +88,6 @@ const Header = props => {
             </Box>
           </Box>
           <Box className="d-flex align-items m-2 pr-1 pl-1">
-            {/* <List disablePadding>
-              <ListItem className="p-0 m-0">
-                <ListItemIcon style={{ minWidth: "0" }} className="mr-2">
-                  <ListIcon className="text-white" fontSize="small" />
-                </ListItemIcon>
-                <ListItemText
-                  disableTypography
-                  primary={<Typography type="body2" style={{ fontSize: "0.8rem" }}>{ledger.ledgerIndex}</Typography>}
-                />
-              </ListItem>
-              <ListItem className="p-0 m-0">
-                <ListItemIcon style={{ minWidth: "0" }} className="mr-2">
-                  <LinearScaleIcon className="text-white" fontSize="small" />
-                </ListItemIcon>
-                <ListItemText
-                  disableTypography
-                  primary={<Typography type="body2" style={{ fontSize: "0.8rem" }}>{ledger.moment}</Typography>}
-                />
-              </ListItem>
-            </List> */}
             <Card className="card-box">
               {ledger ?
                 (
@@ -103,17 +95,19 @@ const Header = props => {
                     <div className="align-box-row align-items-start">
                       <div className="font-weight-bold mr-3">
                         <small className="text-black-50 d-block mb-1 text-uppercase">
-                          Last Closed Ledger
+                          Last closed ledger ({environment})
                         </small>
                         <span className="font-size-l mt-1">{ledger.ledgerIndex}</span>
                       </div>
                       <Divider orientation="vertical" flexItem />
-                      <div className="ml-3">
-                        <small className="text-black-50 d-block mb-1 text-uppercase">
-                          Moment
-                        </small>
-                        <span className="font-size-m mt-1">{ledger.moment}</span>
-                      </div>
+                      <Tooltip title={`1 Moment = ${momentSize} XRPL Ledgers`}>
+                        <div className="ml-3">
+                          <small className="text-black-50 d-block mb-1 text-uppercase">
+                            Moment
+                          </small>
+                          <span className="font-size-m mt-1">{ledger.moment}</span>
+                        </div>
+                      </Tooltip>
                     </div>
                   </CardContent>) : <Loader className="p-3" size="1rem" />}
             </Card>

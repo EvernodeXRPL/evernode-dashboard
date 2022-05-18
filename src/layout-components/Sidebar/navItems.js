@@ -1,5 +1,6 @@
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 import DnsIcon from '@material-ui/icons/Dns';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 const navItems = [
   {
@@ -13,6 +14,11 @@ const navItems = [
         label: "My Host",
         icon: DnsIcon,
         to: "/host"
+      },
+      {
+        label: "Registry",
+        icon: SettingsApplicationsIcon,
+        to: "/registry"
       }
     ]
   }];

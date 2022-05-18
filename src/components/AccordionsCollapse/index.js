@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { Typography } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -14,6 +14,7 @@ export default function AccordionsCollapse(props) {
     panelClassName,
     panelSummaryClassName,
     panelDetailClassName,
+    headerTooltip
   } = props;
 
   const [expanded, setExpanded] = React.useState(props.expanded ? id : false);
@@ -22,18 +23,22 @@ export default function AccordionsCollapse(props) {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const panelSummary = <ExpansionPanelSummary
+    expandIcon={<ExpandMoreIcon className={panelSummaryClassName} />}
+    aria-controls="panel1bh-content"
+    id="panel1bh-header">
+    {summary}
+  </ExpansionPanelSummary>
+
   return (
     <Fragment>
       <ExpansionPanel
         expanded={expanded === id}
         onChange={handleChange(id)}
         className={panelClassName}>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon className={panelSummaryClassName} />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header">
-          <Typography>{summary}</Typography>
-        </ExpansionPanelSummary>
+        {headerTooltip ?
+          <Tooltip title={headerTooltip}>{panelSummary}</Tooltip> :
+          panelSummary}
         <ExpansionPanelDetails
           className={`${panelDetailClassName} p-0`}>
           {props.children}

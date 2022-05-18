@@ -8,9 +8,10 @@ const EvernodeContext = createContext(null);
 
 export const EvernodeProvider = (props) => {
     const value = {
-        registryAddress: props.registryAddress || registryAddress,
-        getHostInfo: props.getHostInfo || getHostInfo,
+        getRegistryAddress: props.getRegistryAddress || getRegistryAddress,
+        getEnvironment: props.getEnvironment || getEnvironment,
         getConfigs: props.getConfigs || getConfigs,
+        getHostInfo: props.getHostInfo || getHostInfo,
         getHosts: props.getHosts || getHosts,
         getLeases: props.getLeases || getLeases,
         getEVRBalance: props.getEVRBalance || getEVRBalance,
@@ -31,30 +32,37 @@ export const useEvernode = () => {
 }
 
 const registryAddress = process.env.REACT_APP_REGISTRY_ADDRESS;
+const environment = 'XRPL NFT DevNet'
 
 const xrplApi = new evernode.XrplApi();
 evernode.Defaults.set({
     registryAddress: registryAddress,
     xrplApi: xrplApi
 });
+const regClient = new evernode.RegistryClient();
+
+const getRegistryAddress = () => {
+    return registryAddress;
+}
+
+const getEnvironment = () => {
+    return environment;
+}
+
+const getConfigs = async () => {
+    await regClient.connect();
+    return regClient.config;
+}
+
+const getHosts = async () => {
+    await regClient.connect();
+    return regClient.getHosts();
+}
 
 const getHostInfo = async (address) => {
     const client = new evernode.HostClient(address);
     await client.connect();
     return await client.getRegistration();
-}
-
-const getConfigs = async () => {
-    const client = new evernode.RegistryClient();
-    await client.connect();
-    return client.config;
-}
-
-const getHosts = async () => {
-    const client = new evernode.RegistryClient();
-    await client.connect();
-
-    return client.getHosts();
 }
 
 const getLeases = async (address) => {
@@ -87,13 +95,10 @@ const getEVRBalance = async (address) => {
 }
 
 const onLedger = async (callback) => {
-    const client = new evernode.RegistryClient();
-    await client.connect();
-
     xrplApi.on(evernode.XrplApiEvents.LEDGER, async (e) => {
 
         const ledgerIndex = e.ledger_index;
-        const moment = await client.getMoment(ledgerIndex);
+        const moment = await regClient.getMoment(ledgerIndex);
         callback({
             ledgerIndex: ledgerIndex,
             moment: moment
