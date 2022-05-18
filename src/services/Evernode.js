@@ -11,8 +11,9 @@ export const EvernodeProvider = (props) => {
         getRegistryAddress: props.getRegistryAddress || getRegistryAddress,
         getEnvironment: props.getEnvironment || getEnvironment,
         getConfigs: props.getConfigs || getConfigs,
-        getHostInfo: props.getHostInfo || getHostInfo,
         getHosts: props.getHosts || getHosts,
+        decodeLeaseUri: props.decodeLeaseUri || decodeLeaseUri,
+        getHostInfo: props.getHostInfo || getHostInfo,
         getLeases: props.getLeases || getLeases,
         getEVRBalance: props.getEVRBalance || getEVRBalance,
         onLedger: props.onLedger || onLedger
@@ -57,6 +58,10 @@ const getConfigs = async () => {
 const getHosts = async () => {
     await regClient.connect();
     return regClient.getHosts();
+}
+
+const decodeLeaseUri = (uri) => {
+    return evernode.UtilHelpers.decodeLeaseNftUri(uri);
 }
 
 const getHostInfo = async (address) => {

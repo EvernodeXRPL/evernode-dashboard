@@ -65,9 +65,8 @@ export default function Registry() {
       });
     }
 
-    if (!configs)
-      fetchConfigs();
-  }, [evernode, configs]);
+    fetchConfigs();
+  }, [evernode]);
 
   return (
     <Fragment>

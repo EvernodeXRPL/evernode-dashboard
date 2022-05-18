@@ -12,8 +12,8 @@ export default function Lease(props) {
   };
   const tableValues = [
     {
-      key: 'URI',
-      value: lease.uri
+      key: 'Lease Amount',
+      value: lease.leaseAmount
     },
     {
       key: 'Offer Index',

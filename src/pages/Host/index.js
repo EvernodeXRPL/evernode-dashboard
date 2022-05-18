@@ -1,5 +1,7 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useCallback, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
+
+import EditIcon from '@material-ui/icons/Edit';
 
 import PageTitle from '../../layout-components/PageTitle';
 import RegularTable from '../../components/RegularTable';
@@ -8,7 +10,8 @@ import {
   Grid,
   Card,
   CardContent,
-  Typography
+  Typography,
+  Tooltip
 } from '@material-ui/core';
 import Leases from './Leases';
 
@@ -20,35 +23,38 @@ export default function Host(props) {
   const history = useHistory();
   const evernode = useEvernode();
 
-  let address = props.match.params.address;
-  let selfAddress = localStorage.getItem(StorageKeys.hostAddress);
-  let redirect;
-  if (!address) {
-    if (!selfAddress) {
-      let input;
-      while (!/^r[a-zA-Z0-9]{24,34}$/g.test(input)) {
-        input = prompt("Please enter host address");
-        if (!input) break;
-      }
+  const selfAddress = localStorage.getItem(StorageKeys.hostAddress);
+  const pathAddress = props.match.params.address;
 
-      if (input) {
-        selfAddress = input;
-        localStorage.setItem(StorageKeys.hostAddress, selfAddress);
-      }
+  const [address, setAddress] = React.useState(pathAddress || selfAddress);
+  const [info, setInfo] = React.useState(null);
+
+  const changeAddress = useCallback(() => {
+    let input;
+    while (!/^r[a-zA-Z0-9]{24,34}$/g.test(input)) {
+      input = prompt("Please enter host address");
+      if (!input) break;
     }
-    if (selfAddress)
-      address = selfAddress
-  }
-  else if (address === selfAddress)
-    redirect = '/host';
 
+    if (input) {
+      localStorage.setItem(StorageKeys.hostAddress, input);
+      setAddress(input);
+    }
+  }, []);
+
+  // If the path address param is empty this is My Host page and no address is set in local storage.
+  if (!address)
+    changeAddress();
+
+  let redirect;
   if (!address)
     redirect = '/';
-
-  const [info, setInfo] = React.useState(null);
+  else if (pathAddress === selfAddress)
+    redirect = '/host';
 
   useEffect(() => {
     const fetchInfo = async () => {
+      setInfo(null);
       const hostInfo = await evernode.getHostInfo(address);
       const tableHeadings = {
         key: 'Key',
@@ -107,18 +113,21 @@ export default function Host(props) {
 
     if (redirect)
       history.push(redirect);
-    else {
-      if (!info)
-        fetchInfo();
-    }
-  }, [address, redirect, history, evernode, info]);
+    else if (address) { }
+    fetchInfo();
+  }, [evernode, history, address, redirect]);
 
   return (
     <Fragment>
       <PageTitle
         titleHeading={
-          <Typography component={'span'} className="d-inline-flex">{address}
-            {<div className="ml-1 mt-auto mb-auto ">
+          <Typography component={'span'} className="d-inline-flex">
+            {address}
+            {address === selfAddress &&
+              <Tooltip title="Change address">
+                <EditIcon className="mt-auto mb-auto edit-btn" onClick={changeAddress} />
+              </Tooltip>}
+            {<div className="ml-1 mt-auto mb-auto">
               {(info &&
                 <div className={`rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>)
                 || <Loader className="p-0" size="0.8rem" />}

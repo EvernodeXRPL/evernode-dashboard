@@ -15,13 +15,20 @@ export default function Leases(props) {
 
   useEffect(() => {
     const fetchLeases = async () => {
-      const leaseData = await evernode.getLeases(address);
+      setLeases(null);
+      const res = await evernode.getLeases(address);
+      const leaseData = res.map(l => {
+        const uriInfo = evernode.decodeLeaseUri(l.uri)
+        return {
+          ...l,
+          ...uriInfo
+        }
+      });
       setLeases(leaseData);
     }
 
-    if (!leases)
-      fetchLeases();
-  }, [address, evernode, leases]);
+    fetchLeases();
+  }, [address, evernode]);
 
   return (
     <Fragment>

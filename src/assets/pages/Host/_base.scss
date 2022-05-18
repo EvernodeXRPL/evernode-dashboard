@@ -10,6 +10,16 @@ body {
         }
     }
 
+    .edit-btn {
+        font-size: 0.9rem;
+        cursor: pointer;
+        border-radius: 0.1rem;
+
+        &:hover {
+            background-color: $dark;
+        }
+    }
+
     .online {
         width: 0.8rem;
         height: 0.8rem;
