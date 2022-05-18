@@ -3,7 +3,7 @@ import React, { Fragment, useEffect } from 'react';
 import { Grid } from '@material-ui/core';
 
 import Lease from '../Lease';
-import { useEvernode } from '../../../services/evernode';
+import { useEvernode } from '../../../services/Evernode';
 import Loader from '../../../components/Loader';
 
 export default function Leases(props) {

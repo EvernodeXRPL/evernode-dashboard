@@ -22,7 +22,7 @@ import HeaderLogo from '../../layout-components/HeaderLogo';
 
 import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
-import { useEvernode } from '../../services/evernode';
+import { useEvernode } from '../../services/Evernode';
 
 const Header = props => {
   const [ledger, setLedger] = React.useState(null);

@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import Leases from './Leases';
 
-import { useEvernode } from '../../services/evernode';
+import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
 import { StorageKeys } from '../../common/constants';
 
@@ -62,7 +62,7 @@ export default function Host(props) {
         },
         {
           key: 'Instances',
-          value: `${hostInfo.noOfActiveInstances} out of ${hostInfo.noOfTotalInstances}`
+          value: `${hostInfo.activeInstances} out of ${hostInfo.maxInstances}`
         },
         {
           key: 'CPU',
@@ -163,7 +163,15 @@ export default function Host(props) {
   return (
     <Fragment>
       <PageTitle
-        titleHeading={address}
+        titleHeading={
+          <Typography component={'span'} className="d-inline-flex">{address}
+            {<div className="ml-1 mt-auto mb-auto ">
+              {(info &&
+                <div className={`rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>)
+                || <Loader className="p-0" size="0.8rem" />}
+            </div>}
+          </Typography>
+        }
         titleDescription={(info && <Typography type="p">{info.hostInfo.nfTokenId}</Typography>) ||
           <Loader className="p-0" size="1rem" />}>
         <Card className="mt-1 bg-unicorn border-0 text-light">

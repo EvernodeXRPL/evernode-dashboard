@@ -7,7 +7,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import MuiTheme from './theme';
 import LeftSidebar from './layout-blueprints/LeftSidebar';
 
-import { EvernodeProvider } from './services/evernode';
+import { EvernodeProvider } from './services/Evernode';
 import Loader from './components/Loader';
 
 const Hosts = lazy(() => import('./pages/Hosts'));
