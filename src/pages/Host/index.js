@@ -19,6 +19,10 @@ import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
 import { StorageKeys } from '../../common/constants';
 
+function round(n) {
+  return Math.round(n * 100) / 100;
+}
+
 export default function Host(props) {
   const history = useHistory();
   const evernode = useEvernode();
@@ -74,16 +78,20 @@ export default function Host(props) {
           value: `${hostInfo.activeInstances} out of ${hostInfo.maxInstances}`
         },
         {
-          key: 'CPU',
-          value: `${hostInfo.cpuMicrosec}us`
+          key: 'Specifications',
+          value: `${round(hostInfo.cpuMicrosec / 10000)}% CPU, 
+          ${round(hostInfo.ramMb / 1000)}GB RAM, 
+          ${round(hostInfo.diskMb / 1000)}GB Disk`
         },
         {
-          key: 'RAM',
-          value: `${hostInfo.ramMb}MB`
+          key: 'CPU Model',
+          value: `${hostInfo.cpuModelName}, ${hostInfo.cpuCount}, ${hostInfo.cpuMHz}`
         },
         {
-          key: 'Disk',
-          value: `${hostInfo.diskMb}MB`
+          key: 'Instance Size',
+          value: `${round(hostInfo.cpuMicrosec / 10000 / hostInfo.maxInstances)}% CPU, 
+          ${round(hostInfo.ramMb / 1000 / hostInfo.maxInstances)}GB RAM, 
+          ${round(hostInfo.diskMb / 1000 / hostInfo.maxInstances)}GB Disk`
         },
         {
           key: 'Last Heartbeat Ledger',

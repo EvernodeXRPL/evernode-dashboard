@@ -23,7 +23,7 @@ export default function CustomTable(props) {
               {!hideHeadings && <thead className="thead-light">
                 <tr>
                   {keys.map((k, i) => {
-                    return <th key={i}  className={columns[k].className}>{columns[k].title}</th>
+                    return <th key={i} className={columns[k].className}>{columns[k].title}</th>
                   })}
                 </tr>
               </thead>}

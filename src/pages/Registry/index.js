@@ -6,7 +6,8 @@ import RegularTable from '../../components/RegularTable';
 import {
   Grid,
   Card,
-  CardContent
+  CardContent,
+  Typography
 } from '@material-ui/core';
 
 import { useEvernode } from '../../services/Evernode';
@@ -16,10 +17,12 @@ export default function Registry() {
   const evernode = useEvernode();
 
   const [configs, setConfigs] = React.useState(null);
+  const [registryAddress, setRegistryAddress] = React.useState(null);
 
   useEffect(() => {
     const fetchConfigs = async () => {
       const config = await evernode.getConfigs();
+      setRegistryAddress(evernode.getRegistryAddress());
       const tableHeadings = {
         key: 'Key',
         value: 'Value'
@@ -72,7 +75,8 @@ export default function Registry() {
     <Fragment>
       <PageTitle
         titleHeading="Configurations"
-      />
+        titleDescription={(registryAddress && <Typography type="p">Registry Address: {registryAddress}</Typography>) ||
+          <Loader className="p-0" size="1rem" />} />
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
