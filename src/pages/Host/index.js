@@ -18,6 +18,7 @@ import Leases from './Leases';
 import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
 import { StorageKeys } from '../../common/constants';
+import ReactCountryFlag from 'react-country-flag';
 
 function round(n) {
   return Math.round(n * 100) / 100;
@@ -68,10 +69,6 @@ export default function Host(props) {
         {
           key: 'Registration Token Id',
           value: hostInfo.nfTokenId
-        },
-        {
-          key: 'Country Code',
-          value: hostInfo.countryCode
         },
         {
           key: 'Instances',
@@ -130,6 +127,18 @@ export default function Host(props) {
       <PageTitle
         titleHeading={
           <Typography component={'span'} className="d-inline-flex">
+            <span className="mr-2">
+              {info && <Tooltip title={info.hostInfo.countryCode}>
+                <span>
+                  <ReactCountryFlag
+                    countryCode={info.hostInfo.countryCode}
+                    style={{
+                      fontSize: '1.8em',
+                      cursor: 'pointer'
+                    }}
+                    aria-label={info.hostInfo.countryCode} /></span>
+              </Tooltip>}
+            </span>
             {address}
             {address === selfAddress &&
               <Tooltip title="Change address">
