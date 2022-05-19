@@ -55,9 +55,9 @@ const getConfigs = async () => {
     return regClient.config;
 }
 
-const getHosts = async () => {
+const getHosts = async (filters = null, pageSize = null, nextPageToken = null) => {
     await regClient.connect();
-    return regClient.getHosts();
+    return regClient.getHosts(filters, pageSize, nextPageToken);
 }
 
 const decodeLeaseUri = (uri) => {
