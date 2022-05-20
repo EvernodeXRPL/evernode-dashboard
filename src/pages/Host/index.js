@@ -13,16 +13,15 @@ import {
   Typography,
   Tooltip
 } from '@material-ui/core';
-import Leases from './Leases';
+import Leases from '../../business-components/Leases';
 
 import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
 import { StorageKeys } from '../../common/constants';
-import ReactCountryFlag from 'react-country-flag';
-
-function round(n) {
-  return Math.round(n * 100) / 100;
-}
+import CountryFlag from '../../business-components/CountryFlag';
+import EvrBalance from '../../business-components/EvrBalance';
+import CPUModel from '../../business-components/CPUModel';
+import InstanceSpecs from '../../business-components/InstanceSpecs';
 
 export default function Host(props) {
   const history = useHistory();
@@ -75,23 +74,15 @@ export default function Host(props) {
           value: `${hostInfo.activeInstances} out of ${hostInfo.maxInstances}`
         },
         {
-          key: 'Specifications',
-          value: `${round(hostInfo.cpuMicrosec / 10000)}% CPU, 
-          ${round(hostInfo.ramMb / 1000)}GB RAM, 
-          ${round(hostInfo.diskMb / 1000)}GB Disk`
-        },
-        {
           key: 'CPU Model',
-          value: `${hostInfo.cpuModelName}, ${hostInfo.cpuCount}, ${hostInfo.cpuMHz}`
+          value: <CPUModel modelName={hostInfo.cpuModelName} speed={hostInfo.cpuMHz} count={hostInfo.cpuCount} />
         },
         {
           key: 'Instance Size',
-          value: `${round(hostInfo.cpuMicrosec / 10000 / hostInfo.maxInstances)}% CPU, 
-          ${round(hostInfo.ramMb / 1000 / hostInfo.maxInstances)}GB RAM, 
-          ${round(hostInfo.diskMb / 1000 / hostInfo.maxInstances)}GB Disk`
+          value: <InstanceSpecs cpu={hostInfo.cpuMicrosec} ram={hostInfo.ramMb} disk={hostInfo.diskMb} instanceCount={hostInfo.maxInstances} />
         },
         {
-          key: 'Last Heartbeat Ledger',
+          key: 'Last Heartbeat XRPL Ledger',
           value: hostInfo.lastHeartbeatLedger
         },
         {
@@ -128,16 +119,7 @@ export default function Host(props) {
         titleHeading={
           <Typography component={'span'} className="d-inline-flex">
             <span className="mr-2">
-              {info && <Tooltip title={info.hostInfo.countryCode}>
-                <span>
-                  <ReactCountryFlag
-                    countryCode={info.hostInfo.countryCode}
-                    style={{
-                      fontSize: '1.8em',
-                      cursor: 'pointer'
-                    }}
-                    aria-label={info.hostInfo.countryCode} /></span>
-              </Tooltip>}
+              {info && <CountryFlag countryCode={info.hostInfo.countryCode} size="1.8rem" />}
             </span>
             {address}
             {address === selfAddress &&
@@ -153,16 +135,7 @@ export default function Host(props) {
         }
         titleDescription={(info && <Typography type="p">{info.hostInfo.description}</Typography>) ||
           <Loader className="p-0" size="1rem" />}>
-        <Card className="mt-1 bg-unicorn border-0 text-light">
-          {(info && <CardContent className="pt-1 pb-1 text-center wallet-balance">
-            <span className="font-weight-bold amount">
-              {info.evrBalance}
-            </span>
-            <span className="font-weight-normal ml-1 evr">
-              EVR
-            </span>
-          </CardContent>) || <Loader className="mt-1 p-2" size="1.5rem" />}
-        </Card>
+        <EvrBalance balance={info?.evrBalance} />
       </PageTitle>
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
