@@ -48,7 +48,7 @@ export default function MomentInfo() {
             <CardContent className="p-3">
               <div className="align-box-row align-items-start">
                 <div className="font-weight-bold mr-3">
-                  <small className="text-black-50 d-block mb-1 text-uppercase">
+                  <small className="text-black-50 mb-1 mr-1 text-uppercase d-md-block">
                     Last closed ledger ({environment})
                   </small>
                   <span className="font-size-l mt-1">{ledger.ledgerIndex}</span>
@@ -56,7 +56,7 @@ export default function MomentInfo() {
                 <Divider orientation="vertical" flexItem />
                 <Tooltip title={`1 Moment = ${momentSize} XRPL Ledgers`}>
                   <div className="ml-3">
-                    <small className="text-black-50 d-block mb-1 text-uppercase">
+                    <small className="text-black-50 mb-1 text-uppercase d-block">
                       Moment
                     </small>
                     <span className="font-size-m mt-1">{ledger.moment}</span>
