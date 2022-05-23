@@ -1,5 +1,5 @@
 import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import AccordionsCollapse from '../../../components/AccordionsCollapse';
 import RegularTable from '../../../components/RegularTable';
@@ -9,14 +9,6 @@ export default function Lease(props) {
   const { lease } = props;
 
   const [showTos, setShowTos] = React.useState(false);
-
-  const handleTosClose = useCallback(() => {
-    setShowTos(false);
-  }, []);
-
-  const handleTosShow = useCallback(() => {
-    setShowTos(true);
-  }, []);
 
   const tableHeadings = {
     key: 'Key',
@@ -34,7 +26,7 @@ export default function Lease(props) {
     {
       key: 'TOS',
       value: <Tooltip title="Show Terms of Service">
-        <Button className="tos-button" size="small" variant="outlined" onClick={handleTosShow}>
+        <Button className="tos-button" size="small" variant="outlined" onClick={() => setShowTos(true)}>
           {lease.halfTos}...
         </Button>
       </Tooltip>
@@ -62,7 +54,7 @@ export default function Lease(props) {
             hideHeadings />
         </Grid>
       </AccordionsCollapse>
-      <ModalDialog open={showTos} scroll="body" onClose={handleTosClose}>
+      <ModalDialog open={showTos} scroll="body" onClose={() => setShowTos(false)}>
         <div className="license">{lease.tos}</div>
       </ModalDialog>
     </Grid>

@@ -29,19 +29,19 @@ export default function Registry() {
       }
       const tableValues = [
         {
-          key: 'EVR Issuer',
+          key: 'EVR Issuer XRP Address',
           value: config.evrIssuerAddress
         },
         {
-          key: 'Foundation',
+          key: 'Foundation XRP Address',
           value: config.foundationAddress
         },
         {
-          key: 'Heartbeat Freq',
+          key: 'Heartbeat Frequency',
           value: config.hostHeartbeatFreq
         },
         {
-          key: 'Reg Fee',
+          key: 'Registration Fee',
           value: config.hostRegFee
         },
         {
@@ -49,7 +49,7 @@ export default function Registry() {
           value: config.leaseAcquireWindow
         },
         {
-          key: 'Moment Base Idx',
+          key: 'Moment Base Index',
           value: config.momentBaseIdx
         },
         {
@@ -57,7 +57,7 @@ export default function Registry() {
           value: config.momentSize
         },
         {
-          key: 'Purchaser Taget Price',
+          key: 'Purchaser Target Price',
           value: config.purchaserTargetPrice
         }
       ];
