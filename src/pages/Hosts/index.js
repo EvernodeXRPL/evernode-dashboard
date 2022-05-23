@@ -36,6 +36,28 @@ export default function Hosts() {
         activeInstances: { title: "Active Instances", className: 'text-center' }
       };
       const tableValues = data.map(host => {
+
+        let cpuModel = null;
+        if (host.cpuModelName) {
+          cpuModel = `${host.cpuModelName}`;
+        }
+        if (host.cpuMHz) {
+          cpuModel ? cpuModel += `, ${host.cpuMHz} MHz` : cpuModel = `${host.cpuMHz} MHz`;
+        }
+        if (host.cpuCount) {
+          cpuModel ? cpuModel += `, ${host.cpuCount} cores` : cpuModel = `${host.cpuCount} cores`;
+        }
+
+        let instanceSize = null;
+        if (host.cpuMicrosec !== null) {
+          instanceSize = `${(host.cpuMicrosec/10000)}% CPU`;
+        }
+        if (host.ramMb !== null && host.ramMb !== undefined) {
+          instanceSize ? instanceSize += `, ${host.ramMb} MB RAM` : instanceSize = `${host.ramMb} MB RAM`;
+        }
+        if (host.diskMb !== null && host.diskMb !== undefined) {
+          instanceSize ? instanceSize += `, ${(host.diskMb/1000).toFixed(2)} GB Disk` : instanceSize = `${(host.diskMb/1000).toFixed(2)} GB Disk`;
+        }
         return {
           key: host.address,
           address: <div className="d-flex align-items-center">
@@ -80,8 +102,8 @@ export default function Hosts() {
             <div className="h-auto py-2 badge badge-warning" style={{width: '4.25rem', fontSize: '0.75rem'}}>
               Inactive
             </div>,
-          cpuModel: `${host.cpuModelName}, ${host.cpuMHz} MHz, ${host.cpuCount} cores`,
-          instanceSize: `${(host.cpuMicrosec/10000)}% CPU, ${(host.ramMb/1000).toFixed(2)} GB RAM, ${(host.diskMb/1000).toFixed(2)} GB Disk`,
+          cpuModel: cpuModel,
+          instanceSize: instanceSize,
           maxInstances: host.maxInstances,
           activeInstances: host.activeInstances
         }
