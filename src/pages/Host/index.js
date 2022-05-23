@@ -127,7 +127,7 @@ export default function Host(props) {
                 <EditIcon className="ml-1 edit-btn" onClick={changeAddress} />
               </Tooltip>}
             <span>{info?.hostInfo &&
-              <Tooltip title={info.hostInfo.active ? 'Online' : 'Offline'}>
+              <Tooltip title={info.hostInfo.active ? 'Active' : 'Inactive'}>
                 <div className={`ml-1 rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
               </Tooltip>}</span>
           </div>
