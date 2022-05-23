@@ -117,8 +117,7 @@ export default function Host(props) {
     <Fragment>
       <PageTitle
         titleHeading={
-          <Typography component={'span'}>
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center display-7">
               <span className="mr-2">
                 {info && <CountryFlag countryCode={info.hostInfo.countryCode} size="1.8rem" />}
               </span>
@@ -132,7 +131,6 @@ export default function Host(props) {
                   <div className={`ml-1 rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
                 </Tooltip>}</span>
             </div>
-          </Typography>
         }
         titleDescription={(info && <Typography type="p">{info.hostInfo.description}</Typography>) ||
           <Loader className="p-0" size="1rem" />}>
