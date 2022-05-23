@@ -117,20 +117,21 @@ export default function Host(props) {
     <Fragment>
       <PageTitle
         titleHeading={
-          <Typography component={'span'} className="d-inline-flex">
-            <span className="mr-2">
-              {info && <CountryFlag countryCode={info.hostInfo.countryCode} size="1.8rem" />}
-            </span>
-            {address}
-            {address === selfAddress &&
-              <Tooltip title="Change address">
-                <EditIcon className="mt-auto mb-auto edit-btn" onClick={changeAddress} />
-              </Tooltip>}
-            {<div className="ml-1 mt-auto mb-auto">
-              {(info &&
-                <div className={`rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>)
-                || <Loader className="p-0" size="0.8rem" />}
-            </div>}
+          <Typography component={'span'}>
+            <div className="d-flex align-items-center">
+              <span className="mr-2">
+                {info && <CountryFlag countryCode={info.hostInfo.countryCode} size="1.8rem" />}
+              </span>
+              {address}
+              {address === selfAddress &&
+                <Tooltip title="Change address">
+                  <EditIcon className="ml-1 edit-btn" onClick={changeAddress} />
+                </Tooltip>}
+              <span>{info &&
+                <Tooltip title={info.hostInfo.active ? 'Online' : 'Offline'}>
+                  <div className={`ml-1 rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
+                </Tooltip>}</span>
+            </div>
           </Typography>
         }
         titleDescription={(info && <Typography type="p">{info.hostInfo.description}</Typography>) ||

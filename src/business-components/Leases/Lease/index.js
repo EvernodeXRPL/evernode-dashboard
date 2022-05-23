@@ -30,6 +30,14 @@ export default function Lease(props) {
     {
       key: 'Offer Index',
       value: lease.offerIndex
+    },
+    {
+      key: 'TOS',
+      value: <Tooltip title="Show Terms of Service">
+        <Button className="tos-button" size="small" variant="outlined" onClick={handleTosShow}>
+          {lease.halfTos}...
+        </Button>
+      </Tooltip>
     }
   ];
 
@@ -44,7 +52,7 @@ export default function Lease(props) {
         panelSummaryClassName="text-light"
         panelDetailClassName="text-light overflow-auto"
         headerTooltip="NFToken Id">
-        <Grid xs={12}>
+        <Grid item xs={12}>
           <RegularTable
             className="bg-transparent rounded-0"
             cellClassName="text-light"
@@ -52,19 +60,10 @@ export default function Lease(props) {
             values={tableValues}
             highlight={['value']}
             hideHeadings />
-          <div className="text-center">
-            <Button
-              className="mt-1 mb-1 p-1"
-              variant="outlined"
-              color="primary"
-              onClick={handleTosShow}>
-              Show TOS
-            </Button>
-          </div>
         </Grid>
       </AccordionsCollapse>
       <ModalDialog open={showTos} scroll="body" onClose={handleTosClose}>
-        {lease.tos}
+        <div className="license">{lease.tos}</div>
       </ModalDialog>
     </Grid>
   );
