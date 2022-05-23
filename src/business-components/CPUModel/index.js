@@ -14,6 +14,6 @@ export default function CPUModel(props) {
     cpuInfo.push(`${count} cores`);
 
   return (
-    <Typography>{cpuInfo.join(', ')}</Typography>
+    <Typography>{cpuInfo.join(', ') || '-'}</Typography>
   );
 }

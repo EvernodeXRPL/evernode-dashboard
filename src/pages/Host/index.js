@@ -64,14 +64,14 @@ export default function Host(props) {
         key: 'Key',
         value: 'Value'
       }
-      const tableValues = [
+      const tableValues = hostInfo ? [
         {
           key: 'Registration Token Id',
           value: hostInfo.nfTokenId
         },
         {
           key: 'Instances',
-          value: `${hostInfo.activeInstances} out of ${hostInfo.maxInstances}`
+          value: `${hostInfo.activeInstances || 0} out of ${hostInfo.maxInstances || 0}`
         },
         {
           key: 'CPU Model',
@@ -97,7 +97,7 @@ export default function Host(props) {
           key: 'Version',
           value: hostInfo.version
         }
-      ];
+      ] : [];
       const evrBalance = await evernode.getEVRBalance(address);
       setInfo({
         evrBalance: evrBalance,
@@ -117,22 +117,22 @@ export default function Host(props) {
     <Fragment>
       <PageTitle
         titleHeading={
-            <div className="d-flex align-items-center display-7">
-              <span className="mr-2">
-                {info && <CountryFlag countryCode={info.hostInfo.countryCode} size="1.8rem" />}
-              </span>
-              {address}
-              {address === selfAddress &&
-                <Tooltip title="Change address">
-                  <EditIcon className="ml-1 edit-btn" onClick={changeAddress} />
-                </Tooltip>}
-              <span>{info &&
-                <Tooltip title={info.hostInfo.active ? 'Online' : 'Offline'}>
-                  <div className={`ml-1 rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
-                </Tooltip>}</span>
-            </div>
+          <div className="d-flex align-items-center display-7">
+            <span className="mr-2">
+              {info?.hostInfo && <CountryFlag countryCode={info.hostInfo.countryCode} size="1.8rem" />}
+            </span>
+            {address}
+            {address === selfAddress &&
+              <Tooltip title="Change address">
+                <EditIcon className="ml-1 edit-btn" onClick={changeAddress} />
+              </Tooltip>}
+            <span>{info?.hostInfo &&
+              <Tooltip title={info.hostInfo.active ? 'Online' : 'Offline'}>
+                <div className={`ml-1 rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
+              </Tooltip>}</span>
+          </div>
         }
-        titleDescription={(info && <Typography type="p">{info.hostInfo.description}</Typography>) ||
+        titleDescription={info ? (info?.hostInfo && <Typography type="p">{info.hostInfo.description}</Typography>) :
           <Loader className="p-0" size="1rem" />}>
         <EvrBalance balance={info?.evrBalance} />
       </PageTitle>
@@ -143,11 +143,11 @@ export default function Host(props) {
               <h5 className="card-title font-weight-bold font-size-md">
                 Registration Info
               </h5>
-              {(info && <RegularTable
+              {(info && (info.hostInfo ? <RegularTable
                 headings={info.tableHeadings}
                 values={info.tableValues}
                 highlight={['key']}
-                hideHeadings />) ||
+                hideHeadings /> : <span>Host is not Registered!</span>)) ||
                 <Loader className="p-4" />}
             </CardContent>
           </Card>

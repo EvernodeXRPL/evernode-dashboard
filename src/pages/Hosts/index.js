@@ -73,8 +73,8 @@ export default function Hosts() {
           </div>,
         cpuModel: <CPUModel modelName={host.cpuModelName} speed={host.cpuMHz} count={host.cpuCount} />,
         instanceSize: <InstanceSpecs cpu={host.cpuMicrosec} ram={host.ramMb} disk={host.diskMb} instanceCount={host.maxInstances} />,
-        maxInstances: host.maxInstances,
-        activeInstances: host.activeInstances
+        maxInstances: host.maxInstances || 0,
+        activeInstances: host.activeInstances || 0
       }
     });
 
