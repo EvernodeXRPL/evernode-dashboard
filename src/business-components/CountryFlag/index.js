@@ -1,20 +1,31 @@
-import { Tooltip } from '@material-ui/core';
 import React from 'react';
+import { Tooltip, withStyles } from '@material-ui/core';
 import ReactCountryFlag from 'react-country-flag';
 
 export default function CountryFlag(props) {
   const { countryCode, size } = props;
 
+  // Overriding tooltip styles to keep tooltip near the flag.
+  const StyledTooltip = withStyles({
+    tooltipPlacementRight: {
+      marginLeft: "0",
+    },
+  })(Tooltip);
+
   return (
-    <Tooltip title={countryCode}>
-      <span>
+    <StyledTooltip title={countryCode} placement='right-end'>
+      <div>
         <ReactCountryFlag
+          className="emojiFlag"
           countryCode={countryCode}
           style={{
             fontSize: size,
             cursor: 'pointer'
           }}
-          aria-label={countryCode} /></span>
-    </Tooltip>
+          aria-label={countryCode}
+          alt={countryCode}
+        />
+      </div>
+    </StyledTooltip>
   );
 }

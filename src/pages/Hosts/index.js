@@ -1,13 +1,14 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import ReactCountryFlag from "react-country-flag"
 import { Button } from '@material-ui/core';
-import { Tooltip, withStyles } from '@material-ui/core';
 
 import PageTitle from '../../layout-components/PageTitle';
 import CustomTable from '../../components/CustomTable';
 import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
+import CountryFlag from '../../business-components/CountryFlag';
+import CPUModel from '../../business-components/CPUModel';
+import InstanceSpecs from '../../business-components/InstanceSpecs';
 
 const PAGE_SIZE = 10;
 
@@ -40,47 +41,11 @@ export default function Hosts() {
       activeInstances: { title: "Active Instances", className: 'text-center' }
     };
     const tableValues = data.map(host => {
-
-      let cpuModel = null;
-      if (host.cpuModelName) {
-        cpuModel = `${host.cpuModelName}`;
-      }
-      if (host.cpuMHz) {
-        cpuModel ? cpuModel += `, ${host.cpuMHz} MHz` : cpuModel = `${host.cpuMHz} MHz`;
-      }
-      if (host.cpuCount) {
-        cpuModel ? cpuModel += `, ${host.cpuCount} cores` : cpuModel = `${host.cpuCount} cores`;
-      }
-
-      let instanceSize = null;
-      if (host.cpuMicrosec !== null) {
-        instanceSize = `${(host.cpuMicrosec/10000)}% CPU`;
-      }
-      if (host.ramMb !== null && host.ramMb !== undefined) {
-        instanceSize ? instanceSize += `, ${host.ramMb} MB RAM` : instanceSize = `${host.ramMb} MB RAM`;
-      }
-      if (host.diskMb !== null && host.diskMb !== undefined) {
-        instanceSize ? instanceSize += `, ${(host.diskMb/1000).toFixed(2)} GB Disk` : instanceSize = `${(host.diskMb/1000).toFixed(2)} GB Disk`;
-      }
       return {
         key: host.address,
         address: <div className="d-flex align-items-center">
-          <StyledTooltip title={host.countryCode} placement='right-end'>
-            <div>
-              <ReactCountryFlag
-                className="emojiFlag"
-                countryCode={host.countryCode}
-                style={{
-                  fontSize: '2em',
-                  lineHeight: '1.5em',
-                  paddingRight: '0.5em'
-                }}
-                aria-label={host.countryCode}
-                alt={host.countryCode}
-              />
-            </div>
-          </StyledTooltip>
-          <div>
+          <CountryFlag countryCode={host.countryCode} size="2em" />
+          <div className="ml-2">
             <a
               href="#/"
               className="font-weight-bold text-black"
@@ -100,32 +65,25 @@ export default function Hosts() {
           </div>
         </div>,
         status: host.active ?
-          <div className="h-auto py-2 badge badge-success" style={{width: '4.25rem', fontSize: '0.75rem'}}>
+          <div className="h-auto py-2 badge badge-success" style={{ width: '4.25rem', fontSize: '0.75rem' }}>
             Active
           </div> :
-          <div className="h-auto py-2 badge badge-warning" style={{width: '4.25rem', fontSize: '0.75rem'}}>
+          <div className="h-auto py-2 badge badge-warning" style={{ width: '4.25rem', fontSize: '0.75rem' }}>
             Inactive
           </div>,
-        cpuModel: cpuModel,
-        instanceSize: instanceSize,
+        cpuModel: <CPUModel modelName={host.cpuModelName} speed={host.cpuMHz} count={host.cpuCount} />,
+        instanceSize: <InstanceSpecs cpu={host.cpuMicrosec} ram={host.ramMb} disk={host.diskMb} instanceCount={host.maxInstances} />,
         maxInstances: host.maxInstances,
         activeInstances: host.activeInstances
       }
     });
 
     setHosts({
-      hosts: data,
+      hosts: hostList,
       tableColumns: tableColumns,
       tableValues: tableValues
     });
   }, [evernode]);
-
-  // Overriding tooltip styles to keep tooltip near the flag.
-  const StyledTooltip = withStyles({
-    tooltipPlacementRight: {
-      marginLeft: "-0.5rem",
-    },
-  })(Tooltip);
 
   useEffect(() => {
     loadHosts();
