@@ -1,13 +1,15 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
+import ReactCountryFlag from "react-country-flag"
+import { Button } from '@material-ui/core';
+import { Tooltip, withStyles } from '@material-ui/core';
 
 import PageTitle from '../../layout-components/PageTitle';
 import CustomTable from '../../components/CustomTable';
 import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
-import { Button } from '@material-ui/core';
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 10;
 
 export default function Hosts() {
   const history = useHistory();
@@ -32,17 +34,52 @@ export default function Hosts() {
     const tableColumns = {
       address: { title: "Address", className: 'text-start' },
       status: { title: "Status", className: 'text-center' },
-      countryCode: { title: "Country Code", className: 'text-center' },
-      cpu: { title: "CPU", className: 'text-right' },
-      ram: { title: "RAM", className: 'text-right' },
-      disk: { title: "Disk", className: 'text-right' },
-      maxInstances: { title: "Max Instances", className: 'text-right' },
-      activeInstances: { title: "Active Instances", className: 'text-right' }
+      cpuModel: { title: "CPU Model", className: 'text-center' },
+      instanceSize: { title: "Instance Size", className: 'text-center' },
+      maxInstances: { title: "Max Instances", className: 'text-center' },
+      activeInstances: { title: "Active Instances", className: 'text-center' }
     };
-    const tableValues = hostList.map(host => {
+    const tableValues = data.map(host => {
+
+      let cpuModel = null;
+      if (host.cpuModelName) {
+        cpuModel = `${host.cpuModelName}`;
+      }
+      if (host.cpuMHz) {
+        cpuModel ? cpuModel += `, ${host.cpuMHz} MHz` : cpuModel = `${host.cpuMHz} MHz`;
+      }
+      if (host.cpuCount) {
+        cpuModel ? cpuModel += `, ${host.cpuCount} cores` : cpuModel = `${host.cpuCount} cores`;
+      }
+
+      let instanceSize = null;
+      if (host.cpuMicrosec !== null) {
+        instanceSize = `${(host.cpuMicrosec/10000)}% CPU`;
+      }
+      if (host.ramMb !== null && host.ramMb !== undefined) {
+        instanceSize ? instanceSize += `, ${host.ramMb} MB RAM` : instanceSize = `${host.ramMb} MB RAM`;
+      }
+      if (host.diskMb !== null && host.diskMb !== undefined) {
+        instanceSize ? instanceSize += `, ${(host.diskMb/1000).toFixed(2)} GB Disk` : instanceSize = `${(host.diskMb/1000).toFixed(2)} GB Disk`;
+      }
       return {
         key: host.address,
         address: <div className="d-flex align-items-center">
+          <StyledTooltip title={host.countryCode} placement='right-end'>
+            <div>
+              <ReactCountryFlag
+                className="emojiFlag"
+                countryCode={host.countryCode}
+                style={{
+                  fontSize: '2em',
+                  lineHeight: '1.5em',
+                  paddingRight: '0.5em'
+                }}
+                aria-label={host.countryCode}
+                alt={host.countryCode}
+              />
+            </div>
+          </StyledTooltip>
           <div>
             <a
               href="#/"
@@ -53,26 +90,24 @@ export default function Hosts() {
             <span className="text-black-50 d-block py-1">
               {
                 host.version &&
-                <span>Version: {host.version} | </span>
+                <span>v{host.version} | </span>
               }
               {
                 host.description &&
-                <span>Description: {host.description}</span>
+                <span>{host.description}</span>
               }
             </span>
           </div>
         </div>,
         status: host.active ?
-          <div className="h-auto py-2 px-3 badge badge-success">
+          <div className="h-auto py-2 badge badge-success" style={{width: '4.25rem', fontSize: '0.75rem'}}>
             Active
           </div> :
-          <div className="h-auto py-2 px-3 badge badge-warning">
+          <div className="h-auto py-2 badge badge-warning" style={{width: '4.25rem', fontSize: '0.75rem'}}>
             Inactive
           </div>,
-        countryCode: host.countryCode,
-        cpu: host.cpuMicrosec,
-        ram: host.ramMb,
-        disk: host.diskMb,
+        cpuModel: cpuModel,
+        instanceSize: instanceSize,
         maxInstances: host.maxInstances,
         activeInstances: host.activeInstances
       }
@@ -84,6 +119,13 @@ export default function Hosts() {
       tableValues: tableValues
     });
   }, [evernode]);
+
+  // Overriding tooltip styles to keep tooltip near the flag.
+  const StyledTooltip = withStyles({
+    tooltipPlacementRight: {
+      marginLeft: "-0.5rem",
+    },
+  })(Tooltip);
 
   useEffect(() => {
     loadHosts();
