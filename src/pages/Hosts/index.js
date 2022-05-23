@@ -5,6 +5,9 @@ import PageTitle from '../../layout-components/PageTitle';
 import CustomTable from '../../components/CustomTable';
 import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
+import ReactCountryFlag from "react-country-flag"
+import { Tooltip, withStyles } from '@material-ui/core';
+
 
 export default function Hosts() {
   const history = useHistory();
@@ -13,6 +16,13 @@ export default function Hosts() {
   const [hosts, setHosts] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // Overriding tooltip styles to keep tooltip near the flag.
+  const StyledTooltip = withStyles({
+    tooltipPlacementRight: {
+      marginLeft: "-0.5rem",
+    },
+  })(Tooltip);
+
   useEffect(() => {
     async function getData() {
       const data = await evernode.getHosts();
@@ -20,17 +30,30 @@ export default function Hosts() {
       const tableColumns = {
         address: { title: "Address", className: 'text-start' },
         status: { title: "Status", className: 'text-center' },
-        countryCode: { title: "Country Code", className: 'text-center' },
-        cpu: { title: "CPU", className: 'text-right' },
-        ram: { title: "RAM", className: 'text-right' },
-        disk: { title: "Disk", className: 'text-right' },
-        maxInstances: { title: "Max Instances", className: 'text-right' },
-        activeInstances: { title: "Active Instances", className: 'text-right' }
+        cpuModel: { title: "CPU Model", className: 'text-center' },
+        instanceSize: { title: "Instance Size", className: 'text-center' },
+        maxInstances: { title: "Max Instances", className: 'text-center' },
+        activeInstances: { title: "Active Instances", className: 'text-center' }
       };
       const tableValues = data.map(host => {
         return {
           key: host.address,
           address: <div className="d-flex align-items-center">
+            <StyledTooltip title={host.countryCode} placement='right-end'>
+              <div>
+                <ReactCountryFlag
+                  className="emojiFlag"
+                  countryCode={host.countryCode}
+                  style={{
+                    fontSize: '2em',
+                    lineHeight: '1.5em',
+                    paddingRight: '0.5em'
+                  }}
+                  aria-label={host.countryCode}
+                  alt={host.countryCode}
+                />
+              </div>
+            </StyledTooltip>
             <div>
               <a
                 href="#/"
@@ -41,26 +64,24 @@ export default function Hosts() {
               <span className="text-black-50 d-block py-1">
                 {
                   host.version &&
-                  <span>Version: {host.version} | </span>
+                  <span>v{host.version} | </span>
                 }
                 {
                   host.description &&
-                  <span>Description: {host.description}</span>
+                  <span>{host.description}</span>
                 }
               </span>
             </div>
           </div>,
           status: host.active ?
-            <div className="h-auto py-2 px-3 badge badge-success">
+            <div className="h-auto py-2 badge badge-success" style={{width: '4.25rem', fontSize: '0.75rem'}}>
               Active
             </div> :
-            <div className="h-auto py-2 px-3 badge badge-warning">
+            <div className="h-auto py-2 badge badge-warning" style={{width: '4.25rem', fontSize: '0.75rem'}}>
               Inactive
             </div>,
-          countryCode: host.countryCode,
-          cpu: host.cpuMicrosec,
-          ram: host.ramMb,
-          disk: host.diskMb,
+          cpuModel: `${host.cpuModelName}, ${host.cpuMHz} MHz, ${host.cpuCount} cores`,
+          instanceSize: `${(host.cpuMicrosec/10000)}% CPU, ${(host.ramMb/1000).toFixed(2)} GB RAM, ${(host.diskMb/1000).toFixed(2)} GB Disk`,
           maxInstances: host.maxInstances,
           activeInstances: host.activeInstances
         }
