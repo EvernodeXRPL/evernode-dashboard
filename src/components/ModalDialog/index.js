@@ -12,7 +12,7 @@ export default function ModalDialog(props) {
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description">
       {title && <DialogTitle id="scroll-dialog-title">{title}</DialogTitle>}
-      <DialogContent dividers={scroll === 'paper'} className="mb-1">
+      <DialogContent dividers={scroll === 'paper'} className="mb-2">
         {props.children}
       </DialogContent>
       {onConfirm && <DialogActions>
