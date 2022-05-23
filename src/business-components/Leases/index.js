@@ -2,12 +2,12 @@ import React, { Fragment, useEffect } from 'react';
 
 import { Grid } from '@material-ui/core';
 
-import Lease from '../Lease';
-import { useEvernode } from '../../../services/Evernode';
-import Loader from '../../../components/Loader';
+import Lease from './Lease';
+import { useEvernode } from '../../services/Evernode';
+import Loader from '../../components/Loader';
 
 export default function Leases(props) {
-  const address = props.address;
+  const { address } = props;
 
   const [leases, setLeases] = React.useState(null);
 
@@ -15,13 +15,22 @@ export default function Leases(props) {
 
   useEffect(() => {
     const fetchLeases = async () => {
-      const leaseData = await evernode.getLeases(address);
+      setLeases(null);
+      const tos = await evernode.getTos();
+      const res = await evernode.getLeases(address);
+      const leaseData = res.map(l => {
+        const uriInfo = evernode.decodeLeaseUri(l.uri)
+        return {
+          ...l,
+          ...uriInfo,
+          tos: tos
+        }
+      });
       setLeases(leaseData);
     }
 
-    if (!leases)
-      fetchLeases();
-  }, [address, evernode, leases]);
+    fetchLeases();
+  }, [address, evernode]);
 
   return (
     <Fragment>

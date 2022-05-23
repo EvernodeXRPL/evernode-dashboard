@@ -12,6 +12,7 @@ import Loader from './components/Loader';
 
 const Hosts = lazy(() => import('./pages/Hosts'));
 const Host = lazy(() => import('./pages/Host'));
+const Registry = lazy(() => import('./pages/Registry'));
 
 const Routes = () => {
   const location = useLocation();
@@ -53,8 +54,9 @@ const Routes = () => {
               <Redirect exact from="/" to="/hosts" />
               <Route
                 path={[
+                  '/hosts',
                   '/host/:address?',
-                  '/hosts'
+                  '/registry'
                 ]}>
                 <LeftSidebar>
                   <Switch location={location} key={location.pathname}>
@@ -71,6 +73,10 @@ const Routes = () => {
                       <Route
                         path="/host/:address?"
                         component={Host}
+                      />
+                      <Route
+                        path="/registry"
+                        component={Registry}
                       />
                     </motion.div>
                   </Switch>
