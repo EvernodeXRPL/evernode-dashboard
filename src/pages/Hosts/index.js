@@ -48,8 +48,7 @@ export default function Hosts() {
           <div className="ml-3">
             <a
               href="#/"
-              className="font-weight-bold text-black"
-              title="...">
+              className="font-weight-bold text-black">
               {host.address}
             </a>
             <span className="text-black-50 d-block py-1">
