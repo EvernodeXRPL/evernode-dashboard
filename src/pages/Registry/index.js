@@ -39,7 +39,7 @@ export default function Registry() {
         },
         {
           key: 'Heartbeat Frequency',
-          value: <Tooltip title="The moment frequency, which a host should keep on signaling to the registry contract."><span>{config.hostHeartbeatFreq}</span></Tooltip>
+          value: <Tooltip title="The moment frequency which a host should keep on signaling to the registry contract."><span>{config.hostHeartbeatFreq}</span></Tooltip>
         },
         {
           key: 'Registration Fee',
@@ -47,7 +47,7 @@ export default function Registry() {
         },
         {
           key: 'Lease Acquire Window',
-          value: <Tooltip title="The maximum no. of ledgers, that an acquire-lease request should wait for instance creation."><span>{config.leaseAcquireWindow}</span></Tooltip>
+          value: <Tooltip title="The maximum no. of ledgers that an acquire-lease request should wait for instance creation."><span>{config.leaseAcquireWindow}</span></Tooltip>
         },
         {
           key: 'Moment Base Index',
