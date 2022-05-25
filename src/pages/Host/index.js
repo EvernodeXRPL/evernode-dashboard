@@ -67,7 +67,7 @@ export default function Host(props) {
       const tableValues = hostInfo ? [
         {
           key: 'Registration Token Id',
-          value: <Tooltip title="Registration NFToken Id"><span className="text-truncate">{hostInfo.nfTokenId}</span></Tooltip>
+          value: <Tooltip title="Registration NFToken Id"><span>{hostInfo.nfTokenId}</span></Tooltip>
         },
         {
           key: 'Instances',
