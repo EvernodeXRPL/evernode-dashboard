@@ -35,8 +35,8 @@ export default function Hosts() {
     const tableColumns = {
       address: { title: "Address", className: 'text-start' },
       status: { title: "Status", className: 'text-center' },
-      cpuModel: { title: "CPU Model", className: 'text-center' },
-      instanceSize: { title: "Instance Size", className: 'text-center' },
+      cpuModel: { title: "CPU Model", className: 'text-center col-fixed-mw' },
+      instanceSize: { title: "Instance Size", className: 'text-center col-fixed-mw' },
       maxInstances: { title: "Max Instances", className: 'text-center' },
       activeInstances: { title: "Active Instances", className: 'text-center' }
     };
@@ -44,12 +44,11 @@ export default function Hosts() {
       return {
         key: host.address,
         address: <div className="d-flex align-items-center">
-          <CountryFlag countryCode={host.countryCode} size="2em" />
-          <div className="ml-2">
+          <CountryFlag countryCode={host.countryCode} size="3em" />
+          <div className="ml-3">
             <a
               href="#/"
-              className="font-weight-bold text-black"
-              title="...">
+              className="font-weight-bold text-black">
               {host.address}
             </a>
             <span className="text-black-50 d-block py-1">

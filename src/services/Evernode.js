@@ -1,4 +1,5 @@
 import React from 'react'
+import tos from '../assets/data/tos.txt'
 
 const evernode = require("evernode-js-client");
 
@@ -35,11 +36,6 @@ export const useEvernode = () => {
 
 const registryAddress = process.env.REACT_APP_REGISTRY_ADDRESS;
 const environment = 'XRPL NFT DevNet';
-let licenceUrl = 'https://stevernode.blob.core.windows.net/evernode-$ENV$/licence.txt'
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development')
-    licenceUrl = licenceUrl.replace('$ENV$', 'dev');
-else
-    licenceUrl = licenceUrl.replace('$ENV$', 'beta');
 
 const xrplApi = new evernode.XrplApi();
 evernode.Defaults.set({
@@ -62,7 +58,7 @@ const getConfigs = async () => {
 }
 
 const getTos = async () => {
-    const res = await fetch(licenceUrl);
+    const res = await fetch(tos);
     return await res.text();
 }
 

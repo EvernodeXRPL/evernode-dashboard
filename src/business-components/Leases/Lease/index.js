@@ -21,7 +21,7 @@ export default function Lease(props) {
     },
     {
       key: 'Offer Index',
-      value: lease.offerIndex
+      value: <Tooltip title="Lease NFT sell offer index"><span>{lease.offerIndex}</span></Tooltip>
     },
     {
       key: 'TOS',

@@ -16,8 +16,8 @@ export default function ModalDialog(props) {
         {props.children}
       </DialogContent>
       {onConfirm && <DialogActions>
-        <Button onClick={onConfirm} color="primary">
-          Subscribe
+        <Button onClick={onConfirm} variant="outlined">
+          Ok
         </Button>
       </DialogActions>}
     </Dialog>

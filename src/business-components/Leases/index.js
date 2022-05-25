@@ -34,11 +34,11 @@ export default function Leases(props) {
 
   return (
     <Fragment>
-      {(leases && <Grid container>
+      {(leases && (leases.length ? <Grid container>
         {leases.map((lease, index) => {
           return <Lease key={index} lease={lease} />
         })}
-      </Grid>) || <Loader />}
+      </Grid> : <span>There're no available leases!</span>)) || <Loader />}
     </Fragment>
   );
 }

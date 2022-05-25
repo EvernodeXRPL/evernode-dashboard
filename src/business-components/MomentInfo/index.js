@@ -48,7 +48,7 @@ export default function MomentInfo() {
           (
             <CardContent className="p-3">
               <div className="align-box-row align-items-start">
-                <div className="font-weight-bold mr-3">
+                <div className="font-weight-bold mr-3 pr-1">
                   <Grid container>
                     <Grid item xs={9} sm={12}>
                       <small className="text-black-50 d-block mb-1 text-uppercase">
@@ -61,7 +61,7 @@ export default function MomentInfo() {
                   </Grid>
                 </div>
                 <Divider orientation="vertical" flexItem />
-                <Tooltip title={`1 Moment = ${momentSize} XRPL Ledgers`}>
+                <Tooltip title={`1 Moment = ${momentSize} XRP Ledgers`}>
                   <div className="ml-3">
                     <small className="text-black-50 d-block mb-1 text-uppercase">
                       Moment

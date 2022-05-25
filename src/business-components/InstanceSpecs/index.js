@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { Typography } from '@material-ui/core';
+import { Tooltip, Typography } from '@material-ui/core';
 
 function round(n) {
   return Math.round(n * 100) / 100;
 }
 
 export default function InstanceSpecs(props) {
-  const { cpu, ram, disk, instanceCount } = props;
+  const { cpu, ram, disk, instanceCount, showTooltip } = props;
 
   const specs = [];
   if (instanceCount) {
@@ -19,7 +19,12 @@ export default function InstanceSpecs(props) {
       specs.push(`${round(disk / 1000 / instanceCount)}GB Disk`);
   }
 
+  const text = specs.join(', ');
+  const content = <Typography className="text-wrap">{text}</Typography>;
+
   return (
-    <Typography>{specs.join(', ') || '-'}</Typography>
+    text ? (showTooltip ? <Tooltip title="Resource allocation for a smart contract instance">
+      {content}
+    </Tooltip> : content) : '-'
   );
 }
