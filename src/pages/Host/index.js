@@ -93,7 +93,7 @@ export default function Host(props) {
         },
         {
           key: 'Registration Fee',
-          value: <Tooltip title="Registration fee spent by the host"><span>{hostInfo.registrationFee}</span></Tooltip>
+          value: <Tooltip title="Registration fee (in EVRs) spent by the host"><span>{hostInfo.registrationFee}</span></Tooltip>
         },
         {
           key: 'Version',
