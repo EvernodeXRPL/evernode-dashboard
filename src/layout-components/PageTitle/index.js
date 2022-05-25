@@ -5,11 +5,13 @@ import { Paper } from '@material-ui/core';
 function PageTitle(props) {
   return (
     <Fragment>
-      <Paper square elevation={2} className="app-page-title">
+      <Paper elevation={2} className="app-page-title"
+        style={{ width: '100%', margin: '0 0 2rem 0', padding: '1rem' }}
+      >
         <div>
           <div className="app-page-title--first">
             <div className="app-page-title--heading">
-              <h1>{props.titleHeading}</h1>
+              <h1 className={ props.responsive ?  'font-size-responsive' : '' }>{props.titleHeading}</h1>
               {props.titleDescription && <div className="app-page-title--description">
                 {props.titleDescription}
               </div>}

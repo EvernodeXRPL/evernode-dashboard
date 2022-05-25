@@ -35,4 +35,10 @@ body {
     .address-input {
         width: 280px !important;
     }
+
+    @media (max-width: map-get($grid-breakpoints, 'sm')) {
+        .font-size-responsive {
+            font-size: 0.85rem!important
+        }
+    }
 }

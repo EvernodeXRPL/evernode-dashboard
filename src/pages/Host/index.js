@@ -13,7 +13,8 @@ import {
   Typography,
   Tooltip,
   TextField,
-  Button
+  Button,
+  Hidden
 } from '@material-ui/core';
 import Leases from '../../business-components/Leases';
 
@@ -124,11 +125,14 @@ export default function Host(props) {
     <>{address &&
       <Fragment>
         <PageTitle
+          responsive={true}
           titleHeading={
             <div className="d-flex align-items-center display-7">
-              <span className="mr-2">
-                {info?.hostInfo && <CountryFlag countryCode={info.hostInfo.countryCode} size="1.8em" />}
-              </span>
+              <Hidden mdDown>
+                <span className="mr-2">
+                  {info?.hostInfo && <CountryFlag countryCode={info.hostInfo.countryCode} size="1.8em" />}
+                </span>
+              </Hidden>
               {address}
               {address === selfAddress &&
                 <Tooltip title="Change address">
@@ -142,6 +146,11 @@ export default function Host(props) {
           }
           titleDescription={info ? (info?.hostInfo && <Typography type="p">{info.hostInfo.description}</Typography>) :
             <Loader className="p-0" size="1rem" />}>
+          <Hidden mdUp>
+            <span>
+              {info?.hostInfo && <CountryFlag countryCode={info.hostInfo.countryCode} size="2.5em" />}
+            </span>
+          </Hidden>
           <EvrBalance balance={info?.evrBalance} />
         </PageTitle>
         <Grid container spacing={4}>
