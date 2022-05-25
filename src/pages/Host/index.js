@@ -56,7 +56,7 @@ export default function Host(props) {
     // Redirect to the home page.
     if (!address)
       history.push('/')
-  }, [address]);
+  }, [address, history]);
 
   useEffect(() => {
     const fetchInfo = async () => {
