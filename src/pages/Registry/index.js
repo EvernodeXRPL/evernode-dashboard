@@ -7,7 +7,8 @@ import {
   Grid,
   Card,
   CardContent,
-  Typography
+  Typography,
+  Tooltip
 } from '@material-ui/core';
 
 import { useEvernode } from '../../services/Evernode';
@@ -30,36 +31,36 @@ export default function Registry() {
       const tableValues = [
         {
           key: 'EVR Issuer XRP Address',
-          value: config.evrIssuerAddress
+          value: <Tooltip title="EVR Issuer XRP account address."><span>{config.evrIssuerAddress}</span></Tooltip>
         },
         {
           key: 'Foundation XRP Address',
-          value: config.foundationAddress
+          value: <Tooltip title="Evernode foundation XRP account address."><span>{config.foundationAddress}</span></Tooltip>
         },
         {
           key: 'Heartbeat Frequency',
-          value: config.hostHeartbeatFreq
+          value: <Tooltip title="The moment frequency, which a host should keep on signaling to the registry contract."><span>{config.hostHeartbeatFreq}</span></Tooltip>
         },
         {
           key: 'Registration Fee',
-          value: config.hostRegFee
+          value: <Tooltip title="Host registration fee in EVRs."><span>{config.hostRegFee}</span></Tooltip>
         },
         {
           key: 'Lease Acquire Window',
-          value: config.leaseAcquireWindow
+          value: <Tooltip title="The maximum no. of ledgers, that an acquire-lease request should wait for instance creation."><span>{config.leaseAcquireWindow}</span></Tooltip>
         },
         {
           key: 'Moment Base Index',
-          value: config.momentBaseIdx
+          value: <Tooltip title="Ledger index when the 'Moment Size' last changed on."><span>{config.momentBaseIdx}</span></Tooltip>
         },
         {
           key: 'Moment Size',
-          value: config.momentSize
+          value: <Tooltip title="No. of ledgers per moment."><span>{config.momentSize}</span></Tooltip>
         },
-        {
-          key: 'Purchaser Target Price',
-          value: config.purchaserTargetPrice
-        }
+        // {
+        //   key: 'Purchaser Target Price',
+        //   value: <Tooltip title="Per moment lease amount that is derived from the condition of the epoch."><span>{config.purchaserTargetPrice}</span></Tooltip>
+        // }
       ];
       setConfigs({
         configs: config,
