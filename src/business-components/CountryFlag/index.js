@@ -24,6 +24,7 @@ export default function CountryFlag(props) {
           }}
           aria-label={countryCode}
           alt={countryCode}
+          svg
         />
       </div>
     </StyledTooltip>

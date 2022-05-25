@@ -67,11 +67,13 @@ export default function Host(props) {
       const tableValues = hostInfo ? [
         {
           key: 'Registration Token Id',
-          value: hostInfo.nfTokenId
+          value: <Tooltip title="Registration NFToken Id"><span className="text-truncate">{hostInfo.nfTokenId}</span></Tooltip>
         },
         {
           key: 'Instances',
-          value: `${hostInfo.activeInstances || 0} out of ${hostInfo.maxInstances || 0}`
+          value: <Tooltip title="Active instances out of Maximum instances">
+            <span>{hostInfo.activeInstances || 0} out of {hostInfo.maxInstances || 0}</span>
+          </Tooltip>
         },
         {
           key: 'CPU Model',
@@ -83,19 +85,19 @@ export default function Host(props) {
         },
         {
           key: 'Last Heartbeat XRPL Ledger',
-          value: hostInfo.lastHeartbeatLedger
+          value: <Tooltip title="XPR Ledger which the last heartbeat is received"><span>{hostInfo.lastHeartbeatLedger}</span></Tooltip>
         },
         {
           key: 'Registered on XRPL Ledger',
-          value: hostInfo.registrationLedger
+          value: <Tooltip title="XPR Ledger which the host is registered"><span>{hostInfo.registrationLedger}</span></Tooltip>
         },
         {
           key: 'Registration Fee',
-          value: hostInfo.registrationFee
+          value: <Tooltip title="Registration fee spent by the host"><span>{hostInfo.registrationFee}</span></Tooltip>
         },
         {
           key: 'Version',
-          value: hostInfo.version
+          value: <Tooltip title="Host's sashimono version"><span>{hostInfo.version}</span></Tooltip>
         }
       ] : [];
       const evrBalance = await evernode.getEVRBalance(address);
@@ -119,7 +121,7 @@ export default function Host(props) {
         titleHeading={
           <div className="d-flex align-items-center display-7">
             <span className="mr-2">
-              {info?.hostInfo && <CountryFlag countryCode={info.hostInfo.countryCode} size="1.8rem" />}
+              {info?.hostInfo && <CountryFlag countryCode={info.hostInfo.countryCode} size="1.8em" />}
             </span>
             {address}
             {address === selfAddress &&

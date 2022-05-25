@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Typography } from '@material-ui/core';
+import { Tooltip, Typography } from '@material-ui/core';
 
 export default function CPUModel(props) {
   const { modelName, speed, count } = props;
@@ -14,6 +14,8 @@ export default function CPUModel(props) {
     cpuInfo.push(`${count} cores`);
 
   return (
-    <Typography>{cpuInfo.join(', ') || '-'}</Typography>
+    <Tooltip title="Host's CPU specifications">
+      <Typography className="text-wrap">{cpuInfo.join(', ') || '-'}</Typography>
+    </Tooltip>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Typography } from '@material-ui/core';
+import { Tooltip, Typography } from '@material-ui/core';
 
 function round(n) {
   return Math.round(n * 100) / 100;
@@ -20,6 +20,8 @@ export default function InstanceSpecs(props) {
   }
 
   return (
-    <Typography>{specs.join(', ') || '-'}</Typography>
+    <Tooltip title="Specifications of a sashimono instance">
+      <Typography className="text-wrap">{specs.join(', ') || '-'}</Typography>
+    </Tooltip>
   );
 }
