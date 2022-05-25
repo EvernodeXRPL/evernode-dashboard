@@ -31,35 +31,35 @@ export default function Registry() {
       const tableValues = [
         {
           key: 'EVR Issuer XRP Address',
-          value: <Tooltip title="EVR Issuer XRP account address."><span>{config.evrIssuerAddress}</span></Tooltip>
+          value: <Tooltip title="EVR Issuer XRP account address"><span>{config.evrIssuerAddress}</span></Tooltip>
         },
         {
           key: 'Foundation XRP Address',
-          value: <Tooltip title="Evernode foundation XRP account address."><span>{config.foundationAddress}</span></Tooltip>
+          value: <Tooltip title="Evernode foundation XRP account address"><span>{config.foundationAddress}</span></Tooltip>
         },
         {
           key: 'Heartbeat Frequency',
-          value: <Tooltip title="The moment frequency which a host should keep on signaling to the registry contract."><span>{config.hostHeartbeatFreq}</span></Tooltip>
+          value: <Tooltip title="The window (in no. of Moments) that the host should indicate liveness"><span>{config.hostHeartbeatFreq}</span></Tooltip>
         },
         {
           key: 'Registration Fee',
-          value: <Tooltip title="Host registration fee in EVRs."><span>{config.hostRegFee}</span></Tooltip>
+          value: <Tooltip title="Host registration fee in EVRs"><span>{config.hostRegFee}</span></Tooltip>
         },
         {
           key: 'Lease Acquire Window',
-          value: <Tooltip title="The maximum no. of XRP ledgers that an acquire-lease request should wait for instance creation."><span>{config.leaseAcquireWindow}</span></Tooltip>
+          value: <Tooltip title="The maximum no. of XRP ledgers that an acquire-lease request should wait for instance creation"><span>{config.leaseAcquireWindow}</span></Tooltip>
         },
         {
           key: 'Moment Base Index',
-          value: <Tooltip title="XRP ledger index when the 'Moment Size' last changed."><span>{config.momentBaseIdx}</span></Tooltip>
+          value: <Tooltip title="XRP ledger index when the 'Moment Size' last changed"><span>{config.momentBaseIdx}</span></Tooltip>
         },
         {
           key: 'Moment Size',
-          value: <Tooltip title="No. of XRP ledgers per moment."><span>{config.momentSize}</span></Tooltip>
+          value: <Tooltip title="No. of XRP ledgers per moment"><span>{config.momentSize}</span></Tooltip>
         },
         // {
         //   key: 'Purchaser Target Price',
-        //   value: <Tooltip title="Per moment lease amount that is derived from the condition of the epoch."><span>{config.purchaserTargetPrice}</span></Tooltip>
+        //   value: <Tooltip title="Per moment lease amount that is derived from the condition of the epoch"><span>{config.purchaserTargetPrice}</span></Tooltip>
         // }
       ];
       setConfigs({

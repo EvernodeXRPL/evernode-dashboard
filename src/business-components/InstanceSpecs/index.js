@@ -23,7 +23,7 @@ export default function InstanceSpecs(props) {
   const content = <Typography className="text-wrap">{text}</Typography>;
 
   return (
-    text ? (showTooltip ? <Tooltip title="Specifications of a sashimono instance">
+    text ? (showTooltip ? <Tooltip title="Resource allocation for a smart contract instance">
       {content}
     </Tooltip> : content) : '-'
   );
