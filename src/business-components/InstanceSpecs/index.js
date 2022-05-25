@@ -7,7 +7,7 @@ function round(n) {
 }
 
 export default function InstanceSpecs(props) {
-  const { cpu, ram, disk, instanceCount } = props;
+  const { cpu, ram, disk, instanceCount, showTooltip } = props;
 
   const specs = [];
   if (instanceCount) {
@@ -19,9 +19,12 @@ export default function InstanceSpecs(props) {
       specs.push(`${round(disk / 1000 / instanceCount)}GB Disk`);
   }
 
+  const text = specs.join(', ');
+  const content = <Typography className="text-wrap">{text}</Typography>;
+
   return (
-    <Tooltip title="Specifications of a sashimono instance">
-      <Typography className="text-wrap">{specs.join(', ') || '-'}</Typography>
-    </Tooltip>
+    text ? (showTooltip ? <Tooltip title="Specifications of a sashimono instance">
+      {content}
+    </Tooltip> : content) : '-'
   );
 }

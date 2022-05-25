@@ -3,7 +3,7 @@ import React from 'react';
 import { Tooltip, Typography } from '@material-ui/core';
 
 export default function CPUModel(props) {
-  const { modelName, speed, count } = props;
+  const { modelName, speed, count, showTooltip } = props;
 
   const cpuInfo = [];
   if (modelName)
@@ -13,9 +13,12 @@ export default function CPUModel(props) {
   if (count)
     cpuInfo.push(`${count} cores`);
 
+  const text = cpuInfo.join(', ');
+  const content = <Typography className="text-wrap">{text}</Typography>;
+
   return (
-    <Tooltip title="Host's CPU specifications">
-      <Typography className="text-wrap">{cpuInfo.join(', ') || '-'}</Typography>
-    </Tooltip>
+    text ? (showTooltip ? <Tooltip title="Host's CPU specifications">
+      {content}
+    </Tooltip> : content) : '-'
   );
 }
