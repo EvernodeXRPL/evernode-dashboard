@@ -84,11 +84,11 @@ export default function Host(props) {
           value: <InstanceSpecs cpu={hostInfo.cpuMicrosec} ram={hostInfo.ramMb} disk={hostInfo.diskMb} instanceCount={hostInfo.maxInstances} />
         },
         {
-          key: 'Last Heartbeat XRPL Ledger',
+          key: 'Last Heartbeat XRP Ledger',
           value: <Tooltip title="XPR Ledger which the last heartbeat is received"><span>{hostInfo.lastHeartbeatLedger}</span></Tooltip>
         },
         {
-          key: 'Registered on XRPL Ledger',
+          key: 'Registered on XRP Ledger',
           value: <Tooltip title="XPR Ledger which the host is registered"><span>{hostInfo.registrationLedger}</span></Tooltip>
         },
         {
