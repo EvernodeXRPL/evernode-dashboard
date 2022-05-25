@@ -47,15 +47,15 @@ export default function Registry() {
         },
         {
           key: 'Lease Acquire Window',
-          value: <Tooltip title="The maximum no. of ledgers that an acquire-lease request should wait for instance creation."><span>{config.leaseAcquireWindow}</span></Tooltip>
+          value: <Tooltip title="The maximum no. of XRP ledgers that an acquire-lease request should wait for instance creation."><span>{config.leaseAcquireWindow}</span></Tooltip>
         },
         {
           key: 'Moment Base Index',
-          value: <Tooltip title="Ledger index when the 'Moment Size' last changed on."><span>{config.momentBaseIdx}</span></Tooltip>
+          value: <Tooltip title="XRP ledger index when the 'Moment Size' last changed."><span>{config.momentBaseIdx}</span></Tooltip>
         },
         {
           key: 'Moment Size',
-          value: <Tooltip title="No. of ledgers per moment."><span>{config.momentSize}</span></Tooltip>
+          value: <Tooltip title="No. of XRP ledgers per moment."><span>{config.momentSize}</span></Tooltip>
         },
         // {
         //   key: 'Purchaser Target Price',
