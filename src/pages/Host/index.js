@@ -16,6 +16,7 @@ import {
   Button,
   Hidden
 } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core/styles";
 import Leases from '../../business-components/Leases';
 
 import { useEvernode } from '../../services/Evernode';
@@ -27,7 +28,31 @@ import CPUModel from '../../business-components/CPUModel';
 import InstanceSpecs from '../../business-components/InstanceSpecs';
 import ModalDialog from '../../components/ModalDialog';
 
+const useStyles = makeStyles({
+  root: {
+    // input label when focused
+    "& label.Mui-focused": {
+      color: 'rgba(0,0,0,0.54)'
+    },
+    "& label.Mui-error": {
+      color: 'red'
+    },
+    // focused color for input with variant='standard'
+    "& .MuiInput-underline:after": {
+      borderBottomColor: 'rgba(0,0,0,0.87)'
+    },
+    "& .MuiInput-underline.Mui-error:after": {
+      borderBottomColor: '#f83245'
+    },
+    "& label.MuiInputLabel-shrink": {
+      transform: 'translate(0, 1.5px) scale(0.95)',
+      transformOrigin: 'top left'
+    }
+  }
+});
+
 export default function Host(props) {
+  const classes = useStyles();
   const history = useHistory();
   const evernode = useEvernode();
 
@@ -53,6 +78,8 @@ export default function Host(props) {
   }, [inputAddress, inputAddressValid]);
 
   const handleChangeAddressClose = useCallback(() => {
+    setShowChangeAddress(false);
+    setInputAddress(null);
     // If the address change modal is closed without changing the address,
     // Redirect to the home page.
     if (!address)
@@ -183,7 +210,7 @@ export default function Host(props) {
       </Fragment >}
       {address === selfAddress && <ModalDialog open={showChangeAddress} scroll="body" onClose={handleChangeAddressClose}>
         <div>
-          <TextField error={inputAddress && !inputAddressValid()} className="address-input" label="Enter the host XRP address" multiline value={inputAddress || ''} onChange={(e) => setInputAddress(e.target.value)} />
+          <TextField autoFocus error={inputAddress && !inputAddressValid()} className={['address-input', classes.root]} variant="standard" label="Enter the host XRP address" multiline value={inputAddress || ''} onChange={(e) => setInputAddress(e.target.value)} />
         </div>
         <div>
           <Button onClick={handleChangeAddress} variant="outlined" disabled={!inputAddress || !inputAddressValid()} className="pull-right mt-3">OK</Button>
