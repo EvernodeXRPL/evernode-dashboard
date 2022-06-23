@@ -210,7 +210,7 @@ export default function Host(props) {
       </Fragment >}
       {address === selfAddress && <ModalDialog open={showChangeAddress} scroll="body" onClose={handleChangeAddressClose}>
         <div>
-          <TextField autoFocus error={inputAddress && !inputAddressValid()} className={['address-input', classes.root]} variant="standard" label="Enter the host XRP address" multiline value={inputAddress || ''} onChange={(e) => setInputAddress(e.target.value)} />
+          <TextField autoFocus error={!!inputAddress && !inputAddressValid()} classes={classes} className="address-input" variant="standard" label="Enter the host XRP address" multiline value={inputAddress || ''} onChange={(e) => setInputAddress(e.target.value)} />
         </div>
         <div>
           <Button onClick={handleChangeAddress} variant="outlined" disabled={!inputAddress || !inputAddressValid()} className="pull-right mt-3">OK</Button>
