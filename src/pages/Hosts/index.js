@@ -10,7 +10,7 @@ import CountryFlag from '../../business-components/CountryFlag';
 import CPUModel from '../../business-components/CPUModel';
 import InstanceSpecs from '../../business-components/InstanceSpecs';
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 10;
 
 export default function Hosts() {
   const history = useHistory();
