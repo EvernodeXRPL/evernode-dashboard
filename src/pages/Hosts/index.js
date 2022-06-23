@@ -10,7 +10,7 @@ import CountryFlag from '../../business-components/CountryFlag';
 import CPUModel from '../../business-components/CPUModel';
 import InstanceSpecs from '../../business-components/InstanceSpecs';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 2;
 
 export default function Hosts() {
   const history = useHistory();
@@ -40,7 +40,7 @@ export default function Hosts() {
       maxInstances: { title: "Max Instances", className: 'text-center' },
       activeInstances: { title: "Active Instances", className: 'text-center' }
     };
-    const tableValues = data.map(host => {
+    const tableValues = hostList.map(host => {
       return {
         key: host.address,
         address: <div className="d-flex align-items-center">
