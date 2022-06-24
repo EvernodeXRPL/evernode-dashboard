@@ -12,7 +12,7 @@ const store = configureStore();
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter basename="/evernode-host-dashboard/">
+      <BrowserRouter basename="/">
         <CssBaseline />
         <ScrollToTop>
           <Routes />
