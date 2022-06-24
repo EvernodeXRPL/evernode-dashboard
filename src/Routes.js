@@ -8,7 +8,7 @@ import MuiTheme from './theme';
 import LeftSidebar from './layout-blueprints/LeftSidebar';
 
 import { EvernodeProvider } from './services/Evernode';
-import Loader from './components/Loader';
+import LoaderScreen from './pages/LoaderScreen';
 
 const Hosts = lazy(() => import('./pages/Hosts'));
 const Host = lazy(() => import('./pages/Host'));
@@ -43,13 +43,7 @@ const Routes = () => {
       <EvernodeProvider>
         <AnimatePresence>
           <Suspense
-            fallback={
-              <div className="d-flex align-items-center vh-100 justify-content-center text-center font-weight-bold font-size-lg py-3">
-                <div className="w-50 mx-auto">
-                  <Loader size="5rem" />
-                </div>
-              </div>
-            }>
+            fallback={<LoaderScreen />}>
             <Switch>
               <Redirect exact from="/" to="/hosts" />
               <Route

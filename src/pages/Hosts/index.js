@@ -40,7 +40,7 @@ export default function Hosts() {
       maxInstances: { title: "Max Instances", className: 'text-center' },
       activeInstances: { title: "Active Instances", className: 'text-center' }
     };
-    const tableValues = data.map(host => {
+    const tableValues = hostList.map(host => {
       return {
         key: host.address,
         address: <div className="d-flex align-items-center">

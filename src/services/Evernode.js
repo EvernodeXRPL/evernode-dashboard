@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import tos from '../assets/data/tos.txt'
+import LoaderScreen from '../pages/LoaderScreen';
 
 const evernode = require("evernode-js-client");
 
@@ -8,6 +9,8 @@ const { createContext, useContext } = React;
 const EvernodeContext = createContext(null);
 
 export const EvernodeProvider = (props) => {
+    const [loading, setLoading] = useState(true);
+
     const value = {
         getRegistryAddress: props.getRegistryAddress || getRegistryAddress,
         getEnvironment: props.getEnvironment || getEnvironment,
@@ -21,11 +24,20 @@ export const EvernodeProvider = (props) => {
         onLedger: props.onLedger || onLedger
     }
 
-    xrplApi.connect();
+    const connectXrpl = async () => {
+        setLoading(true);
+        await xrplApi.connect();
+        await regClient.connect();
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        connectXrpl();
+    }, []);
 
     return (
         <EvernodeContext.Provider value={value}>
-            {props.children}
+            {loading ? <LoaderScreen /> : props.children}
         </EvernodeContext.Provider>
     )
 }
@@ -35,9 +47,10 @@ export const useEvernode = () => {
 }
 
 const registryAddress = process.env.REACT_APP_REGISTRY_ADDRESS;
-const environment = 'XRPL NFT DevNet';
+const rippledServer = process.env.REACT_APP_RIPPLED_SERVER;
+const environment = 'XRPL Hooks TestNet V2';
 
-const xrplApi = new evernode.XrplApi();
+const xrplApi = new evernode.XrplApi(rippledServer);
 evernode.Defaults.set({
     registryAddress: registryAddress,
     xrplApi: xrplApi
@@ -53,7 +66,6 @@ const getEnvironment = () => {
 }
 
 const getConfigs = async () => {
-    await regClient.connect();
     return regClient.config;
 }
 
@@ -63,7 +75,6 @@ const getTos = async () => {
 }
 
 const getHosts = async (filters = null, pageSize = null, nextPageToken = null) => {
-    await regClient.connect();
     return regClient.getHosts(filters, pageSize, nextPageToken);
 }
 
