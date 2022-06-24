@@ -1,0 +1,13 @@
+EVERNODE HOSTING RULES
+
+Background: We exchange hosting tokens for Evers. Evers may have no extrinsic worth and the point of Evernode is to host dApps on multiple Nodes so that one Node’s failure doesn’t matter so much. 
+
+No Guaranteed Redemption: We may refuse to redeem a hosting token for any reason or for no reason, without refund.
+
+Sole Remedy: If we do not redeem a hosting token, your sole remedy is to resell the token on the DEX and/or to find an alternative Evernode host. 
+
+Best Endeavours Only: We do not promise services of any particular standard or availability, if available at all, and any services we do provide are strictly on a “best endeavours” basis.
+
+No Liability: To the extent permitted by law, we offer no warranty, and deny any liability, in respect of our hosting services (except for fraud).
+
+Privacy: We will not use, store, or reveal any personal information, except as necessary to provide hosting services to dApps on Evernode (a public blockchain network) or as required by law.
