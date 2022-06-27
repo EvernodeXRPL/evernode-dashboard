@@ -115,11 +115,11 @@ export default function Host(props) {
         },
         {
           key: 'Last Heartbeat XRP Ledger',
-          value: <Tooltip title="XPR Ledger at which the last heartbeat was received"><span>{hostInfo.lastHeartbeatLedger}</span></Tooltip>
+          value: <Tooltip title="XRP Ledger at which the last heartbeat was received"><span>{hostInfo.lastHeartbeatLedger}</span></Tooltip>
         },
         {
           key: 'Registered on XRP Ledger',
-          value: <Tooltip title="XPR Ledger at which the host registered"><span>{hostInfo.registrationLedger}</span></Tooltip>
+          value: <Tooltip title="XRP Ledger at which the host registered"><span>{hostInfo.registrationLedger}</span></Tooltip>
         },
         {
           key: 'Registration Fee',
