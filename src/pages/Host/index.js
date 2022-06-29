@@ -1,7 +1,7 @@
 import React, { Fragment, useCallback, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 
 import PageTitle from '../../layout-components/PageTitle';
 import RegularTable from '../../components/RegularTable';
@@ -15,8 +15,8 @@ import {
   TextField,
   Button,
   Hidden
-} from '@material-ui/core';
-import { makeStyles } from "@material-ui/core/styles";
+} from '@mui/material';
+import { makeStyles } from "@mui/styles";
 import Leases from '../../business-components/Leases';
 
 import { useEvernode } from '../../services/Evernode';

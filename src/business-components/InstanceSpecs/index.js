@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Tooltip, Typography } from '@material-ui/core';
+import { Tooltip, Typography } from '@mui/material';
 
 function round(n) {
   return Math.round(n * 100) / 100;

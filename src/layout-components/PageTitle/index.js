@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
 
 function PageTitle(props) {
   return (

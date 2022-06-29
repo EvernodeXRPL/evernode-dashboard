@@ -7,7 +7,7 @@ import {
   CardContent,
   Divider,
   Grid
-} from '@material-ui/core';
+} from '@mui/material';
 
 import Loader from '../../components/Loader';
 

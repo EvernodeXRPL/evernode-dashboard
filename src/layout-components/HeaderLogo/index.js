@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
-import { IconButton, Box } from '@material-ui/core';
+import { IconButton, Box } from '@mui/material';
 
 import projectLogo from '../../assets/images/logo-white.png';
 

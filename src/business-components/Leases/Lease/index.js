@@ -1,4 +1,4 @@
-import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
+import { Button, Grid, Tooltip, Typography } from '@mui/material';
 import React from 'react';
 
 import AccordionsCollapse from '../../../components/AccordionsCollapse';

@@ -2,7 +2,7 @@ import { Provider } from 'react-redux';
 import configureStore from './config/configureStore';
 import './App.css';
 import { HashRouter } from 'react-router-dom';
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline } from '@mui/material';
 import ScrollToTop from './utils/ScrollToTop';
 import Routes from './Routes';
 import './assets/base.scss';

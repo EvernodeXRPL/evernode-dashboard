@@ -1,5 +1,6 @@
 import React from 'react';
-import { Tooltip, withStyles } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import ReactCountryFlag from 'react-country-flag';
 
 export default function CountryFlag(props) {

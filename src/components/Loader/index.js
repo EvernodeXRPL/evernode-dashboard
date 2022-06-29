@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   CircularProgress,
   Grid
-} from '@material-ui/core';
+} from '@mui/material';
 
 export default function Loader(props) {
   const {

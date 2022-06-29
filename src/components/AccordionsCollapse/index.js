@@ -1,11 +1,9 @@
 import React, { Fragment } from 'react';
 
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function AccordionsCollapse(props) {
   const {
@@ -23,27 +21,27 @@ export default function AccordionsCollapse(props) {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const panelSummary = <ExpansionPanelSummary
+  const panelSummary = <AccordionSummary
     expandIcon={<ExpandMoreIcon className={panelSummaryClassName} />}
     aria-controls="panel1bh-content"
     id="panel1bh-header">
     {summary}
-  </ExpansionPanelSummary>
+  </AccordionSummary>
 
   return (
     <Fragment>
-      <ExpansionPanel
+      <Accordion
         expanded={expanded === id}
         onChange={handleChange(id)}
         className={panelClassName}>
         {headerTooltip ?
           <Tooltip title={headerTooltip}>{panelSummary}</Tooltip> :
           panelSummary}
-        <ExpansionPanelDetails
+        <AccordionDetails
           className={`${panelDetailClassName} p-0`}>
           {props.children}
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </AccordionDetails>
+      </Accordion>
     </Fragment>
   );
 }

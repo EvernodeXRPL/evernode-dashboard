@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 
 import PageTitle from '../../layout-components/PageTitle';
 import CustomTable from '../../components/CustomTable';

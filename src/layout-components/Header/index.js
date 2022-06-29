@@ -7,7 +7,7 @@ import {
   AppBar,
   Box,
   Tooltip
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { connect } from 'react-redux';
 
@@ -16,8 +16,8 @@ import { setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import HeaderLogo from '../../layout-components/HeaderLogo';
 import MomentInfo from '../../business-components/MomentInfo';
 
-import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
-import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
+import MenuOpenRoundedIcon from '@mui/icons-material/MenuOpenRounded';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 
 const Header = props => {
 

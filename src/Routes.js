@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { ThemeProvider } from '@material-ui/styles';
+import { ThemeProvider } from '@mui/styles';
 
 import MuiTheme from './theme';
 import LeftSidebar from './layout-blueprints/LeftSidebar';
