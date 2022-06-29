@@ -46,11 +46,10 @@ export default function Hosts() {
         address: <div className="d-flex align-items-center">
           <CountryFlag countryCode={host.countryCode} size="3em" />
           <div className="ml-3">
-            <a
-              href="#/"
-              className="font-weight-bold text-black">
+            <p
+              className="font-weight-bold margin-0">
               {host.address}
-            </a>
+            </p>
             <span className="text-black-50 d-block py-1">
               {
                 host.version &&
