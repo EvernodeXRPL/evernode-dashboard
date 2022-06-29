@@ -47,7 +47,7 @@ export default function Hosts() {
           <CountryFlag countryCode={host.countryCode} size="3em" />
           <div className="ml-3">
             <p
-              className="font-weight-bold margin-0">
+              className="font-weight-bold m-0">
               {host.address}
             </p>
             <span className="text-black-50 d-block py-1">
