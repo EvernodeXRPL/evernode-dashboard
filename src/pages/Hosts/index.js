@@ -1,6 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { Button } from '@material-ui/core';
+import MessageIcon from '@material-ui/icons/Message';
 
 import PageTitle from '../../layout-components/PageTitle';
 import CustomTable from '../../components/CustomTable';
@@ -46,10 +47,12 @@ export default function Hosts() {
         address: <div className="d-flex align-items-center">
           <CountryFlag countryCode={host.countryCode} size="3em" />
           <div className="ml-3">
-            <p
-              className="font-weight-bold m-0">
-              {host.address}
-            </p>
+              <p className="font-weight-bold m-0">
+                {host.address}
+                {host.hostMessage ? (
+                  <MessageIcon className="host-message-icon" fontSize="small" />
+                ) : null}
+              </p>
             <span className="text-black-50 d-block py-1">
               {
                 host.version &&
