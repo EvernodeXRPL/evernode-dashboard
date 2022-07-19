@@ -202,23 +202,34 @@ export default function Host(props) {
           ) : null}
         </Grid>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
-              <CardContent className="p-0">
-                <h5 className="card-title font-weight-bold font-size-md">
-                  Registration Info
-                </h5>
-                {(info && (info.hostInfo ? <RegularTable
-                  headings={info.tableHeadings}
-                  values={info.tableValues}
-                  highlight={['key']}
-                  hideHeadings /> : <span>Host is not Registered!</span>)) ||
-                  <Loader className="p-4" />}
-              </CardContent>
-            </Card>
-          </Grid>
             <Grid item xs={12} md={6}>
-              <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
+              <Card
+                style={{ border: "none", boxShadow: "none" }}
+                className="mb-4 bg-transparent"
+              >
+                <CardContent className="p-0">
+                  <h5 className="card-title font-weight-bold font-size-md">
+                    Registration Info
+                  </h5>
+                  {(info &&
+                    (info.hostInfo ? (
+                      <RegularTable
+                        headings={info.tableHeadings}
+                        values={info.tableValues}
+                        highlight={["key"]}
+                        hideHeadings
+                      />
+                    ) : (
+                      <span>Host is not Registered!</span>
+                    ))) || <Loader className="p-4" />}
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Card
+                style={{ border: "none", boxShadow: "none" }}
+                className="mb-4 bg-transparent"
+              >
                 <CardContent className="p-0">
                   <h5 className="card-title font-weight-bold font-size-md">
                     Available Leases
@@ -227,7 +238,7 @@ export default function Host(props) {
                 </CardContent>
               </Card>
             </Grid>
-        </Grid>
+          </Grid>
       </Fragment >}
       {address === selfAddress && <ModalDialog open={showChangeAddress} scroll="body" onClose={handleChangeAddressClose}>
         <div>
