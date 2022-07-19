@@ -4,3 +4,12 @@ body {
         max-width: 250px !important;
     }
 }
+
+.host-message-icon{
+    color: $cornflowerBlue;
+    margin-left: 10px;
+}
+
+tr:hover .host-message-icon{
+    color: $bladeRunnerBlue;
+}
