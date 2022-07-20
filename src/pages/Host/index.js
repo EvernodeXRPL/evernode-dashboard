@@ -89,7 +89,8 @@ export default function Host(props) {
   useEffect(() => {
     const fetchInfo = async () => {
       setInfo(null);
-      const hostInfo = await evernode.getHostInfo(address);
+      const hosts = await evernode.getHosts({ address: address });
+      const hostInfo = (hosts && hosts.length) ? hosts[0] : null;
       const tableHeadings = {
         key: 'Key',
         value: 'Value'
@@ -181,20 +182,20 @@ export default function Host(props) {
           <EvrBalance balance={info?.evrBalance} />
         </PageTitle>
         <Grid container spacing={4}>
-          {info && info.hostInfo.hostMessage ? (
+          {info && info.hostInfo && info.hostInfo.hostMessage ? (
             <Grid item xs={12}>
               <Card
                 style={{ border: "none", boxShadow: "none" }}
                 className="mb-4 bg-transparent"
               >
                 <CardContent className="p-0">
-                  <div className="p-3 border rounded host-message">
+                  <div className="p-3 border rounded host-message mb-0">
                     {(info &&
                       (info.hostInfo.hostMessage
                         ? info.hostInfo.hostMessage
                         : "There is no host message available!")) || (
-                      <Loader className="p-4" />
-                    )}
+                        <Loader className="p-4" />
+                      )}
                   </div>
                 </CardContent>
               </Card>
@@ -202,43 +203,43 @@ export default function Host(props) {
           ) : null}
         </Grid>
         <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
-              <Card
-                style={{ border: "none", boxShadow: "none" }}
-                className="mb-4 bg-transparent"
-              >
-                <CardContent className="p-0">
-                  <h5 className="card-title font-weight-bold font-size-md">
-                    Registration Info
-                  </h5>
-                  {(info &&
-                    (info.hostInfo ? (
-                      <RegularTable
-                        headings={info.tableHeadings}
-                        values={info.tableValues}
-                        highlight={["key"]}
-                        hideHeadings
-                      />
-                    ) : (
-                      <span>Host is not Registered!</span>
-                    ))) || <Loader className="p-4" />}
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Card
-                style={{ border: "none", boxShadow: "none" }}
-                className="mb-4 bg-transparent"
-              >
-                <CardContent className="p-0">
-                  <h5 className="card-title font-weight-bold font-size-md">
-                    Available Leases
-                  </h5>
-                  {address && <Leases address={address} />}
-                </CardContent>
-              </Card>
-            </Grid>
+          <Grid item xs={12} md={6}>
+            <Card
+              style={{ border: "none", boxShadow: "none" }}
+              className="mb-4 bg-transparent"
+            >
+              <CardContent className="p-0">
+                <h5 className="card-title font-weight-bold font-size-md">
+                  Registration Info
+                </h5>
+                {(info &&
+                  (info.hostInfo ? (
+                    <RegularTable
+                      headings={info.tableHeadings}
+                      values={info.tableValues}
+                      highlight={["key"]}
+                      hideHeadings
+                    />
+                  ) : (
+                    <span>Host is not Registered!</span>
+                  ))) || <Loader className="p-4" />}
+              </CardContent>
+            </Card>
           </Grid>
+          <Grid item xs={12} md={6}>
+            <Card
+              style={{ border: "none", boxShadow: "none" }}
+              className="mb-4 bg-transparent"
+            >
+              <CardContent className="p-0">
+                <h5 className="card-title font-weight-bold font-size-md">
+                  Available Leases
+                </h5>
+                {address && <Leases address={address} />}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </Fragment >}
       {address === selfAddress && <ModalDialog open={showChangeAddress} scroll="body" onClose={handleChangeAddressClose}>
         <div>
