@@ -18,7 +18,6 @@ export const EvernodeProvider = (props) => {
         getTos: props.getTos || getTos,
         getHosts: props.getHosts || getHosts,
         decodeLeaseUri: props.decodeLeaseUri || decodeLeaseUri,
-        getHostInfo: props.getHostInfo || getHostInfo,
         getLeases: props.getLeases || getLeases,
         getEVRBalance: props.getEVRBalance || getEVRBalance,
         onLedger: props.onLedger || onLedger
@@ -80,12 +79,6 @@ const getHosts = async (filters = null, pageSize = null, nextPageToken = null) =
 
 const decodeLeaseUri = (uri) => {
     return evernode.UtilHelpers.decodeLeaseNftUri(uri);
-}
-
-const getHostInfo = async (address) => {
-    const client = new evernode.HostClient(address);
-    await client.connect();
-    return await client.getRegistration();
 }
 
 const getLeases = async (address) => {
