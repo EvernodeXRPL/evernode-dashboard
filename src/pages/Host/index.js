@@ -179,7 +179,7 @@ export default function Host(props) {
               {info?.hostInfo && <CountryFlag countryCode={info.hostInfo.countryCode} size="2.5em" />}
             </span>
           </Hidden>
-          <EvrBalance balance={info?.evrBalance} />
+          <EvrBalance balance={+(+info?.evrBalance).toFixed(3)} />
         </PageTitle>
         <Grid container spacing={4}>
           {info && info.hostInfo && info.hostInfo.hostMessage ? (
