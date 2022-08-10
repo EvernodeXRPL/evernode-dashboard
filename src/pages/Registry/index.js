@@ -65,7 +65,7 @@ export default function Registry() {
         },
         {
           key: 'Host Count',
-          value: <Tooltip title="No. of XRP ledgers per moment"><span>{config.hostCount}</span></Tooltip>
+          value: <Tooltip title="Total number of registered hosts"><span>{config.hostCount}</span></Tooltip>
         },
         // {
         //   key: 'Purchaser Target Price',
@@ -92,7 +92,7 @@ export default function Registry() {
         },
         {
           key: 'First Epoch Reward Quota',
-          value: <Tooltip title="EVRs rewarded in one moment in first epoch"><span>{config.rewardConfiguaration.firstEpochRewardQuota}</span></Tooltip>
+          value: <Tooltip title="EVRs rewarded per moment within the first epoch"><span>{config.rewardConfiguaration.firstEpochRewardQuota}</span></Tooltip>
         },
         {
           key: 'Reward Start Moment',
@@ -115,19 +115,15 @@ export default function Registry() {
         },
         {
           key: 'Epoch Pool',
-          value: <Tooltip title="Available amount of EVRs in the current epoch pool"><span>{+(+config.rewardInfo.epochPool).toFixed(3)}</span></Tooltip>
+          value: <Tooltip title="Available amount of EVRs in the current epoch's reward pool"><span>{+(+config.rewardInfo.epochPool).toFixed(3)}</span></Tooltip>
         },
         {
-          key: 'Current Moment Active Host Count',
-          value: <Tooltip title="No. of Active hosts in the current moment"><span>{config.rewardInfo.curMomentActiveHostCount}</span></Tooltip>
+          key: `Active Host Count of the Moment ${config.rewardInfo.savedMoment}`,
+          value: <Tooltip title={`No. of Active hosts in the current moment ${config.rewardInfo.savedMoment}`}><span>{config.rewardInfo.curMomentActiveHostCount}</span></Tooltip>
         },
         {
-          key: 'Previous Moment Active Host Count',
-          value: <Tooltip title="No. of Active hosts in the previous moment"><span>{config.rewardInfo.prevMomentActiveHostCount}</span></Tooltip>
-        },
-        {
-          key: 'Last Updated Moment',
-          value: <Tooltip title="The moment that the reward info were updated last"><span>{config.rewardInfo.savedMoment}</span></Tooltip>
+          key: `Active Host Count of the Moment ${config.rewardInfo.savedMoment - 1}`,
+          value: <Tooltip title={`No. of Active hosts in the moment ${config.rewardInfo.savedMoment - 1}`}><span>{config.rewardInfo.prevMomentActiveHostCount}</span></Tooltip>
         }
       ];
       setRewardConfigs({
