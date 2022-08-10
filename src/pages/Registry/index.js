@@ -159,7 +159,7 @@ export default function Registry() {
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4">
-            <CardHeader className="reward-card-header pt-3 pb-2" title={<Typography style={{ fontSize: '1.54rem', fontWeight: 'bold' }} >Reward Configurations</Typography>} />
+            <CardHeader className="pt-3 pb-2" title={<Typography style={{ fontSize: '1.54rem', fontWeight: 'bold' }} >Reward Configurations</Typography>} />
             <CardContent className="p-0">
               {(rewardConfigs && <RegularTable
                 headings={rewardConfigs.tableHeadings}
