@@ -119,7 +119,7 @@ export default function Registry() {
         },
         {
           key: `Active Host Count of the Moment ${config.rewardInfo.savedMoment}`,
-          value: <Tooltip title={`No. of Active hosts in the current moment ${config.rewardInfo.savedMoment}`}><span>{config.rewardInfo.curMomentActiveHostCount}</span></Tooltip>
+          value: <Tooltip title={`No. of Active hosts in the moment ${config.rewardInfo.savedMoment}`}><span>{config.rewardInfo.curMomentActiveHostCount}</span></Tooltip>
         },
         {
           key: `Active Host Count of the Moment ${config.rewardInfo.savedMoment - 1}`,
