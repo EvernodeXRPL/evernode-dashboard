@@ -111,7 +111,7 @@ export default function Registry() {
         },
         {
           key: 'Current Epoch',
-          value: <Tooltip title="Current on-going epoch"><span>{config.rewardInfo.epoch}</span></Tooltip>
+          value: <Tooltip title="Current epoch"><span>{config.rewardInfo.epoch}</span></Tooltip>
         },
         {
           key: 'Epoch Pool',
