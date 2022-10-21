@@ -113,10 +113,9 @@ const getEVRBalance = async (address) => {
 const onLedger = async (callback) => {
     xrplApi.on(evernode.XrplApiEvents.LEDGER, async (e) => {
 
-        const ledgerIndex = e.ledger_index;
-        const moment = await regClient.getMoment(ledgerIndex);
+        const moment = await regClient.getMoment();
         callback({
-            ledgerIndex: ledgerIndex,
+            ledgerIndex: e.ledger_index,
             moment: moment
         })
     });
