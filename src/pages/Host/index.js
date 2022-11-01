@@ -115,8 +115,8 @@ export default function Host(props) {
           value: <InstanceSpecs cpu={hostInfo.cpuMicrosec} ram={hostInfo.ramMb} disk={hostInfo.diskMb} instanceCount={hostInfo.maxInstances} showTooltip />
         },
         {
-          key: 'Last Heartbeat XRP Ledger',
-          value: <Tooltip title="XRP Ledger at which the last heartbeat was received"><span>{hostInfo.lastHeartbeatLedger}</span></Tooltip>
+          key: 'Last Heartbeat Index',
+          value: <Tooltip title="Timestamp at which the last heartbeat was received"><span>{hostInfo.lastHeartbeatIndex || hostInfo.lastHeartbeatLedger}</span></Tooltip>
         },
         {
           key: 'Registered on XRP Ledger',
@@ -131,6 +131,12 @@ export default function Host(props) {
           value: <Tooltip title="Host's Sashimono version"><span>{hostInfo.version}</span></Tooltip>
         }
       ] : [];
+      if (hostInfo?.registrationTimestamp)
+        tableValues.push(
+          {
+            key: 'Registered on Timestamp',
+            value: <Tooltip title="Timestamp at which the host registered"><span>{hostInfo.registrationTimestamp}</span></Tooltip>
+          });
       const evrBalance = await evernode.getEVRBalance(address);
       setInfo({
         evrBalance: evrBalance,

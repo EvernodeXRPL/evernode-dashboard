@@ -57,7 +57,11 @@ export default function Registry() {
         },
         {
           key: 'Moment Base Index',
-          value: <Tooltip title="XRP ledger index when the 'Moment Size' last changed"><span>{config.momentBaseIdx}</span></Tooltip>
+          value: <Tooltip title="Index when the 'Moment Size' last changed"><span>{config.momentBaseInfo.baseIdx}</span></Tooltip>
+        },
+        {
+          key: 'Transition Moment',
+          value: <Tooltip title="Moment when the moment size is last changed"><span>{config.momentBaseInfo.baseTransitionMoment}</span></Tooltip>
         },
         {
           key: 'Moment Size',
@@ -81,22 +85,22 @@ export default function Registry() {
       const rewardConfigTableValues = [
         {
           key: 'Epoch Count',
-          value: <Tooltip title="Total no. of epochs"><span>{config.rewardConfiguaration.epochCount}</span></Tooltip>,
+          value: <Tooltip title="Total no. of epochs"><span>{config.rewardConfiguration.epochCount}</span></Tooltip>,
           cellConfigs: {
             width: '37%'
           }
         },
         {
           key: 'Epoch Reward Amount',
-          value: <Tooltip title="Total amount of EVRs rewarded in one epoch"><span>{config.rewardConfiguaration.epochRewardAmount}</span></Tooltip>
+          value: <Tooltip title="Total amount of EVRs rewarded in one epoch"><span>{config.rewardConfiguration.epochRewardAmount}</span></Tooltip>
         },
         {
           key: 'First Epoch Reward Quota',
-          value: <Tooltip title="EVRs rewarded per moment within the first epoch"><span>{config.rewardConfiguaration.firstEpochRewardQuota}</span></Tooltip>
+          value: <Tooltip title="EVRs rewarded per moment within the first epoch"><span>{config.rewardConfiguration.firstEpochRewardQuota}</span></Tooltip>
         },
         {
           key: 'Reward Start Moment',
-          value: <Tooltip title="The moment EVR rewarding starts"><span>{config.rewardConfiguaration.rewardStartMoment}</span></Tooltip>
+          value: <Tooltip title="The moment EVR rewarding starts"><span>{config.rewardConfiguration.rewardStartMoment}</span></Tooltip>
         },
         {
           key: <Typography style={{ fontSize: '1.54rem', fontWeight: 'bold', color: 'black' }}>Reward Info</Typography>,
