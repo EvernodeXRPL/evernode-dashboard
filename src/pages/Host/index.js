@@ -90,12 +90,13 @@ export default function Host(props) {
     const fetchInfo = async () => {
       setInfo(null);
       const hosts = await evernode.getHosts({ address: address });
+      const config = await evernode.getConfigs();
       const hostInfo = (hosts && hosts.length) ? hosts[0] : null;
       const tableHeadings = {
         key: 'Key',
         value: 'Value'
       }
-      const tableValues = hostInfo ? [
+      let tableValues = hostInfo ? [
         {
           key: 'Registration Token Id',
           value: <Tooltip title="Registration NFToken Id"><span>{hostInfo.nfTokenId}</span></Tooltip>
@@ -116,7 +117,7 @@ export default function Host(props) {
         },
         {
           key: 'Last Heartbeat Index',
-          value: <Tooltip title="Timestamp at which the last heartbeat was received"><span>{hostInfo.lastHeartbeatIndex || hostInfo.lastHeartbeatLedger}</span></Tooltip>
+          value: <Tooltip title={`${config.momentBaseInfo.momentType === 'ledger' ? 'XRP Ledger' : 'Timestamp'} at which the last heartbeat was received`}><span>{hostInfo.lastHeartbeatIndex}</span></Tooltip>
         },
         {
           key: 'Registered on XRP Ledger',
@@ -174,7 +175,7 @@ export default function Host(props) {
                 </Tooltip>}
               <span>{info?.hostInfo &&
                 <Tooltip title={info.hostInfo.active ? 'Active' : 'Inactive'}>
-                  <div className={`ml-1 rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
+                  <div className={`ml - 1 rounded - circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
                 </Tooltip>}</span>
             </div>
           }

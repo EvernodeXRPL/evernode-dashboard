@@ -13,7 +13,7 @@ export default function EvrBalance(props) {
 
   return (
     <Card className="mt-1 bg-unicorn border-0 text-light">
-      {(balance && <Tooltip title="Total EVR balance">
+      {((balance || balance === 0) && <Tooltip title="Total EVR balance">
         <CardContent className="pt-1 pb-1 text-center wallet-balance">
           <span className="font-weight-bold amount">
             {balance}

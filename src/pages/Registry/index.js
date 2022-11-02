@@ -31,7 +31,7 @@ export default function Registry() {
         key: 'Key',
         value: 'Value'
       }
-      const registryConfigTableValues = [
+      let registryConfigTableValues = [
         {
           key: 'EVR Issuer XRP Address',
           value: <Tooltip title="EVR Issuer XRP account address"><span>{config.evrIssuerAddress}</span></Tooltip>,
@@ -61,11 +61,11 @@ export default function Registry() {
         },
         {
           key: 'Transition Moment',
-          value: <Tooltip title="Moment when the moment size is last changed"><span>{config.momentBaseInfo.baseTransitionMoment}</span></Tooltip>
+          value: <Tooltip title="Moment when the 'Moment Size' last changed"><span>{config.momentBaseInfo.baseTransitionMoment}</span></Tooltip>
         },
         {
           key: 'Moment Size',
-          value: <Tooltip title="No. of XRP ledgers per moment"><span>{config.momentSize}</span></Tooltip>
+          value: <Tooltip title={`Moment size in ${config.momentBaseInfo.momentType === 'ledger' ? 'ledgers' : 'seconds'}`}><span>{config.momentSize}</span></Tooltip>
         },
         {
           key: 'Host Count',
@@ -76,6 +76,17 @@ export default function Registry() {
         //   value: <Tooltip title="Per moment lease amount that is derived from the condition of the epoch"><span>{config.purchaserTargetPrice}</span></Tooltip>
         // }
       ];
+      if (config.momentTransitInfo?.transitionIndex) {
+        registryConfigTableValues = registryConfigTableValues.concat(
+          [{
+            key: `Next 'Moment Size' Transition Index`,
+            value: <Tooltip title="Index when the 'Moment Size' is going to be changed"><span>{config.momentTransitInfo.transitionIndex}</span></Tooltip>
+          },
+          {
+            key: 'New Moment Size',
+            value: <Tooltip title={`New moment size in ${config.momentTransitInfo.momentType === 'ledger' ? 'ledgers' : 'seconds'} after the transition`}><span>{config.momentTransitInfo.momentSize}</span></Tooltip>
+          }]);
+      }
       setRegistryConfigs({
         configs: config,
         tableHeadings: tableHeadings,
