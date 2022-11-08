@@ -90,12 +90,13 @@ export default function Host(props) {
     const fetchInfo = async () => {
       setInfo(null);
       const hosts = await evernode.getHosts({ address: address });
+      const config = await evernode.getConfigs();
       const hostInfo = (hosts && hosts.length) ? hosts[0] : null;
       const tableHeadings = {
         key: 'Key',
         value: 'Value'
       }
-      const tableValues = hostInfo ? [
+      let tableValues = hostInfo ? [
         {
           key: 'Registration Token Id',
           value: <Tooltip title="Registration NFToken Id"><span>{hostInfo.nfTokenId}</span></Tooltip>
@@ -115,8 +116,8 @@ export default function Host(props) {
           value: <InstanceSpecs cpu={hostInfo.cpuMicrosec} ram={hostInfo.ramMb} disk={hostInfo.diskMb} instanceCount={hostInfo.maxInstances} showTooltip />
         },
         {
-          key: 'Last Heartbeat XRP Ledger',
-          value: <Tooltip title="XRP Ledger at which the last heartbeat was received"><span>{hostInfo.lastHeartbeatLedger}</span></Tooltip>
+          key: 'Last Heartbeat Index',
+          value: <Tooltip title={`${config.momentBaseInfo.momentType === 'ledger' ? 'XRP Ledger' : 'Timestamp'} at which the last heartbeat was received`}><span>{hostInfo.lastHeartbeatIndex}</span></Tooltip>
         },
         {
           key: 'Registered on XRP Ledger',
@@ -131,6 +132,12 @@ export default function Host(props) {
           value: <Tooltip title="Host's Sashimono version"><span>{hostInfo.version}</span></Tooltip>
         }
       ] : [];
+      if (hostInfo?.registrationTimestamp)
+        tableValues.push(
+          {
+            key: 'Registered on Timestamp',
+            value: <Tooltip title="Timestamp at which the host registered"><span>{hostInfo.registrationTimestamp}</span></Tooltip>
+          });
       const evrBalance = await evernode.getEVRBalance(address);
       setInfo({
         evrBalance: evrBalance,
@@ -168,7 +175,7 @@ export default function Host(props) {
                 </Tooltip>}
               <span>{info?.hostInfo &&
                 <Tooltip title={info.hostInfo.active ? 'Active' : 'Inactive'}>
-                  <div className={`ml-1 rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
+                  <div className={`ml - 1 rounded - circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
                 </Tooltip>}</span>
             </div>
           }

@@ -31,7 +31,7 @@ export default function Registry() {
         key: 'Key',
         value: 'Value'
       }
-      const registryConfigTableValues = [
+      let registryConfigTableValues = [
         {
           key: 'EVR Issuer XRP Address',
           value: <Tooltip title="EVR Issuer XRP account address"><span>{config.evrIssuerAddress}</span></Tooltip>,
@@ -57,11 +57,15 @@ export default function Registry() {
         },
         {
           key: 'Moment Base Index',
-          value: <Tooltip title="XRP ledger index when the 'Moment Size' last changed"><span>{config.momentBaseIdx}</span></Tooltip>
+          value: <Tooltip title="Index when the 'Moment Size' last changed"><span>{config.momentBaseInfo.baseIdx}</span></Tooltip>
+        },
+        {
+          key: 'Transition Moment',
+          value: <Tooltip title="Moment when the 'Moment Size' last changed"><span>{config.momentBaseInfo.baseTransitionMoment}</span></Tooltip>
         },
         {
           key: 'Moment Size',
-          value: <Tooltip title="No. of XRP ledgers per moment"><span>{config.momentSize}</span></Tooltip>
+          value: <Tooltip title={`Moment size in ${config.momentBaseInfo.momentType === 'ledger' ? 'ledgers' : 'seconds'}`}><span>{config.momentSize}</span></Tooltip>
         },
         {
           key: 'Host Count',
@@ -72,6 +76,17 @@ export default function Registry() {
         //   value: <Tooltip title="Per moment lease amount that is derived from the condition of the epoch"><span>{config.purchaserTargetPrice}</span></Tooltip>
         // }
       ];
+      if (config.momentTransitInfo?.transitionIndex) {
+        registryConfigTableValues = registryConfigTableValues.concat(
+          [{
+            key: `Next 'Moment Size' Transition Index`,
+            value: <Tooltip title="Index when the 'Moment Size' is going to be changed"><span>{config.momentTransitInfo.transitionIndex}</span></Tooltip>
+          },
+          {
+            key: 'New Moment Size',
+            value: <Tooltip title={`New moment size in ${config.momentTransitInfo.momentType === 'ledger' ? 'ledgers' : 'seconds'} after the transition`}><span>{config.momentTransitInfo.momentSize}</span></Tooltip>
+          }]);
+      }
       setRegistryConfigs({
         configs: config,
         tableHeadings: tableHeadings,
@@ -81,22 +96,22 @@ export default function Registry() {
       const rewardConfigTableValues = [
         {
           key: 'Epoch Count',
-          value: <Tooltip title="Total no. of epochs"><span>{config.rewardConfiguaration.epochCount}</span></Tooltip>,
+          value: <Tooltip title="Total no. of epochs"><span>{config.rewardConfiguration.epochCount}</span></Tooltip>,
           cellConfigs: {
             width: '37%'
           }
         },
         {
           key: 'Epoch Reward Amount',
-          value: <Tooltip title="Total amount of EVRs rewarded in one epoch"><span>{config.rewardConfiguaration.epochRewardAmount}</span></Tooltip>
+          value: <Tooltip title="Total amount of EVRs rewarded in one epoch"><span>{config.rewardConfiguration.epochRewardAmount}</span></Tooltip>
         },
         {
           key: 'First Epoch Reward Quota',
-          value: <Tooltip title="EVRs rewarded per moment within the first epoch"><span>{config.rewardConfiguaration.firstEpochRewardQuota}</span></Tooltip>
+          value: <Tooltip title="EVRs rewarded per moment within the first epoch"><span>{config.rewardConfiguration.firstEpochRewardQuota}</span></Tooltip>
         },
         {
           key: 'Reward Start Moment',
-          value: <Tooltip title="The moment EVR rewarding starts"><span>{config.rewardConfiguaration.rewardStartMoment}</span></Tooltip>
+          value: <Tooltip title="The moment EVR rewarding starts"><span>{config.rewardConfiguration.rewardStartMoment}</span></Tooltip>
         },
         {
           key: <Typography style={{ fontSize: '1.54rem', fontWeight: 'bold', color: 'black' }}>Reward Info</Typography>,
