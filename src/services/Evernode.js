@@ -20,7 +20,8 @@ export const EvernodeProvider = (props) => {
         decodeLeaseUri: props.decodeLeaseUri || decodeLeaseUri,
         getLeases: props.getLeases || getLeases,
         getEVRBalance: props.getEVRBalance || getEVRBalance,
-        onLedger: props.onLedger || onLedger
+        onLedger: props.onLedger || onLedger,
+        testnetFaucet: props.testnetFaucet || testnetFaucet,
     }
 
     const connectXrpl = async () => {
@@ -119,4 +120,35 @@ const onLedger = async (callback) => {
             moment: moment
         })
     });
+}
+
+const testnetFaucet = async() => {
+    const generatedAccount = await generateFaucetAccount();
+    return generatedAccount;
+}
+
+const generateFaucetAccount = async() => {
+    console.log("Generating faucet account...");
+
+    const response = await fetch('https://hooks-testnet-v2.xrpl-labs.com/newcreds', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json", 
+            "Access-Control-Allow-Origin":"*", 
+            "Access-Control-Allow-Credentials": "true", 
+            "Access-Control-Allow-Headers": "content-type", 
+            "Access-Control-Max-Age": "1800", 
+            "Access-Control-Allow-Methods":"PUT, POST, GET, DELETE, PATCH, OPTIONS"
+        }
+    });
+
+    const data = await response.json();
+
+    return {
+        address: data.address,
+        secret: data.secret,
+        xrp: data.xrp,
+        hash: data.hash,
+        code: data.code
+    };
 }
