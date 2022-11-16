@@ -2,26 +2,30 @@ import React, { Fragment, useState } from 'react';
 import { Button } from '@material-ui/core';
 import { useEvernode } from '../../services/Evernode';
 import FaucetBox from '../../components/FaucetBox/index'
-import Alert from '@material-ui/lab/Alert';
+import Loader from '../../components/Loader';
 
 const TestnetFaucet = () =>  {
   const evernode = useEvernode();
   const [faucetBox, setFaucetBox] = useState({});
   const [accountGeneratedFlag, setAccountGeneratedFlag] = useState(false);
+  const [accountButtonClick, setAccountButtonClick] = useState(false);
 
   const testnetFaucet = async() => {
-    const accountDetails = await evernode.testnetFaucet();
-    console.log(accountDetails)
+    setAccountButtonClick(true)
+    setAccountGeneratedFlag(false);
+    let accountDetails = await evernode.testnetFaucet();
     setFaucetBox(accountDetails);
-    setAccountGeneratedFlag(true);
+    if(accountDetails){
+      setAccountGeneratedFlag(true);
+      setAccountButtonClick(false);
+    }
   }
   
   return (
     <Fragment>
-      <Button variant="contained" className='mb-4' onClick={() => testnetFaucet()}>Generate an account and process the fund transaction</Button>
-      {(Object.keys(faucetBox).length !== 0 && faucetBox.address) ? <FaucetBox faucetBox = {faucetBox}/> : null}
-      {(!faucetBox.address && accountGeneratedFlag) ? <Alert severity="warning">Try again!</Alert> : null}
-      
+      <Button variant="contained" className='mb-4' disabled = {accountButtonClick} onClick={() => testnetFaucet()}>Generate an account and process the fund transaction</Button>
+      {(accountButtonClick) ? <Loader className="p-4" /> : null}
+      {(accountGeneratedFlag) ? <FaucetBox faucetBox = {faucetBox}/> : null}
     </Fragment>
   );
 }

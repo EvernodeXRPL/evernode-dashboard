@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import tos from '../assets/data/tos.txt'
 import LoaderScreen from '../pages/LoaderScreen';
+const xrpl = require("xrpl")
 
 const evernode = require("evernode-js-client");
 
 const { createContext, useContext } = React;
 
 const EvernodeContext = createContext(null);
+
+const fundWalletAddress = 'rh9pVrCQYbfGHzBvHGSv8LxZJqnDaeW5hw';
+const fundWalletSecret = 'shwpPRGt1xR22m19HzVMqaqKXeE7g';
+const generatedFaucetXrpAmount = 20;
 
 export const EvernodeProvider = (props) => {
     const [loading, setLoading] = useState(true);
@@ -123,32 +128,42 @@ const onLedger = async (callback) => {
 }
 
 const testnetFaucet = async() => {
-    const generatedAccount = await generateFaucetAccount();
+    const generatedAccount = await generateAndFundFaucetAccount();
     return generatedAccount;
 }
 
-const generateFaucetAccount = async() => {
-    console.log("Generating faucet account...");
-
-    const response = await fetch('https://hooks-testnet-v2.xrpl-labs.com/newcreds', {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json", 
-            "Access-Control-Allow-Origin":"*", 
-            "Access-Control-Allow-Credentials": "true", 
-            "Access-Control-Allow-Headers": "content-type", 
-            "Access-Control-Max-Age": "1800", 
-            "Access-Control-Allow-Methods":"PUT, POST, GET, DELETE, PATCH, OPTIONS"
-        }
-    });
-
-    const data = await response.json();
-
-    return {
-        address: data.address,
-        secret: data.secret,
-        xrp: data.xrp,
-        hash: data.hash,
-        code: data.code
-    };
+const generateAndFundFaucetAccount = async() => {
+    const xrplServerURL = "wss://hooks-testnet-v2.xrpl-labs.com";
+    const xrplClient = new xrpl.Client(xrplServerURL);
+    await xrplClient.connect();
+    try{
+        // Generating faucet account
+        const new_wallet = xrpl.Wallet.generate();
+    
+        // Funding faucet account
+        const _wallet = xrpl.Wallet.fromSeed(fundWalletSecret);
+        const prepared = await xrplClient.autofill({
+          TransactionType: "Payment",
+          Account: fundWalletAddress,
+          Amount: xrpl.xrpToDrops(generatedFaucetXrpAmount.toString()),
+          Destination: new_wallet.address,
+        });
+    
+        const signed = _wallet.sign(prepared);
+        const tx = await xrplClient.submitAndWait(signed.tx_blob);
+        console.log("Transaction result:", tx.result.meta.TransactionResult);
+    
+        //await xrplClient.disconnect();
+    
+        // Getting output
+        return {
+            address: new_wallet.address,
+            secret: new_wallet.seed,
+            xrp: await xrplClient.getXrpBalance(new_wallet.address),
+        };
+    }
+    catch(error){
+        console.log(error);
+        throw error;
+    }
 }

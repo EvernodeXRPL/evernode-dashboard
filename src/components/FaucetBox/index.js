@@ -1,5 +1,4 @@
 import React from 'react'
-import Loader from '../../components/Loader';
 import RegularTable from '../../components/RegularTable';
 import {
   Grid,
@@ -22,20 +21,10 @@ const FaucetBox = ({faucetBox}) => {
       value: <span className='text-black'>{faucetBox.secret}</span>,
     },
     {
-      key: 'TX',
-      value: <span className='text-black'>{faucetBox.hash}</span>,
-        
-    },
-    {
       key: 'XRP',
       value: <span className='text-black'>{faucetBox.xrp}</span>,
         
     },
-    {
-      key: 'Result',
-      value: <span className='text-black'>{faucetBox.code}</span>,
-        
-    }
   ];
 
   return (
@@ -48,8 +37,7 @@ const FaucetBox = ({faucetBox}) => {
               headings={tableHeadings}
               values={tableValues}
               highlight={['key']}
-              hideHeadings />) ||
-              <Loader className="p-4" />}
+              hideHeadings />)}
             </CardContent>
           </Card>
         </Grid>
