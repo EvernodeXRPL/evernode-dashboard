@@ -25,6 +25,11 @@ const FaucetBox = ({faucetBox}) => {
       value: <span className='text-black'>{faucetBox.xrp}</span>,
         
     },
+    {
+      key: 'EVR',
+      value: <span className='text-black'>{faucetBox.evrBalance}</span>,
+        
+    },
   ];
 
   return (

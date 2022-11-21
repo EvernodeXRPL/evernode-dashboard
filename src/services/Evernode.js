@@ -149,13 +149,6 @@ const generateAndFundFaucetAccount = async() => {
                     try {
                         // Clearing the interval after success
                         clearInterval(faucetInterval);
-
-                        // Resolving
-                        resolve({
-                            address: new_wallet.address,
-                            secret: new_wallet.seed,
-                            xrp: await xrplClient.getXrpBalance(new_wallet.address),
-                        });
                     } catch (error) {
                         resolve(FaucetAccount.faucetAccountCreationError);
 
@@ -164,11 +157,45 @@ const generateAndFundFaucetAccount = async() => {
                     }
                     
                 }, 5000)
-            }).catch((error)=> {
-                console.log('error', error)
-                reject(error)
-            })            
+            }).then(async()=> {
+                const tenantClient = new evernode.TenantClient(new_wallet.address, new_wallet.seed);
+                await tenantClient.connect();
+
+                console.log("Requesting beta EVRs...");
+            
+                await tenantClient.xrplAcc.setTrustLine(FaucetAccount.EVR, tenantClient.config.evrIssuerAddress, "99999999999999");
+
+                await tenantClient.xrplAcc.makePayment(tenantClient.config.foundationAddress,
+                    evernode.XrplConstants.MIN_XRP_AMOUNT,
+                    evernode.XrplConstants.XRP,
+                    null,
+                    [{ type: 'giftBetaEvr', format: '', data: '' }]);
+
+                // Keep watching our EVR balance.
+                let attempts = 0;
+                while (attempts >= 0) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    const balance = await tenantClient.getEVRBalance();
+                    
+                    if (balance === '0') {
+                        if (++attempts <= 20)
+                            continue;
+                        throw "EVR funds not received within timeout.";
+                    }
+                    resolve({
+                        address: new_wallet.address,
+                        secret: new_wallet.seed,
+                        xrp: await xrplClient.getXrpBalance(new_wallet.address),
+                        evrBalance: balance,
+                    });
+                    break;
+                }
+                }).catch((error) => {
+                    console.log('error', error)
+                    reject(error)
+                })
         });
+        
     }
     catch(error){
         console.log(error);
