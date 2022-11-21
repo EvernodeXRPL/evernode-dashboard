@@ -36,7 +36,7 @@ const TestnetFaucet = () =>  {
       <Button variant="contained" className='mb-4' disabled = {accountButtonClick} onClick={() => testnetFaucet()}>Generate an account and process the fund transaction</Button>      
       {(accountButtonClick) ? <Loader className="p-4" /> : null}
       {(accountGeneratedFlag) ? <FaucetBox faucetBox = {faucetBox}/> : null}
-      {warningDisplay && <Alert severity="warning">Too Fast!! Try again!</Alert>}
+      {warningDisplay && <Alert severity="warning">Try again shortly!</Alert>}
     </Fragment>
   );
 }
