@@ -144,19 +144,6 @@ const generateAndFundFaucetAccount = async() => {
                 headers: {
                     "Content-Type": "application/json"
                 }
-            }).then(async() => {
-                const faucetInterval = setInterval(async()=> {
-                    try {
-                        // Clearing the interval after success
-                        clearInterval(faucetInterval);
-                    } catch (error) {
-                        resolve(FaucetAccount.faucetAccountCreationError);
-
-                        // Clearing the interval after failure to avoid error loop
-                        clearInterval(faucetInterval);
-                    }
-                    
-                }, 5000)
             }).then(async()=> {
                 const hostClient = new evernode.HostClient(new_wallet.address, new_wallet.seed);
                 await hostClient.connect();
