@@ -13,6 +13,7 @@ import LoaderScreen from './pages/LoaderScreen';
 const Hosts = lazy(() => import('./pages/Hosts'));
 const Host = lazy(() => import('./pages/Host'));
 const Registry = lazy(() => import('./pages/Registry'));
+const TestnetFaucet = lazy(() => import('./pages/TestnetFaucet'));
 
 const Routes = () => {
   const location = useLocation();
@@ -50,7 +51,8 @@ const Routes = () => {
                 path={[
                   '/hosts',
                   '/host/:address?',
-                  '/registry'
+                  '/registry',
+                  '/testnet-faucet'
                 ]}>
                 <LeftSidebar>
                   <Switch location={location} key={location.pathname}>
@@ -71,6 +73,10 @@ const Routes = () => {
                       <Route
                         path="/registry"
                         component={Registry}
+                      />
+                      <Route
+                        path="/testnet-faucet"
+                        component={TestnetFaucet}
                       />
                     </motion.div>
                   </Switch>

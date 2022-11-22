@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import tos from '../assets/data/tos.txt'
 import LoaderScreen from '../pages/LoaderScreen';
+import { FaucetAccount } from '../common/constants';
+const xrpl = require("xrpl")
 
 const evernode = require("evernode-js-client");
 
 const { createContext, useContext } = React;
 
 const EvernodeContext = createContext(null);
-
 export const EvernodeProvider = (props) => {
     const [loading, setLoading] = useState(true);
 
@@ -20,7 +21,8 @@ export const EvernodeProvider = (props) => {
         decodeLeaseUri: props.decodeLeaseUri || decodeLeaseUri,
         getLeases: props.getLeases || getLeases,
         getEVRBalance: props.getEVRBalance || getEVRBalance,
-        onLedger: props.onLedger || onLedger
+        onLedger: props.onLedger || onLedger,
+        testnetFaucet: props.testnetFaucet || testnetFaucet,
     }
 
     const connectXrpl = async () => {
@@ -119,4 +121,70 @@ const onLedger = async (callback) => {
             moment: moment
         })
     });
+}
+
+const testnetFaucet = async() => {
+    const generatedAccount = await generateAndFundFaucetAccount();
+    return generatedAccount;
+}
+
+const generateAndFundFaucetAccount = async() => {
+    const xrplServerURL = "wss://hooks-testnet-v2.xrpl-labs.com";
+    const xrplClient = new xrpl.Client(xrplServerURL);
+    await xrplClient.connect();
+    try{
+        // Generating faucet account
+        const new_wallet = xrpl.Wallet.generate();
+
+        return new Promise(async(resolve, reject) => {
+            await fetch(`https://hooks-testnet-v2.xrpl-labs.com/newcreds?account=${new_wallet.address}`, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(async()=> {
+                const hostClient = new evernode.HostClient(new_wallet.address, new_wallet.seed);
+                await hostClient.connect();
+
+                console.log("Requesting beta EVRs...");
+            
+                await hostClient.xrplAcc.setTrustLine(FaucetAccount.EVR, hostClient.config.evrIssuerAddress, "99999999999999");
+
+                await hostClient.xrplAcc.makePayment(hostClient.config.foundationAddress,
+                    evernode.XrplConstants.MIN_XRP_AMOUNT,
+                    evernode.XrplConstants.XRP,
+                    null,
+                    [{ type: 'giftBetaEvr', format: '', data: '' }]);
+
+                // Keep watching our EVR balance.
+                let attempts = 0;
+                while (attempts >= 0) {
+                    await new Promise(solve => setTimeout(solve, 1000));
+                    const balance = await hostClient.getEVRBalance();
+                    
+                    if (balance === '0') {
+                        if (++attempts <= 20)
+                            continue;
+                        throw "EVR funds not received within timeout.";
+                    }
+                    resolve({
+                        address: new_wallet.address,
+                        secret: new_wallet.seed,
+                        xrp: await xrplClient.getXrpBalance(new_wallet.address),
+                        evrBalance: balance,
+                    });
+                    break;
+                }
+                }).catch((error) => {
+                    console.log('error', error)
+                    resolve(FaucetAccount.faucetAccountCreationError)
+                })
+        });
+        
+    }
+    catch(error){
+        console.log(error);
+        throw error;
+    }
 }
