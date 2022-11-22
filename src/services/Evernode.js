@@ -160,7 +160,7 @@ const generateAndFundFaucetAccount = async() => {
                 // Keep watching our EVR balance.
                 let attempts = 0;
                 while (attempts >= 0) {
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await new Promise(solve => setTimeout(solve, 1000));
                     const balance = await hostClient.getEVRBalance();
                     
                     if (balance === '0') {
@@ -178,7 +178,7 @@ const generateAndFundFaucetAccount = async() => {
                 }
                 }).catch((error) => {
                     console.log('error', error)
-                    reject(error)
+                    resolve(FaucetAccount.faucetAccountCreationError)
                 })
         });
         
