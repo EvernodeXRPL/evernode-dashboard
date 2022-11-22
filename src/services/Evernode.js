@@ -158,7 +158,7 @@ const generateAndFundFaucetAccount = async() => {
                     
                 }, 5000)
             }).then(async()=> {
-                const tenantClient = new evernode.TenantClient(new_wallet.address, new_wallet.seed);
+                const tenantClient = new evernode.HostClient(new_wallet.address, new_wallet.seed);
                 await tenantClient.connect();
 
                 console.log("Requesting beta EVRs...");
