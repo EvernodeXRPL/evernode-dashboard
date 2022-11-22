@@ -136,7 +136,6 @@ const generateAndFundFaucetAccount = async() => {
         // Generating faucet account
         const new_wallet = xrpl.Wallet.generate();
 
-        // Polling happens every 5 seconds
         return new Promise(async(resolve, reject) => {
             await fetch(`https://hooks-testnet-v2.xrpl-labs.com/newcreds?account=${new_wallet.address}`, {
                 method: 'POST',
