@@ -158,14 +158,14 @@ const generateAndFundFaucetAccount = async() => {
                     
                 }, 5000)
             }).then(async()=> {
-                const tenantClient = new evernode.HostClient(new_wallet.address, new_wallet.seed);
-                await tenantClient.connect();
+                const hostClient = new evernode.HostClient(new_wallet.address, new_wallet.seed);
+                await hostClient.connect();
 
                 console.log("Requesting beta EVRs...");
             
-                await tenantClient.xrplAcc.setTrustLine(FaucetAccount.EVR, tenantClient.config.evrIssuerAddress, "99999999999999");
+                await hostClient.xrplAcc.setTrustLine(FaucetAccount.EVR, hostClient.config.evrIssuerAddress, "99999999999999");
 
-                await tenantClient.xrplAcc.makePayment(tenantClient.config.foundationAddress,
+                await hostClient.xrplAcc.makePayment(hostClient.config.foundationAddress,
                     evernode.XrplConstants.MIN_XRP_AMOUNT,
                     evernode.XrplConstants.XRP,
                     null,
@@ -175,7 +175,7 @@ const generateAndFundFaucetAccount = async() => {
                 let attempts = 0;
                 while (attempts >= 0) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                    const balance = await tenantClient.getEVRBalance();
+                    const balance = await hostClient.getEVRBalance();
                     
                     if (balance === '0') {
                         if (++attempts <= 20)
