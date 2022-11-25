@@ -3,6 +3,5 @@ export const StorageKeys = {
 }
 
 export const FaucetAccount = {
-    faucetAccountCreationError: 'ERR_IN_FAUCET_GEN',
-    EVR: 'EVR',
+    faucetAccountCreationError: 'ERR_IN_FAUCET_GEN'
 }
