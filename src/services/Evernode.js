@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import tos from '../assets/data/tos.txt'
 import LoaderScreen from '../pages/LoaderScreen';
-import { FaucetAccount } from '../common/constants';
 const xrpl = require("xrpl")
 
 const evernode = require("evernode-js-client");
@@ -140,7 +139,7 @@ const generateAndFundFaucetAccount = async () => {
             "Content-Type": "application/json"
         }
     });
-    
+
     const xrplClient = new xrpl.Client(xrplServerURL);
     await xrplClient.connect();
 
