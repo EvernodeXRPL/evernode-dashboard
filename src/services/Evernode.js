@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import ECDSA from 'xrpl/dist/npm/ECDSA';
 import tos from '../assets/data/tos.txt'
 import LoaderScreen from '../pages/LoaderScreen';
 const xrpl = require("xrpl")
@@ -130,7 +131,7 @@ const testnetFaucet = async () => {
 const generateAndFundFaucetAccount = async () => {
     const xrplServerURL = process.env.REACT_APP_RIPPLED_SERVER;
     // Generating faucet account
-    const new_wallet = xrpl.Wallet.generate();
+    const new_wallet = xrpl.Wallet.generate(ECDSA.secp256k1);
 
     await fetch(`http${xrplServerURL.substring(2)}/newcreds?account=${new_wallet.address}`, {
         method: 'POST',
