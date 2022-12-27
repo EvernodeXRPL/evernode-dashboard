@@ -59,8 +59,8 @@ export default function Hosts() {
                 <span>v{host.version} | </span>
               }
               {
-                host.description &&
-                <span>{host.description}</span>
+                host.domain &&
+                <span>{host.domain}</span>
               }
             </span>
           </div>
