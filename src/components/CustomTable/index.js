@@ -10,7 +10,8 @@ export default function CustomTable(props) {
     columns,
     values,
     hideHeadings,
-    onRowClick
+    onRowClick,
+    blurTable
   } = props;
 
   const keys = Object.keys(columns);
@@ -19,7 +20,7 @@ export default function CustomTable(props) {
       <Card className="card-box mb-4">
         <CardContent className="p-0">
           <div className="table-responsive">
-            <table className="table table-striped table-hover text-nowrap mb-0">
+            <table className={`table table-striped  text-nowrap mb-0 ${blurTable ? 'table-blur' : 'table-hover'}`}>
               {!hideHeadings && <thead className="thead-light">
                 <tr>
                   {keys.map((k, i) => {
