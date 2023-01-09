@@ -117,7 +117,7 @@ export default function Hosts() {
       <PageTitle
         titleHeading="Hosts"
       />
-      { isHostsLoading  && <Loader className = "p-4"/>}
+      { isHostsLoading  && <Loader className = {`hostsLoader "p-4"`}/>}
       {(hosts && <div>
         <CustomTable columns={hosts.tableColumns} values={hosts.tableValues} blurTable={isHostsLoading} onRowClick={handleRowClick} />
         <div>
