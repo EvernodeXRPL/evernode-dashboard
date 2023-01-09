@@ -117,14 +117,14 @@ export default function Hosts() {
       <PageTitle
         titleHeading="Hosts"
       />
+      { isHostsLoading  && <Loader className = "p-4"/>}
       {(hosts && <div>
         <CustomTable columns={hosts.tableColumns} values={hosts.tableValues} blurTable={isHostsLoading} onRowClick={handleRowClick} />
         <div>
           {pageQueue.length > 0 && <Button className="pull-left" variant="contained" disabled={isHostsLoading} onClick={handlePrevClick}>Prev</Button>}
           {nextPageToken && <Button className="pull-right" variant="contained" disabled={isHostsLoading} onClick={handleNextClick}>Next</Button>}
         </div>
-      </div>) ||
-        <Loader className="p-4" />}
+      </div>)}
     </Fragment>
   );
 }
