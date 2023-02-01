@@ -13,7 +13,7 @@ export const EvernodeProvider = (props) => {
     const [loading, setLoading] = useState(true);
 
     const value = {
-        getRegistryAddress: props.getRegistryAddress || getRegistryAddress,
+        getGovernorAddress: props.getGovernorAddress || getGovernorAddress,
         getEnvironment: props.getEnvironment || getEnvironment,
         getConfigs: props.getConfigs || getConfigs,
         getTos: props.getTos || getTos,
@@ -28,7 +28,7 @@ export const EvernodeProvider = (props) => {
     const connectXrpl = async () => {
         setLoading(true);
         await xrplApi.connect();
-        await regClient.connect();
+        await governorClient.connect();
         setLoading(false);
     };
 
@@ -47,19 +47,21 @@ export const useEvernode = () => {
     return useContext(EvernodeContext)
 }
 
-const registryAddress = process.env.REACT_APP_REGISTRY_ADDRESS;
+const governorAddress = process.env.REACT_APP_REGISTRY_ADDRESS;
 const rippledServer = process.env.REACT_APP_RIPPLED_SERVER;
 const environment = 'XRPL Hooks TestNet V2';
 
 const xrplApi = new evernode.XrplApi(rippledServer);
 evernode.Defaults.set({
-    registryAddress: registryAddress,
+    governorAddress: governorAddress,
+    rippledServer: rippledServer,
     xrplApi: xrplApi
 });
-const regClient = new evernode.RegistryClient();
 
-const getRegistryAddress = () => {
-    return registryAddress;
+let governorClient =  new evernode.GovernorClient();
+
+const getGovernorAddress = () => {
+    return governorAddress;
 }
 
 const getEnvironment = () => {
@@ -67,7 +69,7 @@ const getEnvironment = () => {
 }
 
 const getConfigs = async () => {
-    return regClient.config;
+    return await governorClient.config;
 }
 
 const getTos = async () => {
@@ -76,7 +78,7 @@ const getTos = async () => {
 }
 
 const getHosts = async (filters = null, pageSize = null, nextPageToken = null) => {
-    return regClient.getHosts(filters, pageSize, nextPageToken);
+    return governorClient.getHosts(filters, pageSize, nextPageToken);
 }
 
 const decodeLeaseUri = (uri) => {
@@ -115,7 +117,7 @@ const getEVRBalance = async (address) => {
 const onLedger = async (callback) => {
     xrplApi.on(evernode.XrplApiEvents.LEDGER, async (e) => {
 
-        const moment = await regClient.getMoment();
+        const moment = await governorClient.getMoment();
         callback({
             ledgerIndex: e.ledger_index,
             moment: moment
