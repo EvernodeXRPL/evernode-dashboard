@@ -47,7 +47,7 @@ export const useEvernode = () => {
     return useContext(EvernodeContext)
 }
 
-const governorAddress = process.env.REACT_APP_REGISTRY_ADDRESS;
+const governorAddress = process.env.REACT_APP_GOVERNOR_ADDRESS;
 const rippledServer = process.env.REACT_APP_RIPPLED_SERVER;
 const environment = 'XRPL Hooks TestNet V2';
 
