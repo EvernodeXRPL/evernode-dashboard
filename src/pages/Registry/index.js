@@ -150,21 +150,21 @@ export default function Registry() {
       const hookConfigTableValues = [
         {
           key: 'Governor Hook Address',
-          value: <Tooltip title="Governor address"><span>{governorAddress}</span></Tooltip>,
+          value: <Tooltip title="Hook that handles the governance related operations."><span>{governorAddress}</span></Tooltip>,
           cellConfigs: {
             width: '37%'
           }
         },
         {
           key: 'Heartbeat Hook Address',
-          value: <Tooltip title="Heartbeat address"><span>{config.heartbeatAddress}</span></Tooltip>,
+          value: <Tooltip title="Hook that monitors the hosts' aliveness."><span>{config.heartbeatAddress}</span></Tooltip>,
           cellConfigs: {
             width: '37%'
           }
         },
         {
           key: 'Registry Hook Address',
-          value: <Tooltip title="Registry address"><span>{config.registryAddress}</span></Tooltip>,
+          value: <Tooltip title="Hook that manages host registrations."><span>{config.registryAddress}</span></Tooltip>,
           cellConfigs: {
             width: '37%'
           }
