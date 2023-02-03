@@ -58,7 +58,7 @@ evernode.Defaults.set({
     xrplApi: xrplApi
 });
 
-let governorClient =  new evernode.GovernorClient();
+let governorClient =  await evernode.HookClientFactory.create(evernode.HookTypes.governor);
 
 const getGovernorAddress = () => {
     return governorAddress;
