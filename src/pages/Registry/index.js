@@ -157,7 +157,7 @@ export default function Registry() {
         },
         {
           key: 'Heartbeat Hook Address',
-          value: <Tooltip title="Hook that monitors the hosts' aliveness."><span>{config.heartbeatAddress}</span></Tooltip>,
+          value: <Tooltip title="Hook that monitors the host's aliveness."><span>{config.heartbeatAddress}</span></Tooltip>,
           cellConfigs: {
             width: '37%'
           }
