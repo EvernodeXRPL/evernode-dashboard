@@ -18,15 +18,15 @@ import Loader from '../../components/Loader';
 export default function Registry() {
   const evernode = useEvernode();
 
-  const [registryConfigs, setRegistryConfigs] = React.useState(null);
-  const [registryAddress, setRegistryAddress] = React.useState(null);
+  const [governorConfigs, setGovernorConfigs] = React.useState(null);
+  const [governorAddress, setGovernorAddress] = React.useState(null);
   const [rewardConfigs, setRewardConfigs] = React.useState(null);
-
-
+  const [hookClient, setHookClient] = React.useState(null);
+ 
   useEffect(() => {
     const fetchConfigs = async () => {
       const config = await evernode.getConfigs();
-      setRegistryAddress(evernode.getRegistryAddress());
+      setGovernorAddress(evernode.getGovernorAddress());
       const tableHeadings = {
         key: 'Key',
         value: 'Value'
@@ -87,7 +87,7 @@ export default function Registry() {
             value: <Tooltip title={`New moment size in ${config.momentTransitInfo.momentType === 'ledger' ? 'ledgers' : 'seconds'} after the transition`}><span>{config.momentTransitInfo.momentSize}</span></Tooltip>
           }]);
       }
-      setRegistryConfigs({
+      setGovernorConfigs({
         configs: config,
         tableHeadings: tableHeadings,
         tableValues: registryConfigTableValues
@@ -146,24 +146,71 @@ export default function Registry() {
         tableHeadings: tableHeadings,
         tableValues: rewardConfigTableValues
       });
+
+      const hookConfigTableValues = [
+        {
+          key: 'Governor Hook Address',
+          value: <Tooltip title="Hook that handles the governance related operations."><span>{governorAddress}</span></Tooltip>,
+          cellConfigs: {
+            width: '37%'
+          }
+        },
+        {
+          key: 'Heartbeat Hook Address',
+          value: <Tooltip title="Hook that monitors the hosts' aliveness."><span>{config.heartbeatAddress}</span></Tooltip>,
+          cellConfigs: {
+            width: '37%'
+          }
+        },
+        {
+          key: 'Registry Hook Address',
+          value: <Tooltip title="Hook that manages host registrations."><span>{config.registryAddress}</span></Tooltip>,
+          cellConfigs: {
+            width: '37%'
+          }
+        },
+      ];
+
+      setHookClient({
+        configs: config,
+        tableHeadings: tableHeadings,
+        tableValues: hookConfigTableValues
+      });
     }
 
     fetchConfigs();
-  }, [evernode]);
+  }, [evernode, governorAddress]);
 
   return (
     <Fragment>
+      
       <PageTitle
+        className = 'page-title'
         titleHeading="Configurations"
-        titleDescription={(registryAddress && <Typography type="p">Registry Address: {registryAddress}</Typography>) ||
-          <Loader className="p-0" size="1rem" />} />
+      />
+      
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
             <CardContent className="p-0">
-              {(registryConfigs && <RegularTable
-                headings={registryConfigs.tableHeadings}
-                values={registryConfigs.tableValues}
+              {(hookClient && <RegularTable
+                headings={hookClient.tableHeadings}
+                values={hookClient.tableValues}
+                highlight={['key']}
+                hideHeadings />) ||
+                <Loader className="p-4" />}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
+            <CardContent className="p-0">
+              {(governorConfigs && <RegularTable
+                headings={governorConfigs.tableHeadings}
+                values={governorConfigs.tableValues}
                 highlight={['key']}
                 hideHeadings />) ||
                 <Loader className="p-4" />}
