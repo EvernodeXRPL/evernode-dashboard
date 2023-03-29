@@ -49,7 +49,7 @@ export const useEvernode = () => {
 
 const governorAddress = process.env.REACT_APP_GOVERNOR_ADDRESS;
 const rippledServer = process.env.REACT_APP_RIPPLED_SERVER;
-const environment = 'XRPL Hooks TestNet V2';
+const environment = 'XRPL Hooks TestNet V3';
 
 const xrplApi = new evernode.XrplApi(rippledServer);
 evernode.Defaults.set({
