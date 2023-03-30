@@ -12,7 +12,7 @@
     "@mui/lab": "5.0.0-alpha.88",
     "@mui/material": "5.8.6",
     "@mui/styles": "5.8.6",
-    "evernode-js-client": "0.5.17-beta-v3.5",
+    "evernode-js-client": "0.5.17-beta-v3.7",
     "framer-motion": "1.8.4",
     "node-sass": "7.0.1",
     "pe7-icon": "1.0.4",
