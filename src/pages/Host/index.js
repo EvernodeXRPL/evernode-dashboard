@@ -89,12 +89,14 @@ export default function Host(props) {
   useEffect(() => {
     const fetchInfo = async () => {
       setInfo(null);
-      const hostInfo = await evernode.getHostInfo(address);
+      const hosts = await evernode.getHosts({ address: address });
+      const config = await evernode.getConfigs();
+      const hostInfo = (hosts && hosts.length) ? hosts[0] : null;
       const tableHeadings = {
         key: 'Key',
         value: 'Value'
       }
-      const tableValues = hostInfo ? [
+      let tableValues = hostInfo ? [
         {
           key: 'Registration Token Id',
           value: <Tooltip title="Registration NFToken Id"><span>{hostInfo.nfTokenId}</span></Tooltip>
@@ -114,8 +116,8 @@ export default function Host(props) {
           value: <InstanceSpecs cpu={hostInfo.cpuMicrosec} ram={hostInfo.ramMb} disk={hostInfo.diskMb} instanceCount={hostInfo.maxInstances} showTooltip />
         },
         {
-          key: 'Last Heartbeat XRP Ledger',
-          value: <Tooltip title="XRP Ledger at which the last heartbeat was received"><span>{hostInfo.lastHeartbeatLedger}</span></Tooltip>
+          key: 'Last Heartbeat Index',
+          value: <Tooltip title={`${config.momentBaseInfo.momentType === 'ledger' ? 'XRP Ledger' : 'Timestamp'} at which the last heartbeat was received`}><span>{hostInfo.lastHeartbeatIndex}</span></Tooltip>
         },
         {
           key: 'Registered on XRP Ledger',
@@ -130,6 +132,12 @@ export default function Host(props) {
           value: <Tooltip title="Host's Sashimono version"><span>{hostInfo.version}</span></Tooltip>
         }
       ] : [];
+      if (hostInfo?.registrationTimestamp)
+        tableValues.push(
+          {
+            key: 'Registered on Timestamp',
+            value: <Tooltip title="Timestamp at which the host registered"><span>{hostInfo.registrationTimestamp}</span></Tooltip>
+          });
       const evrBalance = await evernode.getEVRBalance(address);
       setInfo({
         evrBalance: evrBalance,
@@ -167,7 +175,7 @@ export default function Host(props) {
                 </Tooltip>}
               <span>{info?.hostInfo &&
                 <Tooltip title={info.hostInfo.active ? 'Active' : 'Inactive'}>
-                  <div className={`ml-1 rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
+                  <div className={`ml - 1 rounded - circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
                 </Tooltip>}</span>
             </div>
           }
@@ -178,26 +186,58 @@ export default function Host(props) {
               {info?.hostInfo && <CountryFlag countryCode={info.hostInfo.countryCode} size="2.5em" />}
             </span>
           </Hidden>
-          <EvrBalance balance={info?.evrBalance} />
+          <EvrBalance balance={+(+info?.evrBalance).toFixed(3)} />
         </PageTitle>
         <Grid container spacing={4}>
+          {info && info.hostInfo && info.hostInfo.hostMessage ? (
+            <Grid item xs={12}>
+              <Card
+                style={{ border: "none", boxShadow: "none" }}
+                className="mb-4 bg-transparent"
+              >
+                <CardContent className="p-0">
+                  <div className="p-3 border rounded host-message mb-0">
+                    {(info &&
+                      (info.hostInfo.hostMessage
+                        ? info.hostInfo.hostMessage
+                        : "There is no host message available!")) || (
+                        <Loader className="p-4" />
+                      )}
+                  </div>
+                </CardContent>
+              </Card>
+            </Grid>
+          ) : null}
+        </Grid>
+        <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
-            <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
+            <Card
+              style={{ border: "none", boxShadow: "none" }}
+              className="mb-4 bg-transparent"
+            >
               <CardContent className="p-0">
                 <h5 className="card-title font-weight-bold font-size-md">
                   Registration Info
                 </h5>
-                {(info && (info.hostInfo ? <RegularTable
-                  headings={info.tableHeadings}
-                  values={info.tableValues}
-                  highlight={['key']}
-                  hideHeadings /> : <span>Host is not Registered!</span>)) ||
-                  <Loader className="p-4" />}
+                {(info &&
+                  (info.hostInfo ? (
+                    <RegularTable
+                      headings={info.tableHeadings}
+                      values={info.tableValues}
+                      highlight={["key"]}
+                      hideHeadings
+                    />
+                  ) : (
+                    <span>Host is not Registered!</span>
+                  ))) || <Loader className="p-4" />}
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
+            <Card
+              style={{ border: "none", boxShadow: "none" }}
+              className="mb-4 bg-transparent"
+            >
               <CardContent className="p-0">
                 <h5 className="card-title font-weight-bold font-size-md">
                   Available Leases

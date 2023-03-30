@@ -1,6 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { Button } from '@mui/material';
+import MessageIcon from '@mui/icons-material/Message';
 
 import PageTitle from '../../layout-components/PageTitle';
 import CustomTable from '../../components/CustomTable';
@@ -19,6 +20,7 @@ export default function Hosts() {
   const [hosts, setHosts] = useState(null);
   const [nextPageToken, setNextPageToken] = useState(null);
   const [pageQueue, setPageQueue] = useState([]);
+  const [isHostsLoading, setIsHostsLoading] = useState(false);
 
   const loadHosts = useCallback(async (pageToken = null) => {
     const data = await evernode.getHosts(null, PAGE_SIZE, pageToken);
@@ -46,18 +48,20 @@ export default function Hosts() {
         address: <div className="d-flex align-items-center">
           <CountryFlag countryCode={host.countryCode} size="3em" />
           <div className="ml-3">
-            <p
-              className="font-weight-bold m-0">
+            <p className="font-weight-bold m-0">
               {host.address}
+              {host.hostMessage ? (
+                <MessageIcon className="host-message-icon" fontSize="small" />
+              ) : null}
             </p>
             <span className="text-black-50 d-block py-1">
               {
                 host.version &&
-                <span>v{host.version} | </span>
+                <span className="text-span">v{host.version} | </span>
               }
               {
-                host.description &&
-                <span>{host.description}</span>
+                host.domain &&
+                <span>{host.domain}</span>
               }
             </span>
           </div>
@@ -81,6 +85,8 @@ export default function Hosts() {
       tableColumns: tableColumns,
       tableValues: tableValues
     });
+
+    setIsHostsLoading(false);
   }, [evernode]);
 
   useEffect(() => {
@@ -88,15 +94,19 @@ export default function Hosts() {
   }, [loadHosts]);
 
   const handleRowClick = useCallback((e) => {
+    if (isHostsLoading)
+      return;
     history.push(`/host/${e.key}`);
-  }, [history]);
+  }, [history, isHostsLoading]);
 
   const handleNextClick = useCallback(() => {
+    setIsHostsLoading(true);
     setPageQueue([...pageQueue, nextPageToken]);
     loadHosts(nextPageToken);
   }, [loadHosts, pageQueue, nextPageToken]);
 
   const handlePrevClick = useCallback(() => {
+    setIsHostsLoading(true);
     const prevPageToken = pageQueue.length > 1 ? pageQueue[pageQueue.length - 2] : null;
     setPageQueue(pageQueue.slice(0, pageQueue.length - 1));
     loadHosts(prevPageToken);
@@ -107,14 +117,14 @@ export default function Hosts() {
       <PageTitle
         titleHeading="Hosts"
       />
+      { isHostsLoading  && <Loader className = {`hostsLoader "p-4"`}/>}
       {(hosts && <div>
-        <CustomTable columns={hosts.tableColumns} values={hosts.tableValues} onRowClick={handleRowClick} />
+        <CustomTable columns={hosts.tableColumns} values={hosts.tableValues} blurTable={isHostsLoading} onRowClick={handleRowClick} />
         <div>
-          {pageQueue.length > 0 && <Button className="pull-left" variant="contained" onClick={handlePrevClick}>Prev</Button>}
-          {nextPageToken && <Button className="pull-right" variant="contained" onClick={handleNextClick}>Next</Button>}
+          {pageQueue.length > 0 && <Button className="pull-left" variant="contained" disabled={isHostsLoading} onClick={handlePrevClick}>Prev</Button>}
+          {nextPageToken && <Button className="pull-right" variant="contained" disabled={isHostsLoading} onClick={handleNextClick}>Next</Button>}
         </div>
-      </div>) ||
-        <Loader className="p-4" />}
+      </div>)}
     </Fragment>
   );
 }

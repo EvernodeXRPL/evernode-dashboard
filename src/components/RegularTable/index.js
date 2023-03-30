@@ -41,10 +41,20 @@ export default function RegularTable(props) {
             {values.map(value => (
               <TableRow key={value[keys[0]]}>
                 {keys.map((k, i) => {
+                  if (value['cellConfigs'] && i === (value['cellConfigs'].colspan) - 1)
+                    return null;
+                  let width;
+                  if (k === keys[0] && value['cellConfigs'] && value['cellConfigs'].width)
+                    width = value['cellConfigs'].width;
+                  let paddingTopBottom;
+                  if (value['cellConfigs'] && value['cellConfigs'].paddingTopBottom)
+                    paddingTopBottom = value['cellConfigs'].paddingTopBottom;
                   return <TableCell
                     key={i}
-                    className={((highlight && highlight.includes(k) && 'bg-secondary text-dark font-weight-bold') || '') + ` ${cellClassName}`}
-                    align="left">
+                    className={(value['cellConfigs'] && value['cellConfigs'].isSubtopic) ? 'pt-3 pb-2' : (((highlight && highlight.includes(k) && 'bg-secondary text-dark font-weight-bold') || '') + ` ${cellClassName}`)}
+                    align="left"
+                    style={{ width: width, paddingTop: paddingTopBottom, paddingBottom: paddingTopBottom }}
+                    colSpan={((value['cellConfigs'] && value['cellConfigs'].colspan))}>
                     {value[k]}
                   </TableCell>
                 })}

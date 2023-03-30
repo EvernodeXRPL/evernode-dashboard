@@ -16,7 +16,7 @@ import { useEvernode } from '../../services/Evernode';
 export default function MomentInfo() {
   const [ledger, setLedger] = React.useState(null);
   const [environment, setEnvironment] = React.useState(null);
-  const [momentSize, setMomentSize] = React.useState(null);
+  const [config, setConfig] = React.useState(null);
 
   const evernode = useEvernode();
 
@@ -33,7 +33,7 @@ export default function MomentInfo() {
 
     const loadMomentSize = async () => {
       const config = await evernode.getConfigs();
-      setMomentSize(config.momentSize);
+      setConfig(config);
     }
 
     listen();
@@ -61,7 +61,7 @@ export default function MomentInfo() {
                   </Grid>
                 </div>
                 <Divider orientation="vertical" flexItem />
-                <Tooltip title={`1 Moment = ${momentSize} XRP Ledgers`}>
+                <Tooltip title={`1 Moment = ${config.momentSize} ${config.momentBaseInfo.momentType === 'ledger' ? 'XRP Ledgers' : 'Seconds'}`}>
                   <div className="ml-3">
                     <small className="text-black-50 d-block mb-1 text-uppercase">
                       Moment

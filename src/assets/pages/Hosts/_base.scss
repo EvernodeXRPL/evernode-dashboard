@@ -4,3 +4,20 @@ body {
         max-width: 250px !important;
     }
 }
+
+.host-message-icon{
+    color: $cornflowerBlue;
+    margin-left: 10px;
+}
+
+tr:hover .host-message-icon{
+    color: $bladeRunnerBlue;
+}
+
+.hostsLoader{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}

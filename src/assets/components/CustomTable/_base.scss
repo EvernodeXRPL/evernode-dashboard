@@ -1,0 +1,10 @@
+//  Core
+.table-blur{
+    color: rgba($color: #000000, $alpha: 0.1);
+    .badge-success, .badge-warning{
+        background-color: rgba($color: #000000, $alpha: 0.1);
+    }
+    .emojiFlag, span, .host-message-icon {
+        opacity: 0.2;
+    }
+}

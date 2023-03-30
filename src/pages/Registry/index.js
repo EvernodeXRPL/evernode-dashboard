@@ -8,7 +8,8 @@ import {
   Card,
   CardContent,
   Typography,
-  Tooltip
+  Tooltip,
+  CardHeader
 } from '@mui/material';
 
 import { useEvernode } from '../../services/Evernode';
@@ -17,21 +18,26 @@ import Loader from '../../components/Loader';
 export default function Registry() {
   const evernode = useEvernode();
 
-  const [configs, setConfigs] = React.useState(null);
-  const [registryAddress, setRegistryAddress] = React.useState(null);
-
+  const [governorConfigs, setGovernorConfigs] = React.useState(null);
+  const [governorAddress, setGovernorAddress] = React.useState(null);
+  const [rewardConfigs, setRewardConfigs] = React.useState(null);
+  const [hookClient, setHookClient] = React.useState(null);
+ 
   useEffect(() => {
     const fetchConfigs = async () => {
       const config = await evernode.getConfigs();
-      setRegistryAddress(evernode.getRegistryAddress());
+      setGovernorAddress(evernode.getGovernorAddress());
       const tableHeadings = {
         key: 'Key',
         value: 'Value'
       }
-      const tableValues = [
+      let registryConfigTableValues = [
         {
           key: 'EVR Issuer XRP Address',
-          value: <Tooltip title="EVR Issuer XRP account address"><span>{config.evrIssuerAddress}</span></Tooltip>
+          value: <Tooltip title="EVR Issuer XRP account address"><span>{config.evrIssuerAddress}</span></Tooltip>,
+          cellConfigs: {
+            width: '37%'
+          }
         },
         {
           key: 'Foundation XRP Address',
@@ -51,40 +57,145 @@ export default function Registry() {
         },
         {
           key: 'Moment Base Index',
-          value: <Tooltip title="XRP ledger index when the 'Moment Size' last changed"><span>{config.momentBaseIdx}</span></Tooltip>
+          value: <Tooltip title="Index when the 'Moment Size' last changed"><span>{config.momentBaseInfo.baseIdx}</span></Tooltip>
+        },
+        {
+          key: 'Transition Moment',
+          value: <Tooltip title="Moment when the 'Moment Size' last changed"><span>{config.momentBaseInfo.baseTransitionMoment}</span></Tooltip>
         },
         {
           key: 'Moment Size',
-          value: <Tooltip title="No. of XRP ledgers per moment"><span>{config.momentSize}</span></Tooltip>
+          value: <Tooltip title={`Moment size in ${config.momentBaseInfo.momentType === 'ledger' ? 'ledgers' : 'seconds'}`}><span>{config.momentSize}</span></Tooltip>
+        },
+        {
+          key: 'Host Count',
+          value: <Tooltip title="Total number of registered hosts"><span>{config.hostCount}</span></Tooltip>
         },
         // {
         //   key: 'Purchaser Target Price',
         //   value: <Tooltip title="Per moment lease amount that is derived from the condition of the epoch"><span>{config.purchaserTargetPrice}</span></Tooltip>
         // }
       ];
-      setConfigs({
+      if (config.momentTransitInfo?.transitionIndex) {
+        registryConfigTableValues = registryConfigTableValues.concat(
+          [{
+            key: `Next 'Moment Size' Transition Index`,
+            value: <Tooltip title="Index when the 'Moment Size' is going to be changed"><span>{config.momentTransitInfo.transitionIndex}</span></Tooltip>
+          },
+          {
+            key: 'New Moment Size',
+            value: <Tooltip title={`New moment size in ${config.momentTransitInfo.momentType === 'ledger' ? 'ledgers' : 'seconds'} after the transition`}><span>{config.momentTransitInfo.momentSize}</span></Tooltip>
+          }]);
+      }
+      setGovernorConfigs({
         configs: config,
         tableHeadings: tableHeadings,
-        tableValues: tableValues
+        tableValues: registryConfigTableValues
+      });
+
+      const rewardConfigTableValues = [
+        {
+          key: 'Epoch Count',
+          value: <Tooltip title="Total no. of epochs"><span>{config.rewardConfiguration.epochCount}</span></Tooltip>,
+          cellConfigs: {
+            width: '37%'
+          }
+        },
+        {
+          key: 'Epoch Reward Amount',
+          value: <Tooltip title="Total amount of EVRs rewarded in one epoch"><span>{config.rewardConfiguration.epochRewardAmount}</span></Tooltip>
+        },
+        {
+          key: 'First Epoch Reward Quota',
+          value: <Tooltip title="EVRs rewarded per moment within the first epoch"><span>{config.rewardConfiguration.firstEpochRewardQuota}</span></Tooltip>
+        },
+        {
+          key: 'Reward Start Moment',
+          value: <Tooltip title="The moment EVR rewarding starts"><span>{config.rewardConfiguration.rewardStartMoment}</span></Tooltip>
+        },
+        {
+          key: <Typography style={{ fontSize: '1.54rem', fontWeight: 'bold', color: 'black' }}>Reward Info</Typography>,
+          value: <Tooltip title=""><span>&nbsp;</span></Tooltip>,
+          cellConfigs: {
+            colspan: 2,
+            isSubtopic: true,
+            width: '37%',
+            paddingTopBottom: '8px'
+
+          }
+        },
+        {
+          key: 'Current Epoch',
+          value: <Tooltip title="Current epoch"><span>{config.rewardInfo.epoch}</span></Tooltip>
+        },
+        {
+          key: 'Epoch Pool',
+          value: <Tooltip title="Available amount of EVRs in the current epoch's reward pool"><span>{+(+config.rewardInfo.epochPool).toFixed(3)}</span></Tooltip>
+        },
+        {
+          key: `Active Host Count of the Moment ${config.rewardInfo.savedMoment}`,
+          value: <Tooltip title={`No. of Active hosts in the moment ${config.rewardInfo.savedMoment}`}><span>{config.rewardInfo.curMomentActiveHostCount}</span></Tooltip>
+        },
+        {
+          key: `Active Host Count of the Moment ${config.rewardInfo.savedMoment - 1}`,
+          value: <Tooltip title={`No. of Active hosts in the moment ${config.rewardInfo.savedMoment - 1}`}><span>{config.rewardInfo.prevMomentActiveHostCount}</span></Tooltip>
+        }
+      ];
+      setRewardConfigs({
+        configs: config,
+        tableHeadings: tableHeadings,
+        tableValues: rewardConfigTableValues
+      });
+
+      const hookConfigTableValues = [
+        {
+          key: 'Governor Hook Address',
+          value: <Tooltip title="Hook that handles the governance related operations."><span>{governorAddress}</span></Tooltip>,
+          cellConfigs: {
+            width: '37%'
+          }
+        },
+        {
+          key: 'Heartbeat Hook Address',
+          value: <Tooltip title="Hook that monitors the host's aliveness."><span>{config.heartbeatAddress}</span></Tooltip>,
+          cellConfigs: {
+            width: '37%'
+          }
+        },
+        {
+          key: 'Registry Hook Address',
+          value: <Tooltip title="Hook that manages host registrations."><span>{config.registryAddress}</span></Tooltip>,
+          cellConfigs: {
+            width: '37%'
+          }
+        },
+      ];
+
+      setHookClient({
+        configs: config,
+        tableHeadings: tableHeadings,
+        tableValues: hookConfigTableValues
       });
     }
 
     fetchConfigs();
-  }, [evernode]);
+  }, [evernode, governorAddress]);
 
   return (
     <Fragment>
+      
       <PageTitle
+        className = 'page-title'
         titleHeading="Configurations"
-        titleDescription={(registryAddress && <Typography type="p">Registry Address: {registryAddress}</Typography>) ||
-          <Loader className="p-0" size="1rem" />} />
+      />
+      
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
             <CardContent className="p-0">
-              {(configs && <RegularTable
-                headings={configs.tableHeadings}
-                values={configs.tableValues}
+              {(hookClient && <RegularTable
+                headings={hookClient.tableHeadings}
+                values={hookClient.tableValues}
                 highlight={['key']}
                 hideHeadings />) ||
                 <Loader className="p-4" />}
@@ -92,6 +203,36 @@ export default function Registry() {
           </Card>
         </Grid>
       </Grid>
-    </Fragment >
+      
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
+            <CardContent className="p-0">
+              {(governorConfigs && <RegularTable
+                headings={governorConfigs.tableHeadings}
+                values={governorConfigs.tableValues}
+                highlight={['key']}
+                hideHeadings />) ||
+                <Loader className="p-4" />}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <Card style={{ border: "none", boxShadow: "none" }} className="mb-4">
+            <CardHeader className="pt-3 pb-2" title={<Typography style={{ fontSize: '1.54rem', fontWeight: 'bold' }} >Reward Configurations</Typography>} />
+            <CardContent className="p-0">
+              {(rewardConfigs && <RegularTable
+                headings={rewardConfigs.tableHeadings}
+                values={rewardConfigs.tableValues}
+                highlight={['key']}
+                hideHeadings />) ||
+                <Loader className="p-4" />}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Fragment>
   );
 }

@@ -1,6 +1,7 @@
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import DnsIcon from '@mui/icons-material/Dns';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
+import AccountBalance from '@mui/icons-material/AccountBalance';
 
 const navItems = [
   {
@@ -19,6 +20,11 @@ const navItems = [
         label: "Registry",
         icon: SettingsApplicationsIcon,
         to: "/registry"
+      },
+      {
+        label: "Testnet Faucet",
+        icon: AccountBalance,
+        to: "/testnet-faucet"
       }
     ]
   }];
