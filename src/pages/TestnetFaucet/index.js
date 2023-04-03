@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useEvernode } from '../../services/Evernode';
 import FaucetBox from '../../components/FaucetBox/index'
 import Loader from '../../components/Loader';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@mui/lab/Alert';
 
 const TestnetFaucet = () => {
   const evernode = useEvernode();

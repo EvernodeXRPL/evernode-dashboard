@@ -2,13 +2,14 @@ import React, { lazy, Suspense } from 'react';
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { ThemeProvider } from '@mui/styles';
+// import { ThemeProvider } from '@mui/styles';
 
 import MuiTheme from './theme';
 import LeftSidebar from './layout-blueprints/LeftSidebar';
 
 import { EvernodeProvider } from './services/Evernode';
 import LoaderScreen from './pages/LoaderScreen';
+import {ThemeProvider} from "@mui/material";
 
 const Hosts = lazy(() => import('./pages/Hosts'));
 const Host = lazy(() => import('./pages/Host'));

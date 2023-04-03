@@ -55,7 +55,8 @@ const xrplApi = new evernode.XrplApi(rippledServer);
 evernode.Defaults.set({
     governorAddress: governorAddress,
     rippledServer: rippledServer,
-    xrplApi: xrplApi
+    xrplApi: xrplApi,
+    stateIndexId: 'evernodev3devindex'
 });
 
 let governorClient =  await evernode.HookClientFactory.create(evernode.HookTypes.governor);

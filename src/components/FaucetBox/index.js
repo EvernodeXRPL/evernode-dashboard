@@ -4,7 +4,7 @@ import {
   Grid,
   Card,
   CardContent,
-} from '@material-ui/core';
+} from '@mui/material';
 
 const FaucetBox = ({faucetBox}) => {
   const tableHeadings = {
