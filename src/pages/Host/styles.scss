@@ -1,0 +1,23 @@
+label.Mui-focused {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+label.Mui-error {
+  color: red;
+}
+
+.MuiInput-underline:after {
+  border-bottom-color: rgba(0, 0, 0, 0.87);
+}
+
+.MuiInput-underline.Mui-error:after {
+  border-bottom-color: red;
+}
+
+
+label.MuiInputLabel-shrink {
+  transform: translate(0, 1.5px) scale(0.95);
+  transform-origin: top left;
+}
+
+
