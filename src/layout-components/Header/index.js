@@ -43,7 +43,7 @@ const Header = props => {
         <Box className="app-header-toolbar">
           <Box className="d-flex align-items-center">
             <Box className="toggle-sidebar-btn-mobile">
-              <Tooltip title="Toggle Sidebar" placement="right">             
+              <Tooltip title="Toggle Sidebar" placement="right">
                 <IconButton
                   color="inherit"
                   onClick={toggleSidebarMobile}
