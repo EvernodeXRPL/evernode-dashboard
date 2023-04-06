@@ -2,6 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import PageTitle from '../../layout-components/PageTitle';
 import RegularTable from '../../components/RegularTable';
+import LabelText from '../../components/Label/LabelText'
 
 import {
     Grid,
@@ -37,11 +38,13 @@ const Candidate = (props) => {
                 {
                     key: 'Foundation Vote Status',
                     value: <Tooltip title="Foundation Vote Status">
-                        {candidateInfo.foundationVoteStatus === "supported" ? <div className="h-auto py-2 badge badge-success" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
-                            Supported
-                        </div> : <div className="h-auto py-2 badge badge-danger" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
-                            Rejected
-                        </div>}
+                        <>
+                            {candidateInfo.foundationVoteStatus === "supported" ? <LabelText labelType="success">
+                                Supported
+                            </LabelText> : <LabelText labelType="danger">
+                                Rejected
+                            </LabelText>}
+                        </>
                     </Tooltip>
                 },
                 {
@@ -71,20 +74,22 @@ const Candidate = (props) => {
                 {
                     key: 'Status',
                     value: <Tooltip title="Status">
-                        {candidateInfo.status === "supported" ? <div className="h-auto py-2 badge badge-success" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
-                            Supported
-                        </div> : candidate.status === "elected" ?
-                            <div className="h-auto py-2 badge badge-primary" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
-                                Elected
-                            </div> : candidate.status === "vetoed" ?
-                                <div className="h-auto py-2 badge badge-warning" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
-                                    Vetoed
-                                </div> : candidate.status === "expired" ?
-                                    <div className="h-auto py-2 badge badge-dark" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
-                                        Expired
-                                    </div> : <div className="h-auto py-2 badge badge-danger" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
-                                        Rejected
-                                    </div>}
+                        <>
+                            {candidateInfo.status === "supported" ? <LabelText labelType="success">
+                                Supported
+                            </LabelText> : candidate.status === "elected" ?
+                                <LabelText labelType="primary">
+                                    Elected
+                                </LabelText> : candidate.status === "vetoed" ?
+                                    <LabelText labelType="warning">
+                                        Vetoed
+                                    </LabelText> : candidate.status === "expired" ?
+                                        <LabelText labelType="dark">
+                                            Expired
+                                        </LabelText> : <LabelText labelType="danger">
+                                            Rejected
+                                        </LabelText>}
+                        </>
                     </Tooltip>
                 },
                 {

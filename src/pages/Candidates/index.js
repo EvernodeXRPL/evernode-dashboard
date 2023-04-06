@@ -6,6 +6,7 @@ import PageTitle from '../../layout-components/PageTitle';
 import CustomTable from '../../components/CustomTable';
 import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
+import LabelText from '../../components/Label/LabelText'
 
 const PAGE_SIZE = 10;
 
@@ -48,28 +49,28 @@ const Candidates = () => {
                     </div>
                 </div>,
                 candidateStatus: candidate.status === "supported" ?
-                    <div className="h-auto py-2 badge badge-success" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                    <LabelText labelType="success">
                         Supported
-                    </div> : candidate.status === "elected" ?
-                        <div className="h-auto py-2 badge badge-primary" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                    </LabelText> : candidate.status === "elected" ?
+                        <LabelText labelType="primary">
                             Elected
-                        </div> : candidate.status === "vetoed" ?
-                            <div className="h-auto py-2 badge badge-warning" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                        </LabelText> : candidate.status === "vetoed" ?
+                            <LabelText labelType="warning">
                                 Vetoed
-                            </div> : candidate.status === "expired" ?
-                                <div className="h-auto py-2 badge badge-dark" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                            </LabelText> : candidate.status === "expired" ?
+                                <LabelText labelType="dark">
                                     Expired
-                                </div> : <div className="h-auto py-2 badge badge-danger" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                                </LabelText> : <LabelText labelType="danger">
                                     Rejected
-                                </div>,
+                                </LabelText>,
                 positiveVoteCount: <div>{candidate.positiveVoteCount}</div>,
                 proposalFee: <div>{candidate.proposalFee}</div>,
                 foundationVoteStatus: candidate.foundationVoteStatus === "supported" ?
-                    <div className="h-auto py-2 badge badge-success" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                    <LabelText labelType="success">
                         Supported
-                    </div> : <div className="h-auto py-2 badge badge-danger" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                    </LabelText> : <LabelText labelType="danger">
                         Rejected
-                    </div>
+                    </LabelText>
             }
         });
 
