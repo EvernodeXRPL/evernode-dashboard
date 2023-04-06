@@ -22,10 +22,11 @@ export default function Registry() {
   const [governorAddress, setGovernorAddress] = React.useState(null);
   const [rewardConfigs, setRewardConfigs] = React.useState(null);
   const [hookClient, setHookClient] = React.useState(null);
- 
+
   useEffect(() => {
     const fetchConfigs = async () => {
       const config = await evernode.getConfigs();
+      const xx = await evernode.getCandidates();
       setGovernorAddress(evernode.getGovernorAddress());
       const tableHeadings = {
         key: 'Key',
@@ -183,12 +184,12 @@ export default function Registry() {
 
   return (
     <Fragment>
-      
+
       <PageTitle
-        className = 'page-title'
+        className='page-title'
         titleHeading="Configurations"
       />
-      
+
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
@@ -203,7 +204,7 @@ export default function Registry() {
           </Card>
         </Grid>
       </Grid>
-      
+
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">

@@ -25,7 +25,12 @@ const navItems = [
         label: "Testnet Faucet",
         icon: AccountBalance,
         to: "/testnet-faucet"
-      }
+      },
+      {
+        label: "Candidates",
+        icon: AccountBalance,
+        to: "/candidates"
+      },
     ]
   }];
 
