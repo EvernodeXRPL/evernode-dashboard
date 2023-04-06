@@ -2,6 +2,7 @@ import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 import DnsIcon from '@material-ui/icons/Dns';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import AccountBalance from '@material-ui/icons/AccountBalance';
+import EmojiObjects from '@material-ui/icons/EmojiObjects';
 
 const navItems = [
   {
@@ -28,7 +29,7 @@ const navItems = [
       },
       {
         label: "Candidates",
-        icon: AccountBalance,
+        icon: EmojiObjects,
         to: "/candidates"
       },
     ]
