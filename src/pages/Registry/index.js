@@ -231,7 +231,7 @@ export default function Registry() {
         },
         {
           key: 'Last Candidate Idx',
-          value: <Tooltip title="Index of the next candidate"><span>{config.governanceInfo.lastCandidateIdx}</span></Tooltip>
+          value: <Tooltip title="Index of the last candidate"><span>{config.governanceInfo.lastCandidateIdx}</span></Tooltip>
         },
         // {
         //   key: 'Support Vote Sent',
