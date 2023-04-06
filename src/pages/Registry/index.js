@@ -23,7 +23,7 @@ export default function Registry() {
   const [rewardConfigs, setRewardConfigs] = React.useState(null);
   const [governanceConfigs, setGovernanceConfigs] = React.useState(null);
   const [hookClient, setHookClient] = React.useState(null);
- 
+
   useEffect(() => {
     const fetchConfigs = async () => {
       const config = await evernode.getConfigs();
@@ -57,8 +57,8 @@ export default function Registry() {
           value: <Tooltip title="The maximum no. of XRP ledgers that an acquire-lease request should wait for instance creation"><span>{config.leaseAcquireWindow}</span></Tooltip>
         },
         {
-          key: 'Moment Base Index',
-          value: <Tooltip title="Index when the 'Moment Size' last changed"><span>{config.momentBaseInfo.baseIdx}</span></Tooltip>
+          key: 'Moment Base Timestamp',
+          value: <Tooltip title="Timestamp when the 'Moment Size' last changed"><span>{config.momentBaseInfo.baseIdx}</span></Tooltip>
         },
         {
           key: 'Transition Moment',
@@ -263,12 +263,12 @@ export default function Registry() {
 
   return (
     <Fragment>
-      
+
       <PageTitle
-        className = 'page-title'
+        className='page-title'
         titleHeading="Configurations"
       />
-      
+
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
@@ -283,7 +283,7 @@ export default function Registry() {
           </Card>
         </Grid>
       </Grid>
-      
+
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">

@@ -82,29 +82,20 @@ const getHosts = async (filters = null, pageSize = null, nextPageToken = null) =
 }
 
 const decodeLeaseUri = (uri) => {
-    return evernode.UtilHelpers.decodeLeaseNftUri(uri);
+    return evernode.UtilHelpers.decodeLeaseTokenUri(uri);
 }
 
 const getLeases = async (address) => {
     const client = new evernode.HostClient(address);
     await client.connect();
 
-    const nfts = await client.xrplAcc.getNfts();
-    const leaseNfts = nfts.filter(n => n.URI.startsWith(evernode.EvernodeConstants.LEASE_NFT_PREFIX_HEX));
+    const leases = await client.xrplAcc.getURITokens();
+    const leaseTokens = leases.filter(n => evernode.EvernodeHelpers.isValidURI(n.URI,evernode.EvernodeConstants.LEASE_TOKEN_PREFIX_HEX))
 
-    const offers = await client.xrplAcc.getNftOffers();
-    let leaseOffers = [];
-    for (const offer of offers) {
-        const nft = leaseNfts.find(l => l.NFTokenID === offer.NFTokenID);
-        if (nft)
-            leaseOffers.push({
-                nfTokenId: nft.NFTokenID,
-                offerIndex: offer.index,
-                uri: nft.URI
-            });
-    }
-
-    return leaseOffers;
+    return leaseTokens.map(leaseToken => {return {
+                    nfTokenId: leaseToken.index,
+                    uri: leaseToken.URI 
+                }});
 }
 
 const getEVRBalance = async (address) => {

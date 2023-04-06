@@ -99,7 +99,7 @@ export default function Host(props) {
       let tableValues = hostInfo ? [
         {
           key: 'Registration Token Id',
-          value: <Tooltip title="Registration NFToken Id"><span>{hostInfo.nfTokenId}</span></Tooltip>
+          value: <Tooltip title="Registration token Id"><span>{hostInfo.uriTokenId}</span></Tooltip>
         },
         {
           key: 'Instances',
@@ -130,14 +130,20 @@ export default function Host(props) {
         {
           key: 'Version',
           value: <Tooltip title="Host's Sashimono version"><span>{hostInfo.version}</span></Tooltip>
+        },
+        {
+          key: 'Registered on Timestamp',
+          value: <Tooltip title="Timestamp at which the host registered"><span>{hostInfo.registrationTimestamp}</span></Tooltip>
+        },
+        {
+          key: 'Accumulated Reward Amount',
+          value: <Tooltip title="Rewards gained upto now"><span>{hostInfo.accumulatedRewardAmount}</span></Tooltip>
+        },
+        {
+          key: 'Last Vote Timestamp',
+          value: <Tooltip title="Timestamp when the last vote has been sent"><span>{hostInfo.lastVoteTimestamp}</span></Tooltip>
         }
       ] : [];
-      if (hostInfo?.registrationTimestamp)
-        tableValues.push(
-          {
-            key: 'Registered on Timestamp',
-            value: <Tooltip title="Timestamp at which the host registered"><span>{hostInfo.registrationTimestamp}</span></Tooltip>
-          });
       const evrBalance = await evernode.getEVRBalance(address);
       setInfo({
         evrBalance: evrBalance,
@@ -179,7 +185,7 @@ export default function Host(props) {
                 </Tooltip>}</span>
             </div>
           }
-          titleDescription={info ? (info?.hostInfo && <Typography type="p">{info.hostInfo.description}</Typography>) :
+          titleDescription={info ? (info?.hostInfo && <Typography type="p">{info.hostInfo.domain}</Typography>) :
             <Loader className="p-0" size="1rem" />}>
           <Hidden mdUp>
             <span>

@@ -18,6 +18,7 @@ import MomentInfo from '../../business-components/MomentInfo';
 
 import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
+import HeaderTitle from '../HeaderTitle';
 
 const Header = props => {
 
@@ -56,6 +57,7 @@ const Header = props => {
               </Tooltip>
             </Box>
           </Box>
+          <HeaderTitle />
           <MomentInfo />
         </Box>
       </AppBar>
