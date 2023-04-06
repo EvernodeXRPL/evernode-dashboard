@@ -219,7 +219,7 @@ export default function Registry() {
         },
         {
           key: 'Foundation Last Voted Candidate Idx',
-          value: <Tooltip title=""><span>{config.governanceInfo.foundationLastVotedCandidateIdx}</span></Tooltip>
+          value: <span>{config.governanceInfo.foundationLastVotedCandidateIdx}</span>
         },
         // {
         //   key: 'Foundation Last Voted Timestamp',
@@ -235,11 +235,11 @@ export default function Registry() {
         },
         // {
         //   key: 'Support Vote Sent',
-        //   value: <Tooltip title=""><span>{config.governanceInfo.supportVoteSent}</span></Tooltip>
+        //   value: <span>{config.governanceInfo.supportVoteSent}</span>
         // },
         // {
         //   key: 'Updated Hook Count',
-        //   value: <Tooltip title=""><span>{config.governanceInfo.updatedHookCount}</span></Tooltip>
+        //   value: <span>{config.governanceInfo.updatedHookCount}</span>
         // },
         {
           key: 'Vote Base Count',
@@ -247,7 +247,7 @@ export default function Registry() {
         },
         // {
         //   key: 'Vote Base Count Changed Timestamp',
-        //   value: <Tooltip title=""><span>{config.governanceInfo.voteBaseCountChangedTimestamp}</span></Tooltip>
+        //   value: <span>{config.governanceInfo.voteBaseCountChangedTimestamp}</span>
         // },
       ];
 
