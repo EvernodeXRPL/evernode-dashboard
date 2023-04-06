@@ -21,6 +21,7 @@ export default function Registry() {
   const [governorConfigs, setGovernorConfigs] = React.useState(null);
   const [governorAddress, setGovernorAddress] = React.useState(null);
   const [rewardConfigs, setRewardConfigs] = React.useState(null);
+  const [governanceConfigs, setGovernanceConfigs] = React.useState(null);
   const [hookClient, setHookClient] = React.useState(null);
  
   useEffect(() => {
@@ -176,6 +177,85 @@ export default function Registry() {
         tableHeadings: tableHeadings,
         tableValues: hookConfigTableValues
       });
+
+      const governanceConfigTableValues = [
+        {
+          key: 'Candidate Election Period',
+          value: <Tooltip title="Maximum period (number of seconds) that is given for voters to vote for a candidate"><span>{config.governanceConfiguration.candidateElectionPeriod}</span></Tooltip>,
+          cellConfigs: {
+            width: '37%'
+          }
+        },
+        {
+          key: 'Candidate Life Period',
+          value: <Tooltip title="Maximum period (number of seconds) a candidate can exist in the system actively"><span>{config.governanceConfiguration.candidateLifePeriod}</span></Tooltip>
+        },
+        {
+          key: 'Candidate Support Average',
+          value: <Tooltip title="Minimum consensus percentage to elect a candidate"><span>{config.governanceConfiguration.candidateSupportAverage}</span></Tooltip>
+        },
+        {
+          key: 'Eligibility Period',
+          value: <Tooltip title="Minimum registration period (number of seconds) required for a host to attain governance maturity"><span>{config.governanceConfiguration.eligibilityPeriod}</span></Tooltip>
+        },
+        {
+          key: <Typography style={{ fontSize: '1.54rem', fontWeight: 'bold', color: 'black' }}>Governance Info</Typography>,
+          value: <Tooltip title="Governance Info"><span>&nbsp;</span></Tooltip>,
+          cellConfigs: {
+            colspan: 2,
+            isSubtopic: true,
+            width: '37%',
+            paddingTopBottom: '8px'
+
+          }
+        },
+        {
+          key: 'Elected Proposal Unique Id',
+          value: <Tooltip title="Most recently elected candidate"><span>{config.governanceInfo.electedProposalUniqueId}</span></Tooltip>
+        },
+        {
+          key: 'Proposal Elected Timestamp',
+          value: <Tooltip title="Timestamp when the most recently elected candidate was elected"><span>{config.governanceInfo.proposalElectedTimestamp}</span></Tooltip>
+        },
+        {
+          key: 'Foundation Last Voted Candidate Idx',
+          value: <Tooltip title=""><span>{config.governanceInfo.foundationLastVotedCandidateIdx}</span></Tooltip>
+        },
+        // {
+        //   key: 'Foundation Last Voted Timestamp',
+        //   value: <Tooltip title="Timestamp when the foundation's last vote was received"><span>{config.governanceInfo.foundationLastVotedTimestamp}</span></Tooltip>
+        // },
+        {
+          key: 'Governance Mode',
+          value: <Tooltip title="Current mode of governance"><span>{config.governanceInfo.governanceMode}</span></Tooltip>
+        },
+        {
+          key: 'Last Candidate Idx',
+          value: <Tooltip title="Index of the last candidate"><span>{config.governanceInfo.lastCandidateIdx}</span></Tooltip>
+        },
+        // {
+        //   key: 'Support Vote Sent',
+        //   value: <Tooltip title=""><span>{config.governanceInfo.supportVoteSent}</span></Tooltip>
+        // },
+        // {
+        //   key: 'Updated Hook Count',
+        //   value: <Tooltip title=""><span>{config.governanceInfo.updatedHookCount}</span></Tooltip>
+        // },
+        {
+          key: 'Vote Base Count',
+          value: <Tooltip title="Number of hosts that are eligible for voting"><span>{config.governanceInfo.voteBaseCount}</span></Tooltip>
+        },
+        // {
+        //   key: 'Vote Base Count Changed Timestamp',
+        //   value: <Tooltip title=""><span>{config.governanceInfo.voteBaseCountChangedTimestamp}</span></Tooltip>
+        // },
+      ];
+
+      setGovernanceConfigs({
+        configs: config,
+        tableHeadings: tableHeadings,
+        tableValues: governanceConfigTableValues
+      });
     }
 
     fetchConfigs();
@@ -229,6 +309,21 @@ export default function Registry() {
                 highlight={['key']}
                 hideHeadings />) ||
                 <Loader className="p-4" />}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <Card style={{ border: "none", boxShadow: "none" }} className="mb-4">
+            <CardHeader className="pt-3 pb-2" title={<Typography style={{ fontSize: '1.54rem', fontWeight: 'bold' }} >Governance Configurations</Typography>} />
+            <CardContent className="p-0">
+              {(governanceConfigs && <RegularTable
+                  headings={governanceConfigs.tableHeadings}
+                  values={governanceConfigs.tableValues}
+                  highlight={['key']}
+                  hideHeadings />) ||
+              <Loader className="p-4" />}
             </CardContent>
           </Card>
         </Grid>
