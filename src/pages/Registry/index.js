@@ -57,8 +57,8 @@ export default function Registry() {
           value: <Tooltip title="The maximum no. of XRP ledgers that an acquire-lease request should wait for instance creation"><span>{config.leaseAcquireWindow}</span></Tooltip>
         },
         {
-          key: 'Moment Base Index',
-          value: <Tooltip title="Index when the 'Moment Size' last changed"><span>{config.momentBaseInfo.baseIdx}</span></Tooltip>
+          key: 'Moment Base Timestamp',
+          value: <Tooltip title="Timestamp when the 'Moment Size' last changed"><span>{config.momentBaseInfo.baseIdx}</span></Tooltip>
         },
         {
           key: 'Transition Moment',
