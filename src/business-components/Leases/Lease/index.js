@@ -20,10 +20,6 @@ export default function Lease(props) {
       value: <Tooltip title="EVRs per Moment"><span>{lease.leaseAmount}</span></Tooltip>
     },
     {
-      key: 'Offer Index',
-      value: <Tooltip title="Lease NFT sell offer index"><span>{lease.offerIndex}</span></Tooltip>
-    },
-    {
       key: 'TOS',
       value: <Tooltip title="Show Terms of Service">
         <Button className="tos-button" size="small" variant="outlined" onClick={() => setShowTos(true)}>
