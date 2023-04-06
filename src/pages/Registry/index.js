@@ -214,13 +214,17 @@ export default function Registry() {
           value: <Tooltip title="Most recently elected candidate"><span>{config.governanceInfo.electedProposalUniqueId}</span></Tooltip>
         },
         {
+          key: 'Proposal Elected Timestamp',
+          value: <Tooltip title="Timestamp when the most recently elected candidate was elected"><span>{config.governanceInfo.proposalElectedTimestamp}</span></Tooltip>
+        },
+        {
           key: 'Foundation Last Voted Candidate Idx',
           value: <Tooltip title=""><span>{config.governanceInfo.foundationLastVotedCandidateIdx}</span></Tooltip>
         },
-        {
-          key: 'Foundation Last Voted Timestamp',
-          value: <Tooltip title="Timestamp when the foundation's last vote was received"><span>{config.governanceInfo.foundationLastVotedTimestamp}</span></Tooltip>
-        },
+        // {
+        //   key: 'Foundation Last Voted Timestamp',
+        //   value: <Tooltip title="Timestamp when the foundation's last vote was received"><span>{config.governanceInfo.foundationLastVotedTimestamp}</span></Tooltip>
+        // },
         {
           key: 'Governance Mode',
           value: <Tooltip title="Current mode of governance"><span>{config.governanceInfo.governanceMode}</span></Tooltip>
@@ -229,26 +233,22 @@ export default function Registry() {
           key: 'Last Candidate Idx',
           value: <Tooltip title="Index of the next candidate"><span>{config.governanceInfo.lastCandidateIdx}</span></Tooltip>
         },
-        {
-          key: 'Proposal Elected Timestamp',
-          value: <Tooltip title="Timestamp when the most recently elected candidate was elected"><span>{config.governanceInfo.proposalElectedTimestamp}</span></Tooltip>
-        },
-        {
-          key: 'Support Vote Sent',
-          value: <Tooltip title=""><span>{config.governanceInfo.supportVoteSent}</span></Tooltip>
-        },
-        {
-          key: 'Updated Hook Count',
-          value: <Tooltip title=""><span>{config.governanceInfo.updatedHookCount}</span></Tooltip>
-        },
+        // {
+        //   key: 'Support Vote Sent',
+        //   value: <Tooltip title=""><span>{config.governanceInfo.supportVoteSent}</span></Tooltip>
+        // },
+        // {
+        //   key: 'Updated Hook Count',
+        //   value: <Tooltip title=""><span>{config.governanceInfo.updatedHookCount}</span></Tooltip>
+        // },
         {
           key: 'Vote Base Count',
           value: <Tooltip title="Number of hosts that are eligible for voting"><span>{config.governanceInfo.voteBaseCount}</span></Tooltip>
         },
-        {
-          key: 'Vote Base Count Changed Timestamp',
-          value: <Tooltip title=""><span>{config.governanceInfo.voteBaseCountChangedTimestamp}</span></Tooltip>
-        },
+        // {
+        //   key: 'Vote Base Count Changed Timestamp',
+        //   value: <Tooltip title=""><span>{config.governanceInfo.voteBaseCountChangedTimestamp}</span></Tooltip>
+        // },
       ];
 
       setGovernanceConfigs({
