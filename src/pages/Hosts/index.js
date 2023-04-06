@@ -1,7 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import { Button } from '@material-ui/core';
-import MessageIcon from '@material-ui/icons/Message';
+import { Button } from '@mui/material';
+import MessageIcon from '@mui/icons-material/Message';
 
 import PageTitle from '../../layout-components/PageTitle';
 import CustomTable from '../../components/CustomTable';

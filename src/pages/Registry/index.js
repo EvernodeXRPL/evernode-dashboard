@@ -10,7 +10,7 @@ import {
   Typography,
   Tooltip,
   CardHeader
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';

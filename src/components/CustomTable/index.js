@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import {
   Card,
   CardContent
-} from '@material-ui/core';
+} from '@mui/material';
 
 export default function CustomTable(props) {
   const {

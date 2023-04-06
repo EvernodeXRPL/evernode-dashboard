@@ -3,7 +3,7 @@ import { matchPath } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 
-import { List, Typography } from '@material-ui/core';
+import { List, Typography } from '@mui/material';
 
 import SidebarMenuListItem from './SidebarMenuListItem';
 import useRouter from '../../utils/useRouter';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Tooltip, Typography } from '@material-ui/core';
+import { Tooltip, Typography } from '@mui/material';
 
 export default function CPUModel(props) {
   const { modelName, speed, count, showTooltip } = props;

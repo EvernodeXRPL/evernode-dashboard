@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 
 import Lease from './Lease';
 import { useEvernode } from '../../services/Evernode';

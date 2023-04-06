@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
-import { IconButton, Box, Tooltip } from '@material-ui/core';
+import { IconButton, Box, Tooltip } from '@mui/material';
 
 import { connect } from 'react-redux';
 
@@ -11,8 +11,8 @@ import projectLogo from '../../assets/images/logo-white.png';
 
 import { setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 
-import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
-import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
+import MenuOpenRoundedIcon from '@mui/icons-material/MenuOpenRounded';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 
 const SidebarHeader = props => {
   const toggleSidebarMobile = () => {

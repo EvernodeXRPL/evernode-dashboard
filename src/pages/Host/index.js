@@ -1,11 +1,11 @@
 import React, { Fragment, useCallback, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 
 import PageTitle from '../../layout-components/PageTitle';
 import RegularTable from '../../components/RegularTable';
-
+import "./styles.scss"
 import {
   Grid,
   Card,
@@ -15,8 +15,7 @@ import {
   TextField,
   Button,
   Hidden
-} from '@material-ui/core';
-import { makeStyles } from "@material-ui/core/styles";
+} from '@mui/material';
 import Leases from '../../business-components/Leases';
 
 import { useEvernode } from '../../services/Evernode';
@@ -28,31 +27,7 @@ import CPUModel from '../../business-components/CPUModel';
 import InstanceSpecs from '../../business-components/InstanceSpecs';
 import ModalDialog from '../../components/ModalDialog';
 
-const useStyles = makeStyles({
-  root: {
-    // input label when focused
-    "& label.Mui-focused": {
-      color: 'rgba(0,0,0,0.54)'
-    },
-    "& label.Mui-error": {
-      color: 'red'
-    },
-    // focused color for input with variant='standard'
-    "& .MuiInput-underline:after": {
-      borderBottomColor: 'rgba(0,0,0,0.87)'
-    },
-    "& .MuiInput-underline.Mui-error:after": {
-      borderBottomColor: '#f83245'
-    },
-    "& label.MuiInputLabel-shrink": {
-      transform: 'translate(0, 1.5px) scale(0.95)',
-      transformOrigin: 'top left'
-    }
-  }
-});
-
 export default function Host(props) {
-  const classes = useStyles();
   const history = useHistory();
   const evernode = useEvernode();
 
@@ -157,7 +132,7 @@ export default function Host(props) {
   }, [evernode, history, address, pathAddress, selfAddress]);
 
   return (
-    <>{address &&
+    <div className={"my-host"}>{address &&
       <Fragment>
         <PageTitle
           responsive={true}
@@ -209,7 +184,7 @@ export default function Host(props) {
             </Grid>
           ) : null}
         </Grid>
-        <Grid container spacing={4}>
+        <Grid container spacing={4} className={"mt-2"}>
           <Grid item xs={12} md={6}>
             <Card
               style={{ border: "none", boxShadow: "none" }}
@@ -250,11 +225,11 @@ export default function Host(props) {
       </Fragment >}
       {address === selfAddress && <ModalDialog open={showChangeAddress} scroll="body" onClose={handleChangeAddressClose}>
         <div>
-          <TextField autoFocus error={!!inputAddress && !inputAddressValid()} classes={classes} className="address-input" variant="standard" label="Enter the host XRP address" multiline value={inputAddress || ''} onChange={(e) => setInputAddress(e.target.value)} />
+          <TextField error={!!inputAddress && !inputAddressValid()} className="address-input" variant="standard" label="Enter the host XRP address" multiline value={inputAddress || ''} onChange={(e) => setInputAddress(e.target.value)}/>
         </div>
         <div>
-          <Button onClick={handleChangeAddress} variant="outlined" disabled={!inputAddress || !inputAddressValid()} className="pull-right mt-3">OK</Button>
+          <Button onClick={handleChangeAddress} variant="contained" disabled={!inputAddress || !inputAddressValid()} className="pull-right mt-3">OK</Button>
         </div>
-      </ModalDialog>}</>
+      </ModalDialog>}</div>
   );
 }

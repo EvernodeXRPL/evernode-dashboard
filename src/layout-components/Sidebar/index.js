@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import clsx from 'clsx';
 
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Hidden, Drawer, Paper } from '@material-ui/core';
+import { Hidden, Drawer, Paper } from '@mui/material';
 
 import { connect } from 'react-redux';
 

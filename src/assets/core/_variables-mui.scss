@@ -1,22 +1,28 @@
-$primary: '#FFF';
-$primaryLight: '#495368';
-$primaryDark: '#09142a';
-$secondary: '#3d4977';
-$inheritDefault1: '#fefefe';
-$inheritDefault2: '#f8f9ff';
+$theme-colors: (
+  'primary': #FFF,
+  'primaryLight': #495368,
+  'primaryDark': #09142a,
+  'secondary': #3d4977,
+  'inheritDefault1': #fefefe,
+  'inheritDefault2': #f8f9ff,
+  'second': #070919,
+  'indigo': #7420ff,
+  'purple': #793de6,
+  'pink': #fc26a4,
+  'red': #f83245,
+  'orange': #f4772e,
+  'yellow': #ffc926,
+  'green': #1bc943,
+  'teal': #18e1a5,
+  'cyan': #27dcf3,
+  'bladeRunnerBlue': #07112D,
+  'cornflowerBlue': #0082FF,
+  'hyperBlue': #00FFFF,
+  'siliconBlue': #0037FF,
+);
 
-$second: '#070919';
-$indigo: '#7420ff';
-$purple: '#793de6';
-$pink: '#fc26a4';
-$red: '#f83245';
-$orange: '#f4772e';
-$yellow: '#ffc926';
-$green: '#1bc943';
-$teal: '#18e1a5';
-$cyan: '#27dcf3';
-
-$bladeRunnerBlue: '#07112D';
-$cornflowerBlue: '#0082FF';
-$hyperBlue: '#00FFFF';
-$siliconBlue: '#0037FF';
+:export {
+  @each $key, $value in $theme-colors {
+    #{unquote($key)}: $value;
+  }
+}

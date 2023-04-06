@@ -1,7 +1,7 @@
-import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
-import DnsIcon from '@material-ui/icons/Dns';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import AccountBalance from '@material-ui/icons/AccountBalance';
+import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
+import DnsIcon from '@mui/icons-material/Dns';
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
+import AccountBalance from '@mui/icons-material/AccountBalance';
 
 const navItems = [
   {
