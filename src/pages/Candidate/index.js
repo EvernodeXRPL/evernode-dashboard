@@ -102,40 +102,52 @@ const Candidate = (props) => {
             }
             let tableValues = hostInfo ? [
                 {
-                    key: 'Registration Token Id',
-                    value: <Tooltip title="Registration NFToken Id"><span>{hostInfo.createdTimestamp
+                    key: 'Created Timestamp',
+                    value: <Tooltip title="Created Timestamp"><span>{hostInfo.createdTimestamp
                     }</span></Tooltip>
                 },
                 {
-                    key: 'Instances',
-                    value: <Tooltip title="Active instances out of Maximum instances">
-                        <span>{hostInfo.activeInstances || 0} out of {hostInfo.maxInstances || 0}</span>
+                    key: 'Foundation Vote Status',
+                    value: <Tooltip title="Foundation Vote Status">
+                        <span>{hostInfo.foundationVoteStatus}</span>
                     </Tooltip>
                 },
                 {
-                    key: 'CPU Model',
-                    value: <CPUModel modelName={hostInfo.cpuModelName} speed={hostInfo.cpuMHz} count={hostInfo.cpuCount} showTooltip />
+                    key: 'Last Vote Timestamp',
+                    value: <Tooltip title="Last Vote Timestamp">
+                        <span>{hostInfo.lastVoteTimestamp}</span>
+                    </Tooltip>
                 },
                 {
-                    key: 'Instance Size',
-                    value: <InstanceSpecs cpu={hostInfo.cpuMicrosec} ram={hostInfo.ramMb} disk={hostInfo.diskMb} instanceCount={hostInfo.maxInstances} showTooltip />
+                    key: 'Owner Address',
+                    value: <Tooltip title="Owner Address">
+                        <span>{hostInfo.ownerAddress}</span>
+                    </Tooltip>
                 },
                 {
-                    key: 'Last Heartbeat Index',
-                    value: <Tooltip title={`${config.momentBaseInfo.momentType === 'ledger' ? 'XRP Ledger' : 'Timestamp'} at which the last heartbeat was received`}><span>{hostInfo.lastHeartbeatIndex}</span></Tooltip>
+                    key: 'Proposal Fee',
+                    value: <Tooltip title="Proposal Fee">
+                        <span>{hostInfo.proposalFee}</span>
+                    </Tooltip>
                 },
                 {
-                    key: 'Registered on XRP Ledger',
-                    value: <Tooltip title="XRP Ledger at which the host registered"><span>{hostInfo.registrationLedger}</span></Tooltip>
+                    key: 'Short Name',
+                    value: <Tooltip title="Short Name">
+                        <span>{hostInfo.shortName}</span>
+                    </Tooltip>
                 },
                 {
-                    key: 'Registration Fee',
-                    value: <Tooltip title="Registration fee (in EVRs) spent by the host"><span>{hostInfo.registrationFee}</span></Tooltip>
+                    key: 'Status',
+                    value: <Tooltip title="Status">
+                        <span>{hostInfo.status}</span>
+                    </Tooltip>
                 },
                 {
-                    key: 'Version',
-                    value: <Tooltip title="Host's Sashimono version"><span>{hostInfo.version}</span></Tooltip>
-                }
+                    key: 'Status Change Timestamp',
+                    value: <Tooltip title="Status Change Timestamp">
+                        <span>{hostInfo.statusChangeTimestamp}</span>
+                    </Tooltip>
+                },
             ] : [];
             if (hostInfo?.registrationTimestamp)
                 tableValues.push(
@@ -167,31 +179,10 @@ const Candidate = (props) => {
                     responsive={true}
                     titleHeading={
                         <div className="d-flex align-items-center display-7">
-                            <Hidden mdDown>
-                                <span className="mr-2">
-                                    {info?.hostInfo && <CountryFlag countryCode={info.hostInfo.countryCode} size="1.8em" />}
-                                </span>
-                            </Hidden>
                             {address}
-                            {address === selfAddress &&
-                                <Tooltip title="Change address">
-                                    <EditIcon className="ml-1 edit-btn" onClick={() => setShowChangeAddress(true)} />
-                                </Tooltip>}
-                            <span>{info?.hostInfo &&
-                                <Tooltip title={info.hostInfo.active ? 'Active' : 'Inactive'}>
-                                    <div className={`ml - 1 rounded - circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
-                                </Tooltip>}</span>
                         </div>
                     }
-                    titleDescription={info ? (info?.hostInfo && <Typography type="p">{info.hostInfo.uniqueId
-                    }</Typography>) :
-                        <Loader className="p-0" size="1rem" />}>
-                    <Hidden mdUp>
-                        <span>
-                            {info?.hostInfo && <CountryFlag countryCode={info.hostInfo.countryCode} size="2.5em" />}
-                        </span>
-                    </Hidden>
-                    <EvrBalance balance={+(+info?.evrBalance).toFixed(3)} />
+                >
                 </PageTitle>
                 <Grid container spacing={4}>
                     {info && info.hostInfo && info.hostInfo.hostMessage ? (
@@ -222,7 +213,7 @@ const Candidate = (props) => {
                         >
                             <CardContent className="p-0">
                                 <h5 className="card-title font-weight-bold font-size-md">
-                                    Registration Info
+                                    Candidate Info
                                 </h5>
                                 {(info &&
                                     (info.hostInfo ? (
@@ -233,34 +224,14 @@ const Candidate = (props) => {
                                             hideHeadings
                                         />
                                     ) : (
-                                        <span>Host is not Registered!</span>
+                                        <span>Candidate info is not available!</span>
                                     ))) || <Loader className="p-4" />}
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Card
-                            style={{ border: "none", boxShadow: "none" }}
-                            className="mb-4 bg-transparent"
-                        >
-                            <CardContent className="p-0">
-                                <h5 className="card-title font-weight-bold font-size-md">
-                                    Available Leases
-                                </h5>
-                                {address && <Leases address={address} />}
                             </CardContent>
                         </Card>
                     </Grid>
                 </Grid>
             </Fragment >}
-            {address === selfAddress && <ModalDialog open={showChangeAddress} scroll="body" onClose={handleChangeAddressClose}>
-                <div>
-                    <TextField autoFocus error={!!inputAddress && !inputAddressValid()} classes={classes} className="address-input" variant="standard" label="Enter the host XRP address" multiline value={inputAddress || ''} onChange={(e) => setInputAddress(e.target.value)} />
-                </div>
-                <div>
-                    <Button onClick={handleChangeAddress} variant="outlined" disabled={!inputAddress || !inputAddressValid()} className="pull-right mt-3">OK</Button>
-                </div>
-            </ModalDialog>}</>
+        </>
     )
 }
 
