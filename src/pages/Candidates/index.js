@@ -13,68 +13,58 @@ const Candidates = () => {
     const history = useHistory();
     const evernode = useEvernode();
 
-    const [hosts, setHosts] = useState(null);
+    const [candidates, setCandidates] = useState(null);
     const [nextPageToken, setNextPageToken] = useState(null);
     const [pageQueue, setPageQueue] = useState([]);
-    const [isHostsLoading, setIsHostsLoading] = useState(false);
+    const [isCandidatesLoading, setIsCandidatesLoading] = useState(false);
 
-    useEffect(() => {
-        const fetchConfigs = async () => {
-            const xx = await evernode.getCandidates();
-            console.log("xx", xx)
-        }
-
-        fetchConfigs();
-    }, [evernode]);
-
-    const loadHosts = useCallback(async (pageToken = null) => {
+    const loadCandidates = useCallback(async (pageToken = null) => {
         const data = await evernode.getCandidates(null, PAGE_SIZE, pageToken);
-        console.log("data", data)
-        let hostList;
+        let candidateList;
         if (data.nextPageToken) {
-            hostList = data.data;
+            candidateList = data.data;
             setNextPageToken(data.nextPageToken);
         }
         else {
-            hostList = data;
+            candidateList = data;
             setNextPageToken(null);
         }
 
         const tableColumns = {
-            address: { title: "Candidate ID", className: 'text-start' },
-            status: { title: "Status", className: 'text-center' },
-            cpuModel: { title: "positive Vote Count", className: 'text-center col-fixed-mw' },
-            instanceSize: { title: "Proposal Fee", className: 'text-center col-fixed-mw' },
-            maxInstances: { title: "Foundation Vote Status", className: 'text-center' },
+            candidateId: { title: "Candidate ID", className: 'text-start' },
+            candidateStatus: { title: "Status", className: 'text-center' },
+            positiveVoteCount: { title: "positive Vote Count", className: 'text-center col-fixed-mw' },
+            proposalFee: { title: "Proposal Fee", className: 'text-center col-fixed-mw' },
+            foundationVoteStatus: { title: "Foundation Vote Status", className: 'text-center' },
         };
-        const tableValues = hostList.map(host => {
+        const tableValues = candidateList.map(candidate => {
             return {
-                key: host.id,
-                address: <div className="d-flex align-items-center">
+                key: candidate.id,
+                candidateId: <div className="d-flex align-items-center">
                     <div>
                         <p className="font-weight-bold m-0">
-                            {host.id}
+                            {candidate.id}
                         </p>
                     </div>
                 </div>,
-                status: host.status === "supported" ?
+                candidateStatus: candidate.status === "supported" ?
                     <div className="h-auto py-2 badge badge-success" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
                         Supported
-                    </div> : host.status === "elected" ?
+                    </div> : candidate.status === "elected" ?
                         <div className="h-auto py-2 badge badge-primary" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
                             Elected
-                        </div> : host.status === "vetoed" ?
+                        </div> : candidate.status === "vetoed" ?
                             <div className="h-auto py-2 badge badge-warning" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
                                 Vetoed
-                            </div> : host.status === "expired" ?
+                            </div> : candidate.status === "expired" ?
                                 <div className="h-auto py-2 badge badge-dark" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
                                     Expired
                                 </div> : <div className="h-auto py-2 badge badge-danger" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
                                     Rejected
                                 </div>,
-                cpuModel: <div>{host.positiveVoteCount}</div>,
-                instanceSize: <div>{host.proposalFee}</div>,
-                maxInstances: host.foundationVoteStatus === "supported" ?
+                positiveVoteCount: <div>{candidate.positiveVoteCount}</div>,
+                proposalFee: <div>{candidate.proposalFee}</div>,
+                foundationVoteStatus: candidate.foundationVoteStatus === "supported" ?
                     <div className="h-auto py-2 badge badge-success" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
                         Supported
                     </div> : <div className="h-auto py-2 badge badge-danger" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
@@ -83,49 +73,49 @@ const Candidates = () => {
             }
         });
 
-        setHosts({
-            hosts: hostList,
+        setCandidates({
+            candidates: candidateList,
             tableColumns: tableColumns,
             tableValues: tableValues
         });
 
-        setIsHostsLoading(false);
+        setIsCandidatesLoading(false);
     }, [evernode]);
 
     useEffect(() => {
-        loadHosts();
-    }, [loadHosts]);
+        loadCandidates();
+    }, [loadCandidates]);
 
     const handleRowClick = useCallback((e) => {
-        if (isHostsLoading)
+        if (isCandidatesLoading)
             return;
         history.push(`/candidate/${e.key}`);
-    }, [history, isHostsLoading]);
+    }, [history, isCandidatesLoading]);
 
     const handleNextClick = useCallback(() => {
-        setIsHostsLoading(true);
+        setIsCandidatesLoading(true);
         setPageQueue([...pageQueue, nextPageToken]);
-        loadHosts(nextPageToken);
-    }, [loadHosts, pageQueue, nextPageToken]);
+        loadCandidates(nextPageToken);
+    }, [loadCandidates, pageQueue, nextPageToken]);
 
     const handlePrevClick = useCallback(() => {
-        setIsHostsLoading(true);
+        setIsCandidatesLoading(true);
         const prevPageToken = pageQueue.length > 1 ? pageQueue[pageQueue.length - 2] : null;
         setPageQueue(pageQueue.slice(0, pageQueue.length - 1));
-        loadHosts(prevPageToken);
-    }, [loadHosts, pageQueue]);
+        loadCandidates(prevPageToken);
+    }, [loadCandidates, pageQueue]);
 
     return (
         <Fragment>
             <PageTitle
                 titleHeading="Candidates"
             />
-            {isHostsLoading && <Loader className={`hostsLoader "p-4"`} />}
-            {(hosts && <div>
-                <CustomTable columns={hosts.tableColumns} values={hosts.tableValues} blurTable={isHostsLoading} onRowClick={handleRowClick} />
+            {isCandidatesLoading && <Loader className={`hostsLoader "p-4"`} />}
+            {(candidates && <div>
+                <CustomTable columns={candidates.tableColumns} values={candidates.tableValues} blurTable={isCandidatesLoading} onRowClick={handleRowClick} />
                 <div>
-                    {pageQueue.length > 0 && <Button className="pull-left" variant="contained" disabled={isHostsLoading} onClick={handlePrevClick}>Prev</Button>}
-                    {nextPageToken && <Button className="pull-right" variant="contained" disabled={isHostsLoading} onClick={handleNextClick}>Next</Button>}
+                    {pageQueue.length > 0 && <Button className="pull-left" variant="contained" disabled={isCandidatesLoading} onClick={handlePrevClick}>Prev</Button>}
+                    {nextPageToken && <Button className="pull-right" variant="contained" disabled={isCandidatesLoading} onClick={handleNextClick}>Next</Button>}
                 </div>
             </div>)}
         </Fragment>

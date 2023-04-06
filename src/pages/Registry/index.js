@@ -26,7 +26,6 @@ export default function Registry() {
   useEffect(() => {
     const fetchConfigs = async () => {
       const config = await evernode.getConfigs();
-      const xx = await evernode.getCandidates();
       setGovernorAddress(evernode.getGovernorAddress());
       const tableHeadings = {
         key: 'Key',
