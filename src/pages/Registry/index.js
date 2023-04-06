@@ -23,7 +23,7 @@ export default function Registry() {
   const [rewardConfigs, setRewardConfigs] = React.useState(null);
   const [governanceConfigs, setGovernanceConfigs] = React.useState(null);
   const [hookClient, setHookClient] = React.useState(null);
- 
+
   useEffect(() => {
     const fetchConfigs = async () => {
       const config = await evernode.getConfigs();
@@ -211,23 +211,23 @@ export default function Registry() {
         },
         {
           key: 'Elected Proposal Unique Id',
-          value: <Tooltip title="Most recently elected candidate"><span>{config.governanceInfo.electedProposalUniqueId}</span></Tooltip>
+          value: <Tooltip title="Most recently elected candidate"><span>{config.governanceInfo.electedProposalUniqueId.match(/^0+$/) ? '-' : config.governanceInfo.electedProposalUniqueId}</span></Tooltip>
         },
         {
           key: 'Proposal Elected Timestamp',
-          value: <Tooltip title="Timestamp when the most recently elected candidate was elected"><span>{config.governanceInfo.proposalElectedTimestamp}</span></Tooltip>
+          value: <Tooltip title="Timestamp when the most recently elected candidate was elected"><span>{config.governanceInfo.proposalElectedTimestamp === 0 ? '-' : config.governanceInfo.proposalElectedTimestamp}</span></Tooltip>
         },
-        {
-          key: 'Foundation Last Voted Candidate Idx',
-          value: <Tooltip title=""><span>{config.governanceInfo.foundationLastVotedCandidateIdx}</span></Tooltip>
-        },
+        // {
+        //   key: 'Foundation Last Voted Candidate Idx',
+        //   value: <Tooltip title=""><span>{config.governanceInfo.foundationLastVotedCandidateIdx}</span></Tooltip>
+        // },
         // {
         //   key: 'Foundation Last Voted Timestamp',
         //   value: <Tooltip title="Timestamp when the foundation's last vote was received"><span>{config.governanceInfo.foundationLastVotedTimestamp}</span></Tooltip>
         // },
         {
           key: 'Governance Mode',
-          value: <Tooltip title="Current mode of governance"><span>{config.governanceInfo.governanceMode}</span></Tooltip>
+          value: <Tooltip title="Current mode of governance"><span>{config.governanceInfo.governanceMode.toUpperCase()}</span></Tooltip>
         },
         {
           key: 'Last Candidate Idx',
@@ -263,12 +263,12 @@ export default function Registry() {
 
   return (
     <Fragment>
-      
+
       <PageTitle
-        className = 'page-title'
+        className='page-title'
         titleHeading="Configurations"
       />
-      
+
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
@@ -283,7 +283,7 @@ export default function Registry() {
           </Card>
         </Grid>
       </Grid>
-      
+
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Card style={{ border: "none", boxShadow: "none" }} className="mb-4 bg-transparent">
@@ -319,11 +319,11 @@ export default function Registry() {
             <CardHeader className="pt-3 pb-2" title={<Typography style={{ fontSize: '1.54rem', fontWeight: 'bold' }} >Governance Configurations</Typography>} />
             <CardContent className="p-0">
               {(governanceConfigs && <RegularTable
-                  headings={governanceConfigs.tableHeadings}
-                  values={governanceConfigs.tableValues}
-                  highlight={['key']}
-                  hideHeadings />) ||
-              <Loader className="p-4" />}
+                headings={governanceConfigs.tableHeadings}
+                values={governanceConfigs.tableValues}
+                highlight={['key']}
+                hideHeadings />) ||
+                <Loader className="p-4" />}
             </CardContent>
           </Card>
         </Grid>
