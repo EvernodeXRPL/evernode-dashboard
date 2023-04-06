@@ -37,7 +37,11 @@ const Candidate = (props) => {
                 {
                     key: 'Foundation Vote Status',
                     value: <Tooltip title="Foundation Vote Status">
-                        <span>{candidateInfo.foundationVoteStatus}</span>
+                        {candidateInfo.foundationVoteStatus === "supported" ? <div className="h-auto py-2 badge badge-success" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                            Supported
+                        </div> : <div className="h-auto py-2 badge badge-danger" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                            Rejected
+                        </div>}
                     </Tooltip>
                 },
                 {
@@ -67,7 +71,20 @@ const Candidate = (props) => {
                 {
                     key: 'Status',
                     value: <Tooltip title="Status">
-                        <span>{candidateInfo.status}</span>
+                        {candidateInfo.status === "supported" ? <div className="h-auto py-2 badge badge-success" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                            Supported
+                        </div> : candidate.status === "elected" ?
+                            <div className="h-auto py-2 badge badge-primary" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                                Elected
+                            </div> : candidate.status === "vetoed" ?
+                                <div className="h-auto py-2 badge badge-warning" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                                    Vetoed
+                                </div> : candidate.status === "expired" ?
+                                    <div className="h-auto py-2 badge badge-dark" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                                        Expired
+                                    </div> : <div className="h-auto py-2 badge badge-danger" style={{ width: '4.8rem', fontSize: '0.75rem' }}>
+                                        Rejected
+                                    </div>}
                     </Tooltip>
                 },
                 {
