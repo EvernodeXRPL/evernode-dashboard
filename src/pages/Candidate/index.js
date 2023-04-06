@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import PageTitle from '../../layout-components/PageTitle';
 import RegularTable from '../../components/RegularTable';
@@ -12,97 +12,88 @@ import {
 
 import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
-import { StorageKeys } from '../../common/constants';
 
 const Candidate = (props) => {
     const history = useHistory();
     const evernode = useEvernode();
-
-    const selfAddress = localStorage.getItem(StorageKeys.hostAddress);
-    const pathAddress = props.match.params.candidateId;
-
-    const [address, setAddress] = React.useState(pathAddress || selfAddress);
+    const candidateId = props.match.params.candidateId;
     const [info, setInfo] = React.useState(null);
 
     useEffect(() => {
         const fetchInfo = async () => {
             setInfo(null);
-            const hosts = await evernode.getCandidateById(address);
-            const hostInfo = (hosts) ? hosts : null;
+            const candidate = await evernode.getCandidateById(candidateId);
+            const candidateInfo = (candidate) ? candidate : null;
             const tableHeadings = {
                 key: 'Key',
                 value: 'Value'
             }
-            let tableValues = hostInfo ? [
+            let tableValues = candidateInfo ? [
                 {
                     key: 'Created Timestamp',
-                    value: <Tooltip title="Created Timestamp"><span>{hostInfo.createdTimestamp
+                    value: <Tooltip title="Created Timestamp"><span>{candidateInfo.createdTimestamp
                     }</span></Tooltip>
                 },
                 {
                     key: 'Foundation Vote Status',
                     value: <Tooltip title="Foundation Vote Status">
-                        <span>{hostInfo.foundationVoteStatus}</span>
+                        <span>{candidateInfo.foundationVoteStatus}</span>
                     </Tooltip>
                 },
                 {
                     key: 'Last Vote Timestamp',
                     value: <Tooltip title="Last Vote Timestamp">
-                        <span>{hostInfo.lastVoteTimestamp}</span>
+                        <span>{candidateInfo.lastVoteTimestamp}</span>
                     </Tooltip>
                 },
                 {
                     key: 'Owner Address',
                     value: <Tooltip title="Owner Address">
-                        <span>{hostInfo.ownerAddress}</span>
+                        <span>{candidateInfo.ownerAddress}</span>
                     </Tooltip>
                 },
                 {
                     key: 'Proposal Fee',
                     value: <Tooltip title="Proposal Fee">
-                        <span>{hostInfo.proposalFee}</span>
+                        <span>{candidateInfo.proposalFee}</span>
                     </Tooltip>
                 },
                 {
                     key: 'Short Name',
                     value: <Tooltip title="Short Name">
-                        <span>{hostInfo.shortName}</span>
+                        <span>{candidateInfo.shortName}</span>
                     </Tooltip>
                 },
                 {
                     key: 'Status',
                     value: <Tooltip title="Status">
-                        <span>{hostInfo.status}</span>
+                        <span>{candidateInfo.status}</span>
                     </Tooltip>
                 },
                 {
                     key: 'Status Change Timestamp',
                     value: <Tooltip title="Status Change Timestamp">
-                        <span>{hostInfo.statusChangeTimestamp}</span>
+                        <span>{candidateInfo.statusChangeTimestamp}</span>
                     </Tooltip>
                 },
             ] : [];
             setInfo({
-                hostInfo: hostInfo,
+                candidateInfo: candidateInfo,
                 tableHeadings: tableHeadings,
                 tableValues: tableValues
             });
         }
 
-        // If no address is set in local storage.
-        if (pathAddress === selfAddress)
-            history.push('/host');
-        else
-            fetchInfo();
-    }, [evernode, history, address, pathAddress, selfAddress]);
+        fetchInfo();
+    }, [evernode, history, candidateId]);
     return (
-        <>{address &&
+        <>{candidateId &&
             <Fragment>
                 <PageTitle
                     responsive={true}
                     titleHeading={
                         <div className="d-flex align-items-center display-7">
-                            {address}
+                            {candidateId}
                         </div>
                     }
                 >
@@ -118,7 +109,7 @@ const Candidate = (props) => {
                                     Candidate Info
                                 </h5>
                                 {(info &&
-                                    (info.hostInfo ? (
+                                    (info.candidateInfo ? (
                                         <RegularTable
                                             headings={info.tableHeadings}
                                             values={info.tableValues}
