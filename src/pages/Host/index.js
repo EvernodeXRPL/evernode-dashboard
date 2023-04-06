@@ -185,7 +185,7 @@ export default function Host(props) {
                 </Tooltip>}</span>
             </div>
           }
-          titleDescription={info ? (info?.hostInfo && <Typography type="p">{info.hostInfo.description}</Typography>) :
+          titleDescription={info ? (info?.hostInfo && <Typography type="p">{info.hostInfo.domain}</Typography>) :
             <Loader className="p-0" size="1rem" />}>
           <Hidden mdUp>
             <span>
