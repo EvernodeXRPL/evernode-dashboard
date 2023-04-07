@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import { useEvernode } from '../../services/Evernode';
 import FaucetBox from '../../components/FaucetBox/index'
 import Loader from '../../components/Loader';
-import Alert from '@mui/lab/Alert';
+import Alert from '@mui/material/Alert';
 
 const TestnetFaucet = () => {
   const evernode = useEvernode();
