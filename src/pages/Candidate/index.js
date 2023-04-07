@@ -60,8 +60,8 @@ const Candidate = (props) => {
                     </Tooltip>
                 },
                 {
-                    key: 'Proposal Fee Units (EVRs)',
-                    value: <Tooltip title="Proposal Fee Units (EVRs)">
+                    key: 'Proposal Fee (EVRs)',
+                    value: <Tooltip title="Proposal Fee (EVRs)">
                         <span>{candidateInfo.proposalFee}</span>
                     </Tooltip>
                 },

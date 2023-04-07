@@ -35,7 +35,7 @@ const Candidates = () => {
             candidateId: { title: "Candidate ID", className: 'text-start' },
             candidateStatus: { title: "Status", className: 'text-center' },
             positiveVoteCount: { title: "Positive Vote Count", className: 'text-center col-fixed-mw' },
-            proposalFee: { title: "Proposal Fee Units (EVRs)", className: 'text-center col-fixed-mw' },
+            proposalFee: { title: "Proposal Fee (EVRs)", className: 'text-center col-fixed-mw' },
             foundationVoteStatus: { title: "Foundation Vote Status", className: 'text-center' },
         };
         const tableValues = candidateList.map(candidate => {
