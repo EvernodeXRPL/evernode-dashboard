@@ -34,8 +34,8 @@ const Candidates = () => {
         const tableColumns = {
             candidateId: { title: "Candidate ID", className: 'text-start' },
             candidateStatus: { title: "Status", className: 'text-center' },
-            positiveVoteCount: { title: "positive Vote Count", className: 'text-center col-fixed-mw' },
-            proposalFee: { title: "Proposal Fee", className: 'text-center col-fixed-mw' },
+            positiveVoteCount: { title: "Positive Vote Count", className: 'text-center col-fixed-mw' },
+            proposalFee: { title: "Proposal Fee Units (EVRs)", className: 'text-center col-fixed-mw' },
             foundationVoteStatus: { title: "Foundation Vote Status", className: 'text-center' },
         };
         const tableValues = candidateList.map(candidate => {
@@ -55,12 +55,12 @@ const Candidates = () => {
                         <LabelText labelType="primary">
                             Elected
                         </LabelText> : candidate.status === "vetoed" ?
-                            <LabelText labelType="warning">
+                            <LabelText labelType="danger">
                                 Vetoed
                             </LabelText> : candidate.status === "expired" ?
                                 <LabelText labelType="dark">
                                     Expired
-                                </LabelText> : <LabelText labelType="danger">
+                                </LabelText> : <LabelText labelType="warning">
                                     Rejected
                                 </LabelText>,
                 positiveVoteCount: <div>{candidate.positiveVoteCount}</div>,
@@ -68,7 +68,7 @@ const Candidates = () => {
                 foundationVoteStatus: candidate.foundationVoteStatus === "supported" ?
                     <LabelText labelType="success">
                         Supported
-                    </LabelText> : <LabelText labelType="danger">
+                    </LabelText> : <LabelText labelType="warning">
                         Rejected
                     </LabelText>
             }

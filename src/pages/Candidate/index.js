@@ -41,7 +41,7 @@ const Candidate = (props) => {
                         <>
                             {candidateInfo.foundationVoteStatus === "supported" ? <LabelText labelType="success">
                                 Supported
-                            </LabelText> : <LabelText labelType="danger">
+                            </LabelText> : <LabelText labelType="warning">
                                 Rejected
                             </LabelText>}
                         </>
@@ -60,8 +60,8 @@ const Candidate = (props) => {
                     </Tooltip>
                 },
                 {
-                    key: 'Proposal Fee',
-                    value: <Tooltip title="Proposal Fee">
+                    key: 'Proposal Fee Units (EVRs)',
+                    value: <Tooltip title="Proposal Fee Units (EVRs)">
                         <span>{candidateInfo.proposalFee}</span>
                     </Tooltip>
                 },
@@ -81,12 +81,12 @@ const Candidate = (props) => {
                                 <LabelText labelType="primary">
                                     Elected
                                 </LabelText> : candidate.status === "vetoed" ?
-                                    <LabelText labelType="warning">
+                                    <LabelText labelType="danger">
                                         Vetoed
                                     </LabelText> : candidate.status === "expired" ?
                                         <LabelText labelType="dark">
                                             Expired
-                                        </LabelText> : <LabelText labelType="danger">
+                                        </LabelText> : <LabelText labelType="warning">
                                             Rejected
                                         </LabelText>}
                         </>
