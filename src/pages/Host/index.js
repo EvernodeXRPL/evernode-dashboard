@@ -32,7 +32,7 @@ export default function Host(props) {
   const evernode = useEvernode();
 
   const selfAddress = localStorage.getItem(StorageKeys.hostAddress);
-  const pathAddress = props.match.params.address;
+  const pathAddress = props.address;
 
   const [address, setAddress] = React.useState(pathAddress || selfAddress);
   const [inputAddress, setInputAddress] = React.useState(null);

@@ -57,29 +57,53 @@ const Routes = () => {
                 ]}>
                 <LeftSidebar>
                   <Switch location={location} key={location.pathname}>
-                    <motion.div
-                      initial="initial"
-                      animate="in"
-                      exit="out"
-                      variants={pageVariants}
-                      transition={pageTransition}>
-                      <Route
-                        path="/hosts"
-                        component={Hosts}
-                      />
-                      <Route
-                        path="/host/:address?"
-                        component={Host}
-                      />
-                      <Route
-                        path="/registry"
-                        component={Registry}
-                      />
-                      <Route
-                        path="/testnet-faucet"
-                        component={TestnetFaucet}
-                      />
-                    </motion.div>
+                    <Route path="/hosts">
+                      <motion.div
+                        initial="initial"
+                        animate="in"
+                        exit="out"
+                        variants={pageVariants}
+                        transition={pageTransition}
+                      >
+                        <Hosts/>
+                      </motion.div>
+                    </Route>
+                    <Route 
+                      path="/host/:address?"
+                      render={(routeProps) => (
+                        <motion.div
+                          initial="initial"
+                          animate="in"
+                          exit="out"
+                          variants={pageVariants}
+                          transition={pageTransition}
+                        >
+                          <Host address={routeProps.match.params.address} />
+                        </motion.div>
+                      )}
+                    />
+                    <Route path="/registry">
+                      <motion.div
+                        initial="initial"
+                        animate="in"
+                        exit="out"
+                        variants={pageVariants}
+                        transition={pageTransition}
+                      >
+                        <Registry/>
+                      </motion.div>
+                    </Route>
+                    <Route path="/testnet-faucet">
+                      <motion.div
+                        initial="initial"
+                        animate="in"
+                        exit="out"
+                        variants={pageVariants}
+                        transition={pageTransition}
+                      >
+                        <TestnetFaucet/>
+                      </motion.div>
+                    </Route>
                   </Switch>
                 </LeftSidebar>
               </Route>
