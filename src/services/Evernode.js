@@ -25,6 +25,7 @@ export const EvernodeProvider = (props) => {
         testnetFaucet: props.testnetFaucet || testnetFaucet,
         getCandidates: props.getCandidates || getCandidates,
         getCandidateById: props.getCandidateById || getCandidateById,
+        getCandidateType: props.getCandidateType || getCandidateType
     }
 
     const connectXrpl = async () => {
@@ -88,8 +89,11 @@ const getCandidates = async (filters = null, pageSize = null, nextPageToken = nu
 }
 
 const getCandidateById = async (candidateId) => {
-    console.log('candidateId', candidateId)
     return governorClient.getCandidateById(candidateId);
+}
+
+const getCandidateType = async (candidateId) => {
+    return evernode.StateHelpers.getCandidateType(candidateId);
 }
 
 const decodeLeaseUri = (uri) => {

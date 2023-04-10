@@ -7,6 +7,7 @@ import CustomTable from '../../components/CustomTable';
 import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
 import LabelText from '../../components/Label/LabelText'
+import { CandidateType } from "../../common/constants"
 
 const PAGE_SIZE = 10;
 
@@ -18,6 +19,11 @@ const Candidates = () => {
     const [nextPageToken, setNextPageToken] = useState(null);
     const [pageQueue, setPageQueue] = useState([]);
     const [isCandidatesLoading, setIsCandidatesLoading] = useState(false);
+
+    const updateCandidateType = useCallback(async (candidate) => {
+        const candidateType = await evernode.getCandidateType(candidate.id);
+        return { ...candidate, candidateType };
+    }, [evernode]);
 
     const loadCandidates = useCallback(async (pageToken = null) => {
         const data = await evernode.getCandidates(null, PAGE_SIZE, pageToken);
@@ -31,14 +37,18 @@ const Candidates = () => {
             setNextPageToken(null);
         }
 
+        const updatedCandidateList = await Promise.all(candidateList.map(updateCandidateType));
+
         const tableColumns = {
             candidateId: { title: "Candidate ID", className: 'text-start' },
             candidateStatus: { title: "Status", className: 'text-center' },
             positiveVoteCount: { title: "Positive Vote Count", className: 'text-center col-fixed-mw' },
             proposalFee: { title: "Proposal Fee (EVRs)", className: 'text-center col-fixed-mw' },
             foundationVoteStatus: { title: "Foundation Vote Status", className: 'text-center' },
+            candidateType: { title: "Candidate Type", className: 'text-center' },
         };
-        const tableValues = candidateList.map(candidate => {
+        const tableValues = updatedCandidateList.map((candidate) => {
+
             return {
                 key: candidate.id,
                 candidateId: <div className="d-flex align-items-center">
@@ -70,18 +80,19 @@ const Candidates = () => {
                         Supported
                     </LabelText> : <LabelText labelType="warning">
                         Rejected
-                    </LabelText>
+                    </LabelText>,
+                candidateType: <div>{candidate.candidateType === 1 ? CandidateType.newHookCandidate : candidate.candidateType === 2 ? CandidateType.pilotedModeCandidate : CandidateType.dudHostCandidate}</div>,
             }
         });
 
         setCandidates({
-            candidates: candidateList,
+            candidates: updatedCandidateList,
             tableColumns: tableColumns,
             tableValues: tableValues
         });
 
         setIsCandidatesLoading(false);
-    }, [evernode]);
+    }, [evernode, updateCandidateType]);
 
     useEffect(() => {
         loadCandidates();

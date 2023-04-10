@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import PageTitle from '../../layout-components/PageTitle';
 import RegularTable from '../../components/RegularTable';
 import LabelText from '../../components/Label/LabelText'
+import { CandidateType } from "../../common/constants"
 
 import {
     Grid,
@@ -25,11 +26,31 @@ const Candidate = (props) => {
             setInfo(null);
             const candidate = await evernode.getCandidateById(candidateId);
             const candidateInfo = (candidate) ? candidate : null;
+            const candidateType = await evernode.getCandidateType(candidateId);
+
+            let candidateTypeName;
+            switch (candidateType) {
+                case 1:
+                    candidateTypeName = CandidateType.newHookCandidate
+                    break;
+                case 2:
+                    candidateTypeName = CandidateType.pilotedModeCandidate
+                    break;
+                default:
+                    candidateTypeName = CandidateType.dudHostCandidate
+            }
+
             const tableHeadings = {
                 key: 'Key',
                 value: 'Value'
             }
             let tableValues = candidateInfo ? [
+                {
+                    key: 'Candidate Type',
+                    value: <Tooltip title="Candidate Type">
+                        <span>{candidateTypeName}</span>
+                    </Tooltip>
+                },
                 {
                     key: 'Created Timestamp',
                     value: <Tooltip title="Created Timestamp"><span>{candidateInfo.createdTimestamp
@@ -47,24 +68,24 @@ const Candidate = (props) => {
                         </>
                     </Tooltip>
                 },
-                {
+                (candidateInfo.ownerAddress ? {
                     key: 'Last Vote Timestamp',
                     value: <Tooltip title="Last Vote Timestamp">
                         <span>{candidateInfo.lastVoteTimestamp}</span>
                     </Tooltip>
-                },
-                {
+                } : {}),
+                (candidateInfo.proposalFee ? {
                     key: 'Owner Address',
                     value: <Tooltip title="Owner Address">
                         <span>{candidateInfo.ownerAddress}</span>
                     </Tooltip>
-                },
-                {
+                } : {}),
+                (candidateInfo.proposalFee ? {
                     key: 'Proposal Fee (EVRs)',
                     value: <Tooltip title="Proposal Fee (EVRs)">
                         <span>{candidateInfo.proposalFee}</span>
                     </Tooltip>
-                },
+                } : {}),
                 {
                     key: 'Short Name',
                     value: <Tooltip title="Short Name">
