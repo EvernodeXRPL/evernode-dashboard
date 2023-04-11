@@ -211,7 +211,7 @@ export default function Registry() {
         },
         {
           key: 'Elected Proposal Unique Id',
-          value: <Tooltip title="Most recently elected candidate"><span>{config.governanceInfo.electedProposalUniqueId}</span></Tooltip>
+          value: <Tooltip title="Most recently elected candidate"><span>{config.governanceInfo.electedProposalUniqueId.match(/^0+$/) ? '-' : config.governanceInfo.electedProposalUniqueId}</span></Tooltip>
         },
         {
           key: 'Proposal Elected Timestamp',
@@ -227,7 +227,7 @@ export default function Registry() {
         // },
         {
           key: 'Governance Mode',
-          value: <Tooltip title="Current mode of governance"><span>{config.governanceInfo.governanceMode}</span></Tooltip>
+          value: <Tooltip title="Current mode of governance"><span>{config.governanceInfo.governanceMode.toUpperCase()}</span></Tooltip>
         },
         {
           key: 'Last Candidate Idx',
