@@ -38,7 +38,8 @@ export default function RegularTable(props) {
             </TableRow>
           </TableHead>}
           <TableBody>
-            {values.map(value => (
+            {/* Checking whether there is a non empty object - Object.keys(value).length !== 0*/}
+            {values.map(value => (Object.keys(value).length !== 0 &&
               <TableRow key={value[keys[0]]}>
                 {keys.map((k, i) => {
                   if (value['cellConfigs'] && i === (value['cellConfigs'].colspan) - 1)

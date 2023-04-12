@@ -23,6 +23,9 @@ export const EvernodeProvider = (props) => {
         getEVRBalance: props.getEVRBalance || getEVRBalance,
         onLedger: props.onLedger || onLedger,
         testnetFaucet: props.testnetFaucet || testnetFaucet,
+        getCandidates: props.getCandidates || getCandidates,
+        getCandidateById: props.getCandidateById || getCandidateById,
+        getCandidateType: props.getCandidateType || getCandidateType
     }
 
     const connectXrpl = async () => {
@@ -55,10 +58,10 @@ const xrplApi = new evernode.XrplApi(rippledServer);
 evernode.Defaults.set({
     governorAddress: governorAddress,
     rippledServer: rippledServer,
-    xrplApi: xrplApi
+    xrplApi: xrplApi,
 });
 
-let governorClient =  await evernode.HookClientFactory.create(evernode.HookTypes.governor);
+let governorClient = await evernode.HookClientFactory.create(evernode.HookTypes.governor);
 
 const getGovernorAddress = () => {
     return governorAddress;
@@ -79,6 +82,18 @@ const getTos = async () => {
 
 const getHosts = async (filters = null, pageSize = null, nextPageToken = null) => {
     return governorClient.getHosts(filters, pageSize, nextPageToken);
+}
+
+const getCandidates = async (filters = null, pageSize = null, nextPageToken = null) => {
+    return governorClient.getCandidates(filters, pageSize, nextPageToken);
+}
+
+const getCandidateById = async (candidateId) => {
+    return governorClient.getCandidateById(candidateId);
+}
+
+const getCandidateType = async (candidateId) => {
+    return evernode.StateHelpers.getCandidateType(candidateId);
 }
 
 const decodeLeaseUri = (uri) => {
