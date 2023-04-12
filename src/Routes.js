@@ -14,6 +14,8 @@ const Hosts = lazy(() => import('./pages/Hosts'));
 const Host = lazy(() => import('./pages/Host'));
 const Registry = lazy(() => import('./pages/Registry'));
 const TestnetFaucet = lazy(() => import('./pages/TestnetFaucet'));
+const Candidates = lazy(() => import('./pages/Candidates'));
+const Candidate = lazy(() => import('./pages/Candidate'));
 
 const Routes = () => {
   const location = useLocation();
@@ -52,7 +54,9 @@ const Routes = () => {
                   '/hosts',
                   '/host/:address?',
                   '/registry',
-                  '/testnet-faucet'
+                  '/testnet-faucet',
+                  '/candidates',
+                  '/candidate/:candidateId?'
                 ]}>
                 <LeftSidebar>
                   <Switch location={location} key={location.pathname}>
@@ -77,6 +81,14 @@ const Routes = () => {
                       <Route
                         path="/testnet-faucet"
                         component={TestnetFaucet}
+                      />
+                      <Route
+                        path="/candidates"
+                        component={Candidates}
+                      />
+                      <Route
+                        path="/candidate/:candidateId?"
+                        component={Candidate}
                       />
                     </motion.div>
                   </Switch>
