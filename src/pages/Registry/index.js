@@ -215,12 +215,12 @@ export default function Registry() {
         },
         {
           key: 'Proposal Elected Timestamp',
-          value: <Tooltip title="Timestamp when the most recently elected candidate was elected"><span>{config.governanceInfo.proposalElectedTimestamp}</span></Tooltip>
+          value: <Tooltip title="Timestamp when the most recently elected candidate was elected"><span>{config.governanceInfo.proposalElectedTimestamp === 0 ? '-' : config.governanceInfo.proposalElectedTimestamp}</span></Tooltip>
         },
-        {
-          key: 'Foundation Last Voted Candidate Idx',
-          value: <span>{config.governanceInfo.foundationLastVotedCandidateIdx}</span>
-        },
+        // {
+        //   key: 'Foundation Last Voted Candidate Idx',
+        //   value: <Tooltip title=""><span>{config.governanceInfo.foundationLastVotedCandidateIdx}</span></Tooltip>
+        // },
         // {
         //   key: 'Foundation Last Voted Timestamp',
         //   value: <Tooltip title="Timestamp when the foundation's last vote was received"><span>{config.governanceInfo.foundationLastVotedTimestamp}</span></Tooltip>
@@ -319,11 +319,11 @@ export default function Registry() {
             <CardHeader className="pt-3 pb-2" title={<Typography style={{ fontSize: '1.54rem', fontWeight: 'bold' }} >Governance Configurations</Typography>} />
             <CardContent className="p-0">
               {(governanceConfigs && <RegularTable
-                  headings={governanceConfigs.tableHeadings}
-                  values={governanceConfigs.tableValues}
-                  highlight={['key']}
-                  hideHeadings />) ||
-              <Loader className="p-4" />}
+                headings={governanceConfigs.tableHeadings}
+                values={governanceConfigs.tableValues}
+                highlight={['key']}
+                hideHeadings />) ||
+                <Loader className="p-4" />}
             </CardContent>
           </Card>
         </Grid>
