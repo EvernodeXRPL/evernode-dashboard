@@ -153,14 +153,14 @@ const Candidate = (props) => {
                 <PageTitle
                     responsive={true}
                     titleHeading={
-                        <div className="d-flex align-items-center display-7">
+                        <div className="d-flex align-items-center display-7 singleCandidateTitle">
                             {candidateId}
                         </div>
                     }
                 >
                 </PageTitle>
                 <Grid container spacing={4}>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={12}>
                         <Card
                             style={{ border: "none", boxShadow: "none" }}
                             className="mb-4 bg-transparent"

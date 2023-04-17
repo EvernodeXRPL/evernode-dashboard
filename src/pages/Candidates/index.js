@@ -50,11 +50,11 @@ const Candidates = () => {
         const tableValues = updatedCandidateList.map((candidate) => {
 
             return {
-                key: candidate.id,
+                key: candidate.uniqueId,
                 candidateId: <div className="d-flex align-items-center">
                     <div>
                         <p className="font-weight-bold m-0">
-                            {candidate.id}
+                            {candidate.uniqueId}
                         </p>
                     </div>
                 </div>,
