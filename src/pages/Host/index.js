@@ -27,6 +27,7 @@ import EvrBalance from '../../business-components/EvrBalance';
 import CPUModel from '../../business-components/CPUModel';
 import InstanceSpecs from '../../business-components/InstanceSpecs';
 import ModalDialog from '../../components/ModalDialog';
+import CopyCard from '../../components/CopyCard';
 
 const useStyles = makeStyles({
   root: {
@@ -92,9 +93,18 @@ export default function Host(props) {
       const hosts = await evernode.getHosts({ address: address });
       const config = await evernode.getConfigs();
       const hostInfo = (hosts && hosts.length) ? hosts[0] : null;
+      const dudHostCandidates = await evernode.getDudHostCandidatesByOwner(address);
+      const candidate = await evernode.getCandidateByOwner(address);
       const tableHeadings = {
         key: 'Key',
         value: 'Value'
+      }
+      let dudHostCandidateList = []
+      for (var dudHostCandidate of dudHostCandidates) {
+        dudHostCandidateList.push({
+          key: 'Id',
+          value: <Tooltip title="DudHost Candidate details"><Button className="tos-button" size="small" variant="outlined">{dudHostCandidate.id}...</Button></Tooltip>,
+        })
       }
       let tableValues = hostInfo ? [
         {
@@ -149,7 +159,9 @@ export default function Host(props) {
         evrBalance: evrBalance,
         hostInfo: hostInfo,
         tableHeadings: tableHeadings,
-        tableValues: tableValues
+        tableValues: tableValues,
+        dudHostCandidates: dudHostCandidates,
+        candidate: candidate
       });
     }
 
@@ -251,6 +263,35 @@ export default function Host(props) {
                 {address && <Leases address={address} />}
               </CardContent>
             </Card>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <div className='col'>
+              <CardContent className="p-0 row">
+                <h5 className="card-title font-weight-bold font-size-md pt-3">
+                  New Hook Proposal
+                </h5>
+                {(info && (info.candidate ?
+                  (
+                    <CopyCard address={info.candidate.uniqueId} />
+                  ) : (
+                    <span>No new hook proposal to show</span>
+                  ))) || <Loader className="p-4" />}
+              </CardContent>
+              <CardContent className="p-0 row">
+                <h5 className="card-title font-weight-bold font-size-md pt-3">
+                  Dud Host Reports
+                </h5>
+                {(info &&
+                  (info.dudHostCandidates ? (
+                    info.dudHostCandidates.map((dudHostCandidate, i) => {
+                      return <CopyCard address={dudHostCandidate.uniqueId} key={i} />
+                    })
+                  ) : (
+                    <span>No dud host reports to show</span>
+                  ))) || <Loader className="p-4" />}
+                <br />
+              </CardContent>
+            </div>
           </Grid>
         </Grid>
       </Fragment >}

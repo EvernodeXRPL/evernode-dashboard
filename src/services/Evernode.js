@@ -25,7 +25,9 @@ export const EvernodeProvider = (props) => {
         testnetFaucet: props.testnetFaucet || testnetFaucet,
         getCandidates: props.getCandidates || getCandidates,
         getCandidateById: props.getCandidateById || getCandidateById,
-        getCandidateType: props.getCandidateType || getCandidateType
+        getCandidateType: props.getCandidateType || getCandidateType,
+        getDudHostCandidatesByOwner: props.getDudHostCandidatesByOwner || getDudHostCandidatesByOwner,
+        getCandidateByOwner: props.getCandidateByOwner || getCandidateByOwner,
     }
 
     const connectXrpl = async () => {
@@ -58,7 +60,7 @@ const xrplApi = new evernode.XrplApi(rippledServer);
 evernode.Defaults.set({
     governorAddress: governorAddress,
     rippledServer: rippledServer,
-    xrplApi: xrplApi,
+    xrplApi: xrplApi
 });
 
 let governorClient = await evernode.HookClientFactory.create(evernode.HookTypes.governor);
@@ -98,6 +100,14 @@ const getCandidateType = async (candidateId) => {
 
 const decodeLeaseUri = (uri) => {
     return evernode.UtilHelpers.decodeLeaseTokenUri(uri);
+}
+
+const getDudHostCandidatesByOwner = async (address) => {
+    return governorClient.getDudHostCandidatesByOwner(address);
+}
+
+const getCandidateByOwner = async (address) => {
+    return governorClient.getCandidateByOwner(address);
 }
 
 const getLeases = async (address) => {
