@@ -1,9 +1,22 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Card, Button, Snackbar, Tooltip } from "@material-ui/core";
+
 import { FileCopyOutlined } from "@material-ui/icons";
 
 export default function CopyCard(props) {
-  const { text, handleClick, handleClose, candidateRoute, open } = props;
+  const { text, candidateRoute } = props;
+  const [open, setOpen] = useState(false);
+  const handleClick = () => {
+    setOpen(true);
+    navigator.clipboard.writeText(text);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
   return (
     <Fragment>
       <Card className={`row ${"copy-card"} pt-2 pb-2`}>
