@@ -276,7 +276,7 @@ export default function Host(props) {
                 </h5>
                 {(info && (info.candidate ?
                   (
-                    <CopyCard text={info.candidate.uniqueId} candidateRoute={() => candidateRoute(info.candidate.uniqueId)} />
+                    <CopyCard text={info.candidate.uniqueId} handleTextClick={() => candidateRoute(info.candidate.uniqueId)} />
                   ) : (
                     <span>No new hook proposal to show</span>
                   ))) || <Loader className="p-4" />}
@@ -288,7 +288,7 @@ export default function Host(props) {
                 {(info &&
                   (info.dudHostCandidates ? (
                     info.dudHostCandidates.map((dudHostCandidate, i) => {
-                      return <CopyCard text={dudHostCandidate.uniqueId} key={i} candidateRoute={() => candidateRoute(dudHostCandidate.uniqueId)} />
+                      return <CopyCard text={dudHostCandidate.uniqueId} key={i} handleTextClick={() => candidateRoute(dudHostCandidate.uniqueId)} />
                     })
                   ) : (
                     <span>No dud host reports to show</span>
