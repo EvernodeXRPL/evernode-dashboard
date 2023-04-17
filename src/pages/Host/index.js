@@ -60,6 +60,7 @@ export default function Host(props) {
   const selfAddress = localStorage.getItem(StorageKeys.hostAddress);
   const pathAddress = props.match.params.address;
 
+  const [open, setOpen] = React.useState(false);
   const [address, setAddress] = React.useState(pathAddress || selfAddress);
   const [inputAddress, setInputAddress] = React.useState(null);
   const [info, setInfo] = React.useState(null);
@@ -86,6 +87,21 @@ export default function Host(props) {
     if (!address)
       history.push('/')
   }, [address, history]);
+
+  const handleClick = function (text) {
+    setOpen(true);
+    navigator.clipboard.writeText(text);
+  };
+  const candidateRoute = function (text) {
+    history.push(`/candidate/${text}`);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -272,7 +288,7 @@ export default function Host(props) {
                 </h5>
                 {(info && (info.candidate ?
                   (
-                    <CopyCard address={info.candidate.uniqueId} />
+                    <CopyCard text={info.candidate.uniqueId} handleClick={() => handleClick(info.candidate.uniqueId)} candidateRoute={() => candidateRoute(info.candidate.uniqueId)} handleClose={handleClose} open={open} />
                   ) : (
                     <span>No new hook proposal to show</span>
                   ))) || <Loader className="p-4" />}
@@ -284,7 +300,7 @@ export default function Host(props) {
                 {(info &&
                   (info.dudHostCandidates ? (
                     info.dudHostCandidates.map((dudHostCandidate, i) => {
-                      return <CopyCard address={dudHostCandidate.uniqueId} key={i} />
+                      return <CopyCard text={dudHostCandidate.uniqueId} key={i} handleClick={() => handleClick(dudHostCandidate.uniqueId)} candidateRoute={() => candidateRoute(dudHostCandidate.uniqueId)} handleClose={handleClose} open={open} />
                     })
                   ) : (
                     <span>No dud host reports to show</span>
