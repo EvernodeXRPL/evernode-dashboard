@@ -27,7 +27,7 @@ import EvrBalance from '../../business-components/EvrBalance';
 import CPUModel from '../../business-components/CPUModel';
 import InstanceSpecs from '../../business-components/InstanceSpecs';
 import ModalDialog from '../../components/ModalDialog';
-import CopyCard from '../../components/CopyCard';
+import CopyBox from '../../components/CopyBox';
 
 const useStyles = makeStyles({
   root: {
@@ -197,7 +197,7 @@ export default function Host(props) {
                 </Tooltip>}
               <span>{info?.hostInfo &&
                 <Tooltip title={info.hostInfo.active ? 'Active' : 'Inactive'}>
-                  <div className={`ml - 1 rounded - circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
+                  <div className={`ml-1 rounded-circle ${info.hostInfo.active ? 'online' : 'offline'}`}></div>
                 </Tooltip>}</span>
             </div>
           }
@@ -270,31 +270,33 @@ export default function Host(props) {
           </Grid>
           <Grid item xs={12} md={6}>
             <div className='col'>
-              <CardContent className="p-0 row">
-                <h5 className="card-title font-weight-bold font-size-md pt-3">
-                  New Hook Proposal
-                </h5>
-                {(info && (info.candidate ?
-                  (
-                    <CopyCard text={info.candidate.uniqueId} handleTextClick={() => candidateRoute(info.candidate.uniqueId)} />
-                  ) : (
-                    <span>No new hook proposal to show</span>
-                  ))) || <Loader className="p-4" />}
-              </CardContent>
-              <CardContent className="p-0 row">
-                <h5 className="card-title font-weight-bold font-size-md pt-3">
-                  Dud Host Reports
-                </h5>
-                {(info &&
-                  (info.dudHostCandidates ? (
-                    info.dudHostCandidates.map((dudHostCandidate, i) => {
-                      return <CopyCard text={dudHostCandidate.uniqueId} key={i} handleTextClick={() => candidateRoute(dudHostCandidate.uniqueId)} />
-                    })
-                  ) : (
-                    <span>No dud host reports to show</span>
-                  ))) || <Loader className="p-4" />}
-                <br />
-              </CardContent>
+              {info && info.candidate &&
+                <CardContent className="p-0 row">
+                  <h5 className="card-title font-weight-bold font-size-md pt-3">
+                    Proposed New Hook Candidate
+                  </h5>
+                  <Card className="row copy-card p-2">
+                    <CopyBox copyText={info.candidate.uniqueId}>
+                      <Button onClick={() => candidateRoute(info.candidate.uniqueId)}>{info.candidate.uniqueId}</Button>
+                    </CopyBox>
+                  </Card>
+                </CardContent>
+              }
+              {info && info.dudHostCandidates && info.dudHostCandidates.length > 0 &&
+                info.dudHostCandidates.map((dudHostCandidate, i) => {
+                  return <CardContent className="p-0 row">
+                    <h5 className="card-title font-weight-bold font-size-md pt-3">
+                      Proposed Dud Host Reports
+                    </h5>
+                    <Card className="row copy-card p-2">
+                      <CopyBox copyText={dudHostCandidate.uniqueId} key={i}>
+                        <Button onClick={() => candidateRoute(dudHostCandidate.uniqueId)}>{dudHostCandidate.uniqueId}</Button>
+                      </CopyBox>
+                    </Card>
+                  </CardContent>
+                })
+              }
+              <br />
             </div>
           </Grid>
         </Grid>

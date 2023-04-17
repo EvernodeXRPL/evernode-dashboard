@@ -29,7 +29,7 @@ export default function CustomTable(props) {
                 </tr>
               </thead>}
               <tbody>
-                {values.map((value, i) => (
+                {values.length > 0 ? values.map((value, i) => (
                   <tr key={i} onClick={() => onRowClick(value)} style={{ cursor: 'pointer' }}>
                     {keys.map((k, j) => {
                       return <td key={j} className={columns[k].className}>
@@ -37,7 +37,7 @@ export default function CustomTable(props) {
                       </td>
                     })}
                   </tr>
-                ))}
+                )) : <tr><td colSpan={keys.length} className="text-center">No data to show</td></tr>}
               </tbody>
             </table>
           </div>
