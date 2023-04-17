@@ -92,8 +92,8 @@ export default function Host(props) {
     setOpen(true);
     navigator.clipboard.writeText(text);
   };
-  const candidateRoute = function (text) {
-    history.push(`/candidate/${text}`);
+  const candidateRoute = function (address) {
+    history.push(`/candidate/${address}`);
   };
 
   const handleClose = (event, reason) => {
