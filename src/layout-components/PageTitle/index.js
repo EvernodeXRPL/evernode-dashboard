@@ -5,7 +5,7 @@ import { Paper } from '@material-ui/core';
 function PageTitle(props) {
   return (
     <Fragment>
-      <Paper elevation={2} className="app-page-title"
+      <Paper elevation={2} className={`app-page-title ${props.singleCandidateWrapperClass}`}
         style={{ width: '100%', margin: '0 0 2rem 0', padding: '1rem' }}
       >
         <div>
