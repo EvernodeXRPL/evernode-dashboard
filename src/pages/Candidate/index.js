@@ -157,6 +157,7 @@ const Candidate = (props) => {
                             {candidateId}
                         </div>
                     }
+                    singleCandidateWrapperClass="singleCandidateWrapperClass"
                 >
                 </PageTitle>
                 <Grid container spacing={4}>
