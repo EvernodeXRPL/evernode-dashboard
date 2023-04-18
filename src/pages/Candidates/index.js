@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import { Button } from '@material-ui/core';
+import { Badge, Button } from '@material-ui/core';
 
 import PageTitle from '../../layout-components/PageTitle';
 import CustomTable from '../../components/CustomTable';
@@ -8,6 +8,7 @@ import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
 import LabelText from '../../components/Label/LabelText'
 import { CandidateType } from "../../common/constants"
+import CopyBox from '../../components/CopyBox';
 
 const PAGE_SIZE = 10;
 
@@ -52,11 +53,11 @@ const Candidates = () => {
             return {
                 key: candidate.uniqueId,
                 candidateId: <div className="d-flex align-items-center">
-                    <div>
+                    <CopyBox copyText={candidate.uniqueId} iconSize="16">
                         <p className="font-weight-bold m-0">
                             {candidate.uniqueId}
                         </p>
-                    </div>
+                    </CopyBox>
                 </div>,
                 candidateStatus: candidate.status === "supported" ?
                     <LabelText labelType="success">
@@ -81,7 +82,7 @@ const Candidates = () => {
                     </LabelText> : <LabelText labelType="warning">
                         Rejected
                     </LabelText>,
-                candidateType: <div>{candidate.candidateType === 1 ? CandidateType.newHookCandidate : candidate.candidateType === 2 ? CandidateType.pilotedModeCandidate : CandidateType.dudHostCandidate}</div>,
+                candidateType: <Badge badgeContent={candidate.candidateType === 1 ? CandidateType.newHookCandidate : candidate.candidateType === 2 ? CandidateType.pilotedModeCandidate : CandidateType.dudHostCandidate}></Badge>,
             }
         });
 

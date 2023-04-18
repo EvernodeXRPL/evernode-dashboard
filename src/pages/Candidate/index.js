@@ -9,7 +9,7 @@ import {
     Grid,
     Card,
     CardContent,
-    Tooltip,
+    Tooltip
 } from '@material-ui/core';
 
 import { useEvernode } from '../../services/Evernode';
@@ -56,13 +56,13 @@ const Candidate = (props) => {
                     value: <Tooltip title="Governor Hook Hash">
                         <span>{candidateInfo.governorHookHash}</span>
                     </Tooltip>
-                }: {}),
+                } : {}),
                 (candidateInfo.heartbeatHookHash ? {
                     key: 'Heartbeat Hook Hash',
                     value: <Tooltip title="Heartbeat Hook Hash">
                         <span>{candidateInfo.heartbeatHookHash}</span>
                     </Tooltip>
-                }: {}),
+                } : {}),
                 (candidateInfo.registryHookHash ? {
                     key: 'Registry Hook Hash',
                     value: <Tooltip title="Registry Hook Hash">

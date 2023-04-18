@@ -1,8 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import { Button, Snackbar } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import MessageIcon from '@material-ui/icons/Message';
-import { FileCopyOutlined } from "@material-ui/icons";
 import PageTitle from '../../layout-components/PageTitle';
 import CustomTable from '../../components/CustomTable';
 import { useEvernode } from '../../services/Evernode';
@@ -10,6 +9,7 @@ import Loader from '../../components/Loader';
 import CountryFlag from '../../business-components/CountryFlag';
 import CPUModel from '../../business-components/CPUModel';
 import InstanceSpecs from '../../business-components/InstanceSpecs';
+import CopyBox from '../../components/CopyBox';
 
 const PAGE_SIZE = 10;
 
@@ -17,24 +17,10 @@ export default function Hosts() {
   const history = useHistory();
   const evernode = useEvernode();
 
-  const [open, setOpen] = useState(false);
   const [hosts, setHosts] = useState(null);
   const [nextPageToken, setNextPageToken] = useState(null);
   const [pageQueue, setPageQueue] = useState([]);
   const [isHostsLoading, setIsHostsLoading] = useState(false);
-
-  const handleClick = (address) => {
-    setOpen(true);
-    navigator.clipboard.writeText(address);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
 
   const loadHosts = useCallback(async (pageToken = null) => {
     const data = await evernode.getHosts(null, PAGE_SIZE, pageToken);
@@ -62,13 +48,14 @@ export default function Hosts() {
         address: <div className="d-flex align-items-center">
           <CountryFlag countryCode={host.countryCode} size="3em" />
           <div className="ml-3">
-            <p className="font-weight-bold m-0">
-              {host.address}
-              {host.hostMessage ? (
-                <MessageIcon className="host-message-icon" fontSize="small" />
-              ) : null}
-              <Button onClick={(e) => { handleClick(host.address); e.stopPropagation(); }} className="copy-button ml-1"><FileCopyOutlined style={{ fontSize: 16 }} /></Button>
-            </p>
+            <CopyBox copyText={host.address} iconSize="16">
+              <p className="font-weight-bold m-0">
+                {host.address}
+                {host.hostMessage ? (
+                  <MessageIcon className="host-message-icon" fontSize="small" />
+                ) : null}
+              </p>
+            </CopyBox>
             <span className="text-black-50 d-block py-1">
               {
                 host.version &&
@@ -140,12 +127,6 @@ export default function Hosts() {
           {nextPageToken && <Button className="pull-right" variant="contained" disabled={isHostsLoading} onClick={handleNextClick}>Next</Button>}
         </div>
       </div>)}
-      <Snackbar
-        open={open}
-        onClose={handleClose}
-        autoHideDuration={1000}
-        message="Copied to clipboard"
-      />
     </Fragment>
   );
 }
