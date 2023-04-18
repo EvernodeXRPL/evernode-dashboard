@@ -33,6 +33,9 @@ export default function CopyBox(props) {
           open={open}
           onClose={handleClose}
           autoHideDuration={1000}
+          anchorOrigin={{
+            horizontal: 'center', vertical: 'top'
+          }}
           message="Copied to clipboard"
           className="alert"
         />
