@@ -13,6 +13,7 @@
     "@material-ui/lab": "4.0.0-alpha.42",
     "evernode-js-client": "0.6.0",
     "framer-motion": "1.8.4",
+    "iso-3166-1": "^2.1.1",
     "node-sass": "7.0.1",
     "pe7-icon": "1.0.4",
     "react": "18.1.0",
