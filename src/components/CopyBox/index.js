@@ -37,7 +37,7 @@ export default function CopyBox(props) {
             horizontal: 'center', vertical: 'top'
           }}
           message="Copied to clipboard"
-          className="alert"
+          className={"alert " + props.alignment_class}
         />
       </div>
     </Fragment>

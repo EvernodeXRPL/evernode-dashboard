@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
 } from '@material-ui/core';
+import CopyBox from "../CopyBox";
 
 const FaucetBox = ({faucetBox}) => {
   const tableHeadings = {
@@ -14,11 +15,11 @@ const FaucetBox = ({faucetBox}) => {
   const tableValues = [
     {
       key: 'Address',
-      value: <span className='text-black'>{faucetBox.address}</span>,
+      value: <CopyBox copyText={faucetBox.address} iconSize="16"><span className='text-black'>{faucetBox.address}</span></CopyBox>,
     },
     {
       key: 'Secret',
-      value: <span className='text-black'>{faucetBox.secret}</span>,
+      value: <CopyBox copyText={faucetBox.secret} iconSize="16"><span className='text-black'>{faucetBox.secret}</span></CopyBox>,
     },
     {
       key: 'XRP',

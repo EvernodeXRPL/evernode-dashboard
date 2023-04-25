@@ -1,7 +1,7 @@
 //  Core
 .copy-box {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
 
   .copy-button {
     padding: 0 !important;
@@ -11,8 +11,14 @@
   }
 
   .alert {
+    top:0;
+    z-index: 10000;
     .MuiPaper-root {
       min-width: fit-content;
     }
+  }
+
+  .alert-inline{
+    top:revert;
   }
 }
