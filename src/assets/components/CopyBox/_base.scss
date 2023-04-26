@@ -9,16 +9,4 @@
     color: #3b3e66 !important;
     float: right;
   }
-
-  .alert {
-    top:0;
-    z-index: 10000;
-    .MuiPaper-root {
-      min-width: fit-content;
-    }
-  }
-
-  .alert-inline{
-    top:revert;
-  }
 }

@@ -48,7 +48,7 @@ export default function Hosts() {
         address: <div className="d-flex align-items-center">
           <CountryFlag countryCode={host.countryCode} size="3em" />
           <div className="ml-3">
-            <CopyBox copyText={host.address} iconSize="16" alignment_class={"alert-inline"}>
+            <CopyBox copyText={host.address} iconSize="16">
               <p className="font-weight-bold m-0">
                 {host.address}
                 {host.hostMessage ? (

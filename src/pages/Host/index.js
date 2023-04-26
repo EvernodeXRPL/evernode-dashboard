@@ -287,9 +287,9 @@ export default function Host(props) {
               </CardContent>
               }
               <CardContent className="p-0 row">
-                <h5 className="card-title font-weight-bold font-size-md pt-3">
+                {info && info.dudHostCandidates && info.dudHostCandidates.length > 0 && <h5 className="card-title font-weight-bold font-size-md pt-3">
                   Proposed Dud Host Reports
-                </h5>
+                </h5>}
                 {info && info.dudHostCandidates && info.dudHostCandidates.length > 0 &&
                 info.dudHostCandidates.map((dudHostCandidate, i) => {
                   return <><Card className="row copy-card p-2">
