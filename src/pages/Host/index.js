@@ -116,6 +116,10 @@ export default function Host(props) {
           value: <Tooltip title="Registration token Id"><span>{hostInfo.uriTokenId}</span></Tooltip>
         },
         {
+          key: 'Host Email',
+          value: <Tooltip title="Email address of the host owner"><span>{hostInfo.email}</span></Tooltip>
+        },
+        {
           key: 'Instances',
           value: <Tooltip title="Active instances out of Maximum instances">
             <span>{hostInfo.activeInstances || 0} out of {hostInfo.maxInstances || 0}</span>
@@ -271,31 +275,33 @@ export default function Host(props) {
           <Grid item xs={12} md={6}>
             <div className='col'>
               {info && info.candidate &&
-                <CardContent className="p-0 row">
-                  <h5 className="card-title font-weight-bold font-size-md pt-3">
-                    Proposed New Hook Candidate
-                  </h5>
-                  <Card className="row copy-card p-2">
-                    <CopyBox copyText={info.candidate.uniqueId}>
-                      <Button onClick={() => candidateRoute(info.candidate.uniqueId)}>{info.candidate.uniqueId}</Button>
+              <CardContent className="p-0 row">
+                <h5 className="card-title font-weight-bold font-size-md pt-3">
+                  Proposed New Hook Candidate
+                </h5>
+                <Card className="row copy-card p-2">
+                  <CopyBox copyText={info.candidate.uniqueId}>
+                    <Button onClick={() => candidateRoute(info.candidate.uniqueId)}>{info.candidate.uniqueId}</Button>
+                  </CopyBox>
+                </Card>
+              </CardContent>
+              }
+              <CardContent className="p-0 row">
+                {info && info.dudHostCandidates && info.dudHostCandidates.length > 0 && <h5 className="card-title font-weight-bold font-size-md pt-3">
+                  Proposed Dud Host Reports
+                </h5>}
+                {info && info.dudHostCandidates && info.dudHostCandidates.length > 0 &&
+                info.dudHostCandidates.map((dudHostCandidate, i) => {
+                  return <><Card className="row copy-card p-2">
+                    <CopyBox copyText={dudHostCandidate.uniqueId} key={i}>
+                      <Button onClick={() => candidateRoute(dudHostCandidate.uniqueId)}>{dudHostCandidate.uniqueId}</Button>
                     </CopyBox>
                   </Card>
-                </CardContent>
-              }
-              {info && info.dudHostCandidates && info.dudHostCandidates.length > 0 &&
-                info.dudHostCandidates.map((dudHostCandidate, i) => {
-                  return <CardContent className="p-0 row">
-                    <h5 className="card-title font-weight-bold font-size-md pt-3">
-                      Proposed Dud Host Reports
-                    </h5>
-                    <Card className="row copy-card p-2">
-                      <CopyBox copyText={dudHostCandidate.uniqueId} key={i}>
-                        <Button onClick={() => candidateRoute(dudHostCandidate.uniqueId)}>{dudHostCandidate.uniqueId}</Button>
-                      </CopyBox>
-                    </Card>
-                  </CardContent>
+                    <br />
+                  </>
                 })
-              }
+                }
+              </CardContent>
               <br />
             </div>
           </Grid>
