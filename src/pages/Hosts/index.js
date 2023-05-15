@@ -16,10 +16,9 @@ const PAGE_SIZE = 10;
 export default function Hosts() {
   const history = useHistory();
   const evernode = useEvernode();
+  const {nextPageToken, onChangeNextPageToken, pageQueue, onChangePageQueue} = useEvernode();
 
   const [hosts, setHosts] = useState(null);
-  const [nextPageToken, setNextPageToken] = useState(null);
-  const [pageQueue, setPageQueue] = useState([]);
   const [isHostsLoading, setIsHostsLoading] = useState(false);
 
   const loadHosts = useCallback(async (pageToken = null) => {
@@ -27,11 +26,11 @@ export default function Hosts() {
     let hostList;
     if (data.nextPageToken) {
       hostList = data.data;
-      setNextPageToken(data.nextPageToken);
+      onChangeNextPageToken(data.nextPageToken);
     }
     else {
       hostList = data;
-      setNextPageToken(null);
+      onChangeNextPageToken(null);
     }
 
     const tableColumns = {
@@ -89,10 +88,13 @@ export default function Hosts() {
     });
 
     setIsHostsLoading(false);
-  }, [evernode]);
+  }, []);
 
   useEffect(() => {
-    loadHosts();
+    if (pageQueue.length > 0)
+      loadHosts(pageQueue[pageQueue.length - 1]);
+    else
+      loadHosts();
   }, [loadHosts]);
 
   const handleRowClick = useCallback((e) => {
@@ -103,7 +105,7 @@ export default function Hosts() {
 
   const handleNextClick = useCallback(() => {
     setIsHostsLoading(true);
-    setPageQueue([...pageQueue, nextPageToken]);
+    onChangePageQueue(nextPageToken);
     loadHosts(nextPageToken);
   }, [loadHosts, pageQueue, nextPageToken]);
 

@@ -92,6 +92,21 @@ export default function Host(props) {
   };
 
   useEffect(() => {
+    const unlisten = history.listen((location, action) => {
+
+      if (action === 'POP') {
+        history.push({
+          pathname: `/`,
+        })
+      }
+    });
+
+    return () => {
+      unlisten();
+    };
+  }, [history]);
+
+  useEffect(() => {
     const fetchInfo = async () => {
       setInfo(null);
       const hosts = await evernode.getHosts({ address: address });
@@ -286,7 +301,7 @@ export default function Host(props) {
                 </Card>
               </CardContent>
               }
-              <CardContent className="p-0 row">
+              <CardContent className="p-0 row" key={i}>
                 {info && info.dudHostCandidates && info.dudHostCandidates.length > 0 && <h5 className="card-title font-weight-bold font-size-md pt-3">
                   Proposed Dud Host Reports
                 </h5>}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import ECDSA from 'xrpl/dist/npm/ECDSA';
 import tos from '../assets/data/tos.txt'
 import LoaderScreen from '../pages/LoaderScreen';
@@ -11,6 +11,27 @@ const { createContext, useContext } = React;
 const EvernodeContext = createContext(null);
 export const EvernodeProvider = (props) => {
     const [loading, setLoading] = useState(true);
+    const [nextPageToken, setNextPageToken] = useState(null);
+    const [pageQueue, setPageQueue] = useState([]);
+
+    const onChangeNextPageToken = (token) => {
+        setNextPageToken(token);
+    }
+
+    const onChangePageQueue = (pageToken, isRemove = false) => {
+        setPageQueue((prevState => {
+            if (isRemove) {
+                let newState = [...prevState];
+                return newState.slice(0, prevState.length - 1);
+            }
+            return [...prevState, pageToken]
+        }))
+    }
+
+    const resetPageTokens = () => {
+        setNextPageToken(null);
+        setPageQueue([]);
+    }
 
     const value = {
         getGovernorAddress: props.getGovernorAddress || getGovernorAddress,
@@ -28,6 +49,11 @@ export const EvernodeProvider = (props) => {
         getCandidateType: props.getCandidateType || getCandidateType,
         getDudHostCandidatesByOwner: props.getDudHostCandidatesByOwner || getDudHostCandidatesByOwner,
         getCandidateByOwner: props.getCandidateByOwner || getCandidateByOwner,
+        nextPageToken: nextPageToken,
+        onChangeNextPageToken: onChangeNextPageToken,
+        pageQueue: pageQueue,
+        onChangePageQueue: onChangePageQueue,
+        resetPageTokens: resetPageTokens
     }
 
     const connectXrpl = async () => {
