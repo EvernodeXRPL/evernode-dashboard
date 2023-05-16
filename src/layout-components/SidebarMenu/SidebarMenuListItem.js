@@ -28,7 +28,6 @@ const SidebarMenuListItem = props => {
   } = props;
 
   const [open, setOpen] = useState(openProp);
-  const evernode = useEvernode();
   const {resetPageTokens} = useEvernode();
 
   const handleToggle = () => {

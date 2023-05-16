@@ -88,6 +88,7 @@ export default function Hosts() {
     });
 
     setIsHostsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -95,6 +96,7 @@ export default function Hosts() {
       loadHosts(pageQueue[pageQueue.length - 1]);
     else
       loadHosts();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadHosts]);
 
   const handleRowClick = useCallback((e) => {
@@ -107,13 +109,15 @@ export default function Hosts() {
     setIsHostsLoading(true);
     onChangePageQueue(nextPageToken);
     loadHosts(nextPageToken);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadHosts, pageQueue, nextPageToken]);
 
   const handlePrevClick = useCallback(() => {
     setIsHostsLoading(true);
     const prevPageToken = pageQueue.length > 1 ? pageQueue[pageQueue.length - 2] : null;
-    setPageQueue(pageQueue.slice(0, pageQueue.length - 1));
+    onChangePageQueue(pageQueue.slice(0, pageQueue.length - 1));
     loadHosts(prevPageToken);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadHosts, pageQueue]);
 
   return (
