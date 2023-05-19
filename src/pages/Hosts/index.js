@@ -16,7 +16,7 @@ const PAGE_SIZE = 10;
 export default function Hosts() {
   const history = useHistory();
   const evernode = useEvernode();
-  const {nextPageToken, onChangeNextPageToken, pageQueue, onChangePageQueue} = useEvernode();
+  const {nextPageToken, updateNextPageToken, pageQueue, updatePageQueue} = useEvernode();
 
   const [hosts, setHosts] = useState(null);
   const [isHostsLoading, setIsHostsLoading] = useState(false);
@@ -26,11 +26,11 @@ export default function Hosts() {
     let hostList;
     if (data.nextPageToken) {
       hostList = data.data;
-      onChangeNextPageToken(data.nextPageToken);
+      updateNextPageToken(data.nextPageToken);
     }
     else {
       hostList = data;
-      onChangeNextPageToken(null);
+      updateNextPageToken(null);
     }
 
     const tableColumns = {
@@ -107,7 +107,7 @@ export default function Hosts() {
 
   const handleNextClick = useCallback(() => {
     setIsHostsLoading(true);
-    onChangePageQueue(nextPageToken);
+    updatePageQueue([...pageQueue,nextPageToken]);
     loadHosts(nextPageToken);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadHosts, pageQueue, nextPageToken]);
@@ -115,7 +115,7 @@ export default function Hosts() {
   const handlePrevClick = useCallback(() => {
     setIsHostsLoading(true);
     const prevPageToken = pageQueue.length > 1 ? pageQueue[pageQueue.length - 2] : null;
-    onChangePageQueue(pageQueue.slice(0, pageQueue.length - 1));
+    updatePageQueue(pageQueue.slice(0, pageQueue.length - 1));
     loadHosts(prevPageToken);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadHosts, pageQueue]);

@@ -14,11 +14,11 @@ export const EvernodeProvider = (props) => {
     const [nextPageToken, setNextPageToken] = useState(null);
     const [pageQueue, setPageQueue] = useState([]);
 
-    const onChangeNextPageToken = (token) => {
+    const updateNextPageToken = (token) => {
         setNextPageToken(token);
     }
 
-    const onChangePageQueue = (pageToken, isRemove = false) => {
+    const updatePageQueue = (pageToken, isRemove = false) => {
         setPageQueue((prevState => {
             if (isRemove) {
                 let newState = [...prevState];
@@ -50,9 +50,9 @@ export const EvernodeProvider = (props) => {
         getDudHostCandidatesByOwner: props.getDudHostCandidatesByOwner || getDudHostCandidatesByOwner,
         getCandidateByOwner: props.getCandidateByOwner || getCandidateByOwner,
         nextPageToken: nextPageToken,
-        onChangeNextPageToken: onChangeNextPageToken,
+        updateNextPageToken: updateNextPageToken,
         pageQueue: pageQueue,
-        onChangePageQueue: onChangePageQueue,
+        updatePageQueue: updatePageQueue,
         resetPageTokens: resetPageTokens
     }
 
