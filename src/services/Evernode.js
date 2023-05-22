@@ -18,14 +18,8 @@ export const EvernodeProvider = (props) => {
         setNextPageToken(token);
     }
 
-    const updatePageQueue = (pageToken, isRemove = false) => {
-        setPageQueue((prevState => {
-            if (isRemove) {
-                let newState = [...prevState];
-                return newState.slice(0, prevState.length - 1);
-            }
-            return [...prevState, pageToken]
-        }))
+    const updatePageQueue = (updatedPageQueue) => {
+        setPageQueue(updatedPageQueue);
     }
 
     const resetPageTokens = () => {
