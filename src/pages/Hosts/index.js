@@ -16,10 +16,9 @@ const PAGE_SIZE = 10;
 export default function Hosts() {
   const history = useHistory();
   const evernode = useEvernode();
+  const {nextPageToken, updateNextPageToken, pageQueue, updatePageQueue} = useEvernode();
 
   const [hosts, setHosts] = useState(null);
-  const [nextPageToken, setNextPageToken] = useState(null);
-  const [pageQueue, setPageQueue] = useState([]);
   const [isHostsLoading, setIsHostsLoading] = useState(false);
 
   const loadHosts = useCallback(async (pageToken = null) => {
@@ -27,11 +26,11 @@ export default function Hosts() {
     let hostList;
     if (data.nextPageToken) {
       hostList = data.data;
-      setNextPageToken(data.nextPageToken);
+      updateNextPageToken(data.nextPageToken);
     }
     else {
       hostList = data;
-      setNextPageToken(null);
+      updateNextPageToken(null);
     }
 
     const tableColumns = {
@@ -89,10 +88,15 @@ export default function Hosts() {
     });
 
     setIsHostsLoading(false);
-  }, [evernode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    loadHosts();
+    if (pageQueue.length > 0)
+      loadHosts(pageQueue[pageQueue.length - 1]);
+    else
+      loadHosts();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadHosts]);
 
   const handleRowClick = useCallback((e) => {
@@ -103,15 +107,17 @@ export default function Hosts() {
 
   const handleNextClick = useCallback(() => {
     setIsHostsLoading(true);
-    setPageQueue([...pageQueue, nextPageToken]);
+    updatePageQueue([...pageQueue,nextPageToken]);
     loadHosts(nextPageToken);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadHosts, pageQueue, nextPageToken]);
 
   const handlePrevClick = useCallback(() => {
     setIsHostsLoading(true);
     const prevPageToken = pageQueue.length > 1 ? pageQueue[pageQueue.length - 2] : null;
-    setPageQueue(pageQueue.slice(0, pageQueue.length - 1));
+    updatePageQueue(pageQueue.slice(0, pageQueue.length - 1));
     loadHosts(prevPageToken);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadHosts, pageQueue]);
 
   return (

@@ -10,7 +10,7 @@ const navItems = [
       {
         label: "Hosts",
         icon: DynamicFeedIcon,
-        to: "/hosts"
+        to: "/"
       },
       {
         label: "My Host",

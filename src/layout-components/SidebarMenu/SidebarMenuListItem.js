@@ -2,10 +2,9 @@ import React, { useState, forwardRef } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-
 import { ListItem, Button, Collapse } from '@material-ui/core';
-
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import {useEvernode} from "../../services/Evernode";
 
 const CustomRouterLink = forwardRef(function CustomLink(props, ref) {
   return (
@@ -29,6 +28,7 @@ const SidebarMenuListItem = props => {
   } = props;
 
   const [open, setOpen] = useState(openProp);
+  const {resetPageTokens} = useEvernode();
 
   const handleToggle = () => {
     setOpen(open => !open);
@@ -74,6 +74,9 @@ const SidebarMenuListItem = props => {
         className={clsx('app-sidebar-item', className)}
         disableGutters>
         <Button
+          onClick={()=>{
+            resetPageTokens();
+          }}
           activeClassName="active-item"
           color="primary"
           disableRipple
