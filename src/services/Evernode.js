@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ECDSA from 'xrpl/dist/npm/ECDSA';
 import tos from '../assets/data/tos.txt'
 import LoaderScreen from '../pages/LoaderScreen';
@@ -135,12 +135,14 @@ const getLeases = async (address) => {
     await client.connect();
 
     const leases = await client.xrplAcc.getURITokens();
-    const leaseTokens = leases.filter(n => evernode.EvernodeHelpers.isValidURI(n.URI,evernode.EvernodeConstants.LEASE_TOKEN_PREFIX_HEX))
+    const leaseTokens = leases.filter(n => evernode.EvernodeHelpers.isValidURI(n.URI, evernode.EvernodeConstants.LEASE_TOKEN_PREFIX_HEX))
 
-    return leaseTokens.map(leaseToken => {return {
-                    nfTokenId: leaseToken.index,
-                    uri: leaseToken.URI 
-                }});
+    return leaseTokens.map(leaseToken => {
+        return {
+            nfTokenId: leaseToken.index,
+            uri: leaseToken.URI
+        }
+    });
 }
 
 const getEVRBalance = async (address) => {
