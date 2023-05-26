@@ -65,15 +65,12 @@ const Candidates = () => {
                     </LabelText> : candidate.status === "elected" ?
                         <LabelText labelType="primary">
                             Elected
-                        </LabelText> : candidate.status === "vetoed" ?
-                            <LabelText labelType="danger">
-                                Vetoed
-                            </LabelText> : candidate.status === "expired" ?
-                                <LabelText labelType="dark">
-                                    Expired
-                                </LabelText> : <LabelText labelType="warning">
-                                    Rejected
-                                </LabelText>,
+                        </LabelText> : candidate.status === "purged" ?
+                            <LabelText labelType="dark">
+                                Purged
+                            </LabelText> : <LabelText labelType="warning">
+                                Rejected
+                            </LabelText>,
                 positiveVoteCount: <div>{candidate.positiveVoteCount}</div>,
                 proposalFee: <div>{candidate.proposalFee}</div>,
                 foundationVoteStatus: candidate.foundationVoteStatus === "supported" ?

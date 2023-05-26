@@ -119,12 +119,9 @@ const Candidate = (props) => {
                             </LabelText> : candidate.status === "elected" ?
                                 <LabelText labelType="primary">
                                     Elected
-                                </LabelText> : candidate.status === "vetoed" ?
-                                    <LabelText labelType="danger">
-                                        Vetoed
-                                    </LabelText> : candidate.status === "expired" ?
+                                </LabelText> : candidate.status === "purged" ?
                                         <LabelText labelType="dark">
-                                            Expired
+                                            Purged
                                         </LabelText> : <LabelText labelType="warning">
                                             Rejected
                                         </LabelText>}
