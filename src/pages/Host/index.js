@@ -92,21 +92,6 @@ export default function Host(props) {
   };
 
   useEffect(() => {
-    const unlisten = history.listen((location, action) => {
-
-      if (action === 'POP') {
-        history.push({
-          pathname: `/`,
-        })
-      }
-    });
-
-    return () => {
-      unlisten();
-    };
-  }, [history]);
-
-  useEffect(() => {
     const fetchInfo = async () => {
       setInfo(null);
       const hosts = await evernode.getHosts({ address: address });
