@@ -92,21 +92,6 @@ export default function Host(props) {
   };
 
   useEffect(() => {
-    const unlisten = history.listen((location, action) => {
-
-      if (action === 'POP') {
-        history.push({
-          pathname: `/`,
-        })
-      }
-    });
-
-    return () => {
-      unlisten();
-    };
-  }, [history]);
-
-  useEffect(() => {
     const fetchInfo = async () => {
       setInfo(null);
       const hosts = await evernode.getHosts({ address: address });
@@ -130,10 +115,10 @@ export default function Host(props) {
           key: 'Registration Token Id',
           value: <Tooltip title="Registration token Id"><span>{hostInfo.uriTokenId}</span></Tooltip>
         },
-        {
-          key: 'Host Email',
-          value: <Tooltip title="Email address of the host owner"><span>{hostInfo.email}</span></Tooltip>
-        },
+        // {
+        //   key: 'Host Email',
+        //   value: <Tooltip title="Email address of the host owner"><span>{hostInfo.email}</span></Tooltip>
+        // },
         {
           key: 'Instances',
           value: <Tooltip title="Active instances out of Maximum instances">
