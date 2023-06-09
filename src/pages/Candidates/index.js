@@ -72,7 +72,7 @@ const Candidates = () => {
                             </LabelText> : <LabelText labelType="warning">
                                 Rejected
                             </LabelText>,
-                positiveVoteCountVsVoteBaseCount: config.governanceInfo.voteBaseCount !== 0 ? <div>{`${candidate.positiveVoteCount}/ ${config.governanceInfo.voteBaseCount}`}</div> : <div> - </div>,
+                positiveVoteCountVsVoteBaseCount: config.governanceInfo.voteBaseCount !== 0 ? <div>{`${candidate.positiveVoteCount} out of ${config.governanceInfo.voteBaseCount}`}</div> : <div> - </div>,
                 proposalFee: <div>{candidate.proposalFee}</div>,
                 foundationVoteStatus: candidate.foundationVoteStatus === "supported" ?
                     <LabelText labelType="success">

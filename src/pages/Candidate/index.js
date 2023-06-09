@@ -72,7 +72,7 @@ const Candidate = (props) => {
                 } : {}),
                 (config.governanceInfo.voteBaseCount !== 0 ? {
                     key: 'Vote Support Ratio',
-                    value: <Tooltip title="Support Vote Count out of Total Vote Count"><span>{`${candidateInfo.positiveVoteCount}/ ${config.governanceInfo.voteBaseCount}`}</span></Tooltip>
+                    value: <Tooltip title="Support Vote Count out of Total Vote Count"><span>{`${candidateInfo.positiveVoteCount} out of ${config.governanceInfo.voteBaseCount}`}</span></Tooltip>
                 }: {} ),
                 {
                     key: 'Created Timestamp',
