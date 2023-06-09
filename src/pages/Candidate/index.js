@@ -70,10 +70,10 @@ const Candidate = (props) => {
                         <span>{candidateInfo.registryHookHash}</span>
                     </Tooltip>
                 } : {}),
-                {
-                    key: 'Positive Vote Count/ Vote Base Count',
-                    value: <Tooltip title="Positive Vote Count/ Vote Base Count"><span>{`${candidateInfo.positiveVoteCount}/ ${config.governanceInfo.voteBaseCount}`}</span></Tooltip>
-                },
+                (config.governanceInfo.voteBaseCount !== 0 ? {
+                    key: 'Vote Support Ratio',
+                    value: <Tooltip title="Support Vote Count out of Total Vote Count"><span>{`${candidateInfo.positiveVoteCount}/ ${config.governanceInfo.voteBaseCount}`}</span></Tooltip>
+                }: {} ),
                 {
                     key: 'Created Timestamp',
                     value: <Tooltip title="Created Timestamp"><span>{candidateInfo.createdTimestamp

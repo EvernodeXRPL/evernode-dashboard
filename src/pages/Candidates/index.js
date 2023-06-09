@@ -44,7 +44,7 @@ const Candidates = () => {
         const tableColumns = {
             candidateId: { title: "Candidate ID", className: 'text-start' },
             candidateStatus: { title: "Status", className: 'text-center' },
-            positiveVoteCountVsVoteBaseCount: { title: "Positive Vote Count/ Vote Base Count", className: 'text-center col-fixed-mw' },
+            positiveVoteCountVsVoteBaseCount: { title: "Vote Support Ratio", className: 'text-center col-fixed-mw' },
             proposalFee: { title: "Proposal Fee (EVRs)", className: 'text-center col-fixed-mw' },
             foundationVoteStatus: { title: "Foundation Vote Status", className: 'text-center' },
             candidateType: { title: "Candidate Type", className: 'text-center' },
@@ -72,7 +72,7 @@ const Candidates = () => {
                             </LabelText> : <LabelText labelType="warning">
                                 Rejected
                             </LabelText>,
-                positiveVoteCountVsVoteBaseCount: <div>{`${candidate.positiveVoteCount}/ ${config.governanceInfo.voteBaseCount}`}</div>,
+                positiveVoteCountVsVoteBaseCount: config.governanceInfo.voteBaseCount !== 0 ? <div>{`${candidate.positiveVoteCount}/ ${config.governanceInfo.voteBaseCount}`}</div> : <div> - </div>,
                 proposalFee: <div>{candidate.proposalFee}</div>,
                 foundationVoteStatus: candidate.foundationVoteStatus === "supported" ?
                     <LabelText labelType="success">
