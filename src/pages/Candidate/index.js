@@ -23,6 +23,7 @@ const Candidate = (props) => {
 
     useEffect(() => {
         const fetchInfo = async () => {
+            const config = await evernode.getConfigs();
             setInfo(null);
             const candidate = await evernode.getCandidateById(candidateId);
             const candidateInfo = (candidate) ? candidate : null;
@@ -69,6 +70,10 @@ const Candidate = (props) => {
                         <span>{candidateInfo.registryHookHash}</span>
                     </Tooltip>
                 } : {}),
+                (config.governanceInfo.voteBaseCount !== 0 ? {
+                    key: 'Vote Support Ratio',
+                    value: <Tooltip title="Support Vote Count out of Total Vote Count"><span>{`${candidateInfo.positiveVoteCount} out of ${config.governanceInfo.voteBaseCount}`}</span></Tooltip>
+                }: {} ),
                 {
                     key: 'Created Timestamp',
                     value: <Tooltip title="Created Timestamp"><span>{candidateInfo.createdTimestamp

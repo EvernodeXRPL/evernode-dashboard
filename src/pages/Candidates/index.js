@@ -28,6 +28,7 @@ const Candidates = () => {
 
     const loadCandidates = useCallback(async (pageToken = null) => {
         const data = await evernode.getCandidates(null, PAGE_SIZE, pageToken);
+        const config = await evernode.getConfigs();
         let candidateList;
         if (data.nextPageToken) {
             candidateList = data.data;
@@ -43,7 +44,7 @@ const Candidates = () => {
         const tableColumns = {
             candidateId: { title: "Candidate ID", className: 'text-start' },
             candidateStatus: { title: "Status", className: 'text-center' },
-            positiveVoteCount: { title: "Positive Vote Count", className: 'text-center col-fixed-mw' },
+            positiveVoteCountVsVoteBaseCount: { title: "Vote Support Ratio", className: 'text-center col-fixed-mw' },
             proposalFee: { title: "Proposal Fee (EVRs)", className: 'text-center col-fixed-mw' },
             foundationVoteStatus: { title: "Foundation Vote Status", className: 'text-center' },
             candidateType: { title: "Candidate Type", className: 'text-center' },
@@ -71,7 +72,7 @@ const Candidates = () => {
                             </LabelText> : <LabelText labelType="warning">
                                 Rejected
                             </LabelText>,
-                positiveVoteCount: <div>{candidate.positiveVoteCount}</div>,
+                positiveVoteCountVsVoteBaseCount: config.governanceInfo.voteBaseCount !== 0 ? <div>{`${candidate.positiveVoteCount} out of ${config.governanceInfo.voteBaseCount}`}</div> : <div> - </div>,
                 proposalFee: <div>{candidate.proposalFee}</div>,
                 foundationVoteStatus: candidate.foundationVoteStatus === "supported" ?
                     <LabelText labelType="success">

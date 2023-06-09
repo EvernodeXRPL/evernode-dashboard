@@ -115,10 +115,10 @@ export default function Host(props) {
           key: 'Registration Token Id',
           value: <Tooltip title="Registration token Id"><span>{hostInfo.uriTokenId}</span></Tooltip>
         },
-        // {
-        //   key: 'Host Email',
-        //   value: <Tooltip title="Email address of the host owner"><span>{hostInfo.email}</span></Tooltip>
-        // },
+        {
+          key: 'Host Email',
+          value: <Tooltip title="Email address of the host owner"><span>{hostInfo.email}</span></Tooltip>
+        },
         {
           key: 'Instances',
           value: <Tooltip title="Active instances out of Maximum instances">
