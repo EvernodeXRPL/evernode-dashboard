@@ -139,7 +139,7 @@ const getLeases = async (address) => {
 
     return leaseTokens.map(leaseToken => {
         return {
-            nfTokenId: leaseToken.index,
+            uriTokenId: leaseToken.index,
             uri: leaseToken.URI
         }
     });

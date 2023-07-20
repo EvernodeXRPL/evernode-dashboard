@@ -18,13 +18,14 @@ export default function RegularTable(props) {
     hideHeadings,
     className,
     cellClassName,
-    headerCellClassName
+    headerCellClassName,
+    hideBorderAttributes
   } = props;
 
   const keys = Object.keys(headings);
   return (
     <Fragment>
-      <TableContainer className={`${className}`} component={Paper}>
+      <TableContainer className={`${className}`} component={Paper} style={hideBorderAttributes && { boxShadow: 'none', borderRadius: '0' }}>
         <Table aria-label="simple table">
           {!hideHeadings && <TableHead>
             <TableRow>
@@ -50,11 +51,17 @@ export default function RegularTable(props) {
                   let paddingTopBottom;
                   if (value['cellConfigs'] && value['cellConfigs'].paddingTopBottom)
                     paddingTopBottom = value['cellConfigs'].paddingTopBottom;
+                  let borderBottom;
+                  if (value['cellConfigs'] && value['cellConfigs'].borderBottom)
+                    borderBottom = value['cellConfigs'].borderBottom;
+                  let paddingLeftRight;
+                  if (k === keys[1] && (value['cellConfigs'] && value['cellConfigs'].paddingLeftRight))
+                    paddingLeftRight = value['cellConfigs'].paddingLeftRight;
                   return <TableCell
                     key={i}
                     className={(value['cellConfigs'] && value['cellConfigs'].isSubtopic) ? 'pt-3 pb-2' : (((highlight && highlight.includes(k) && 'bg-secondary text-dark font-weight-bold') || '') + ` ${cellClassName}`)}
                     align="left"
-                    style={{ width: width, paddingTop: paddingTopBottom, paddingBottom: paddingTopBottom }}
+                    style={{ width: width, paddingTop: paddingTopBottom, paddingBottom: paddingTopBottom, paddingLeft: paddingLeftRight, paddingRight: paddingLeftRight, borderBottom: borderBottom }}
                     colSpan={((value['cellConfigs'] && value['cellConfigs'].colspan))}>
                     {value[k]}
                   </TableCell>

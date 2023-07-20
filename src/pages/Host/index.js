@@ -121,9 +121,43 @@ export default function Host(props) {
         },
         {
           key: 'Instances',
-          value: <Tooltip title="Active instances out of Maximum instances">
-            <span>{hostInfo.activeInstances || 0} out of {hostInfo.maxInstances || 0}</span>
-          </Tooltip>
+          value:
+            <RegularTable
+              headings={tableHeadings}
+              hideBorderAttributes
+              values={[
+                {
+                  key: 'To let',
+                  value: <Tooltip title="Number of instances available for lease">
+                    <span>
+                      {Math.max((hostInfo.maxInstances || 0) - (hostInfo.activeInstances || 0), 0)}
+                    </span>
+                  </Tooltip>,
+                  cellConfigs: { width: '10%' }
+                },
+                {
+                  key: 'Leased',
+                  value: <Tooltip title="Number of leased instances">
+                    <span>
+                      {hostInfo.activeInstances || 0}
+                    </span>
+                  </Tooltip>,
+                  cellConfigs: { width: '10%' }
+                },
+                {
+                  key: 'Total',
+                  value: <Tooltip title="Number of total instances">
+                    <span>
+                      {hostInfo.maxInstances || 0}
+                    </span>
+                  </Tooltip>,
+                  cellConfigs: { width: '10%', borderBottom: '0' }
+                }
+              ]}
+              highlight={["key"]}
+              hideHeadings
+            />,
+          cellConfigs: { paddingTopBottom: '0', paddingLeftRight: '0' }
         },
         {
           key: 'CPU Model',
