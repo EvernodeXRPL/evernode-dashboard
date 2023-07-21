@@ -123,39 +123,39 @@ export default function Host(props) {
           key: 'Instances',
           value:
             <RegularTable
-              headings={tableHeadings}
-              hideBorderAttributes
+              headings={{
+                toLet: 'To Let',
+                leased: 'Leased',
+                total: 'Total'
+              }}
+              isNested
+              hideHeadings
               values={[
                 {
-                  key: 'To let',
-                  value: <Tooltip title="Number of instances available for lease">
+                  toLet: 'To Let',
+                  leased: 'Leased',
+                  total: 'Total',
+                  cellConfigs: { align: 'center', paddingTopBottom: '8px' }
+                },
+                {
+                  toLet: <Tooltip title="Number of instances available for lease">
                     <span>
                       {Math.max((hostInfo.maxInstances || 0) - (hostInfo.activeInstances || 0), 0)}
                     </span>
                   </Tooltip>,
-                  cellConfigs: { width: '10%' }
-                },
-                {
-                  key: 'Leased',
-                  value: <Tooltip title="Number of leased instances">
+                  leased: <Tooltip title="Number of leased instances">
                     <span>
                       {hostInfo.activeInstances || 0}
                     </span>
                   </Tooltip>,
-                  cellConfigs: { width: '10%' }
-                },
-                {
-                  key: 'Total',
-                  value: <Tooltip title="Number of total instances">
+                  total: <Tooltip title="Number of total instances">
                     <span>
                       {hostInfo.maxInstances || 0}
                     </span>
                   </Tooltip>,
-                  cellConfigs: { width: '10%', borderBottom: '0' }
+                  cellConfigs: { align: 'center', paddingTopBottom: '8px', borderBottom: '0' }
                 }
               ]}
-              highlight={["key"]}
-              hideHeadings
             />,
           cellConfigs: { paddingTopBottom: '0', paddingLeftRight: '0' }
         },
