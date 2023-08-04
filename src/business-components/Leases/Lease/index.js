@@ -32,14 +32,14 @@ export default function Lease(props) {
   return (
     <Grid item xs={12} className="pb-2">
       <AccordionsCollapse
-        id={lease.nfTokenId}
+        id={lease.uriTokenId}
         summary={<Typography className="text-truncate pl-2" component={'span'}>
-          {lease.nfTokenId}</Typography>}
+          {lease.uriTokenId}</Typography>}
         expanded="true"
         panelClassName="bg-unicorn text-light"
         panelSummaryClassName="text-light"
         panelDetailClassName="text-light overflow-auto"
-        headerTooltip="NFToken Id">
+        headerTooltip="URI Token Id">
         <Grid item xs={12}>
           <RegularTable
             className="bg-transparent rounded-0"
