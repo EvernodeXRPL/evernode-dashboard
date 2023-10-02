@@ -10,9 +10,16 @@ module.exports = function override(config) {
         "buffer": require.resolve("buffer/"),
         "url": require.resolve("url/"),
         "path": false,
-        "fs": false
+        "fs": false,
+        "os": require.resolve("os-browserify/browser"),
+        "tty": require.resolve("tty-browserify"),
+        "zlib": require.resolve("browserify-zlib")
+
     })
     config.resolve.fallback = fallback;
+    config.externals = {
+        "node:crypto": "crypto"
+    }
     config.plugins = (config.plugins || []).concat([
         new webpack.ProvidePlugin({
             process: 'process/browser',
@@ -21,6 +28,6 @@ module.exports = function override(config) {
         })
     ]);
     config.ignoreWarnings = [/Failed to parse source map/];
-    config.experiments = ({topLevelAwait : true});
+    config.experiments = ({ topLevelAwait: true });
     return config;
 }

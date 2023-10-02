@@ -29,6 +29,12 @@ export default function Lease(props) {
     }
   ];
 
+  if (lease.outboundIP)
+    tableValues.push({
+      key: 'Outbound IP',
+      value: <Tooltip title="IP address for the instance's outbound connections"><span>{lease.outboundIP.address}</span></Tooltip>
+    });
+
   return (
     <Grid item xs={12} className="pb-2">
       <AccordionsCollapse
