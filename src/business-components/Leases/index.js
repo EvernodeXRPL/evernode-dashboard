@@ -25,7 +25,7 @@ export default function Leases(props) {
           ...uriInfo,
           tos: tos
         }
-      });
+      }).sort((a,b) => a.leaseIndex - b.leaseIndex);
       setLeases(leaseData);
     }
 
