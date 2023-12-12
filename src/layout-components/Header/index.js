@@ -19,6 +19,7 @@ import MomentInfo from '../../business-components/MomentInfo';
 import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import HeaderTitle from '../HeaderTitle';
+// import NetworkSelection from '../../business-components/NetworkSelection';
 
 const Header = props => {
 
@@ -59,6 +60,7 @@ const Header = props => {
           </Box>
           <HeaderTitle />
           <MomentInfo />
+          {/* <NetworkSelection/> */}
         </Box>
       </AppBar>
     </Fragment>

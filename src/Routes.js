@@ -7,7 +7,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import MuiTheme from './theme';
 import LeftSidebar from './layout-blueprints/LeftSidebar';
 
-import { EvernodeProvider } from './services/Evernode';
+import { useEvernode } from './services/Evernode';
 import LoaderScreen from './pages/LoaderScreen';
 
 const Hosts = lazy(() => import('./pages/Hosts'));
@@ -18,6 +18,7 @@ const Candidates = lazy(() => import('./pages/Candidates'));
 const Candidate = lazy(() => import('./pages/Candidate'));
 
 const Routes = () => {
+  const evernode = useEvernode();
   const location = useLocation();
 
   const pageVariants = {
@@ -43,7 +44,6 @@ const Routes = () => {
 
   return (
     <ThemeProvider theme={MuiTheme}>
-      <EvernodeProvider>
         <AnimatePresence>
           <Suspense
             fallback={<LoaderScreen />}>
@@ -78,10 +78,10 @@ const Routes = () => {
                         path="/registry"
                         component={Registry}
                       />
-                      <Route
-                        path="/testnet-faucet"
-                        component={TestnetFaucet}
-                      />
+                    {evernode.getEnvironment() !== 'mainnet' && <Route
+                      path="/testnet-faucet"
+                      component={TestnetFaucet}
+                    />}
                       <Route
                         path="/candidates"
                         component={Candidates}
@@ -98,7 +98,6 @@ const Routes = () => {
             </Switch>
           </Suspense>
         </AnimatePresence>
-      </EvernodeProvider>
     </ThemeProvider>
   );
 };

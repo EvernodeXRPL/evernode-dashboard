@@ -6,11 +6,13 @@ import { CssBaseline } from '@material-ui/core';
 import ScrollToTop from './utils/ScrollToTop';
 import Routes from './Routes';
 import './assets/base.scss';
+import { EvernodeProvider } from './services/Evernode';
 
 const store = configureStore();
 
 function App() {
   return (
+    <EvernodeProvider>
     <Provider store={store}>
       <HashRouter basename="/">
         <CssBaseline />
@@ -19,6 +21,7 @@ function App() {
         </ScrollToTop>
       </HashRouter>
     </Provider>
+    </EvernodeProvider>
   );
 }
 

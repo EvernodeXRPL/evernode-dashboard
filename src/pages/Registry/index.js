@@ -115,6 +115,10 @@ export default function Registry() {
           value: <Tooltip title="The moment EVR rewarding starts"><span>{config.rewardConfiguration.rewardStartMoment}</span></Tooltip>
         },
         {
+          key: 'Host Reputation Threshold',
+          value: <Tooltip title="Minimum required threshold for host to receive rewards"><span>{config.rewardConfiguration.hostReputationThreshold}</span></Tooltip>
+        },
+        {
           key: <Typography style={{ fontSize: '1.54rem', fontWeight: 'bold', color: 'black' }}>Reward Info</Typography>,
           value: <Tooltip title=""><span>&nbsp;</span></Tooltip>,
           cellConfigs: {

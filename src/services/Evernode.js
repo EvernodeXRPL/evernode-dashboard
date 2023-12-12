@@ -30,7 +30,10 @@ export const EvernodeProvider = (props) => {
     const value = {
         getGovernorAddress: props.getGovernorAddress || getGovernorAddress,
         getEnvironment: props.getEnvironment || getEnvironment,
+        setEnvironment: props.setEnvironment || setEnvironment,
         getConfigs: props.getConfigs || getConfigs,
+        setDefaults: props.setDefaults || setDefaults,
+        getDefinitions: props.getDefinitions || getDefinitions,
         getTos: props.getTos || getTos,
         getHosts: props.getHosts || getHosts,
         decodeLeaseUri: props.decodeLeaseUri || decodeLeaseUri,
@@ -68,20 +71,34 @@ export const EvernodeProvider = (props) => {
     )
 }
 
+let governorAddress;
+let rippledServer;
+let environment='mainnet';
+let xrplApi;
+
 export const useEvernode = () => {
     return useContext(EvernodeContext)
 }
 
-const governorAddress = process.env.REACT_APP_GOVERNOR_ADDRESS;
-const rippledServer = process.env.REACT_APP_RIPPLED_SERVER;
-const environment = 'XRPL Hooks TestNet V3';
+await evernode.Defaults.useNetwork(environment);
 
-const xrplApi = new evernode.XrplApi(rippledServer);
-evernode.Defaults.set({
-    governorAddress: governorAddress,
-    rippledServer: rippledServer,
-    xrplApi: xrplApi
-});
+const setDefaults = async () => {
+
+    const defaults = await evernode.Defaults.values;
+    governorAddress = defaults.governorAddress;
+    rippledServer = defaults.rippledServer;
+    evernode.Defaults.set({
+        governorAddress: governorAddress,
+        rippledServer: rippledServer,
+        useCentralizedRegistry: true,
+    });
+    xrplApi = new evernode.XrplApi();
+    evernode.Defaults.set({
+        xrplApi: xrplApi,
+    });
+}
+
+await setDefaults();
 
 let governorClient = await evernode.HookClientFactory.create(evernode.HookTypes.governor);
 
@@ -93,9 +110,21 @@ const getEnvironment = () => {
     return environment;
 }
 
+const setEnvironment = async (network) => {
+    await evernode.Defaults.useNetwork(network);
+    await setDefaults();
+    environment = network;
+}
+
 const getConfigs = async () => {
     return await governorClient.config;
 }
+
+const getDefinitions = async () => {
+    return await evernode.Defaults.values;
+}
+
+
 
 const getTos = async () => {
     const res = await fetch(tos);

@@ -13,6 +13,7 @@ import SidebarMenu from '../../layout-components/SidebarMenu';
 import navItems from './navItems';
 
 import { setSidebarToggleMobile } from '../../reducers/ThemeOptions';
+import { useEvernode } from '../../services/Evernode';
 
 const Sidebar = props => {
   const {
@@ -21,12 +22,22 @@ const Sidebar = props => {
     sidebarFixed,
     sidebarShadow
   } = props;
-
+  const evernode = useEvernode();
   const closeDrawer = () => setSidebarToggleMobile(!sidebarToggleMobile);
+  let filteredNavItems = navItems;
+
+  if (evernode.getEnvironment() === "mainnet") {
+    filteredNavItems = navItems.map((item) => {
+      if (item.content) {
+        item.content = item.content.filter(subItem => subItem.to !== "/testnet-faucet");
+      }
+      return item;
+    });
+  }
 
   const sidebarMenuContent = (
     <div>
-      {navItems.map((list, i) => (
+      {filteredNavItems.map((list, i) => (
         <SidebarMenu
           component="div"
           key={list.label || i}

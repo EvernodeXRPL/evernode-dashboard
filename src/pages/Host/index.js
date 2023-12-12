@@ -194,8 +194,13 @@ export default function Host(props) {
         {
           key: 'Last Vote Timestamp',
           value: <Tooltip title="Timestamp when the last vote has been sent"><span>{hostInfo.lastVoteTimestamp}</span></Tooltip>
+        },
+        {
+          key: 'Host Reputation',
+          value: <Tooltip title="Reputation of the host that is considered in rewarding"><span>{hostInfo.hostReputation}</span></Tooltip>
         }
       ] : [];
+      hostInfo && hostInfo.hostReputation==null && (tableValues = tableValues.filter(obj => obj.key !== 'Host Reputation')) ;
       const evrBalance = await evernode.getEVRBalance(address);
       setInfo({
         evrBalance: evrBalance,
