@@ -13,14 +13,14 @@ const store = configureStore();
 function App() {
   return (
     <EvernodeProvider>
-    <Provider store={store}>
-      <HashRouter basename="/">
-        <CssBaseline />
-        <ScrollToTop>
-          <Routes />
-        </ScrollToTop>
-      </HashRouter>
-    </Provider>
+      <Provider store={store}>
+        <HashRouter basename="/">
+          <CssBaseline />
+          <ScrollToTop>
+            <Routes />
+          </ScrollToTop>
+        </HashRouter>
+      </Provider>
     </EvernodeProvider>
   );
 }
