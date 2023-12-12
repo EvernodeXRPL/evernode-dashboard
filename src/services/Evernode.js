@@ -73,7 +73,7 @@ export const EvernodeProvider = (props) => {
 
 let governorAddress;
 let rippledServer;
-let environment='mainnet';
+let environment=process.env.REACT_APP_RIPPLED_ENVIRONMENT;
 let xrplApi;
 
 export const useEvernode = () => {
