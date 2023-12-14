@@ -61,7 +61,7 @@ export default function MomentInfo() {
                   </Grid>
                 </div>
                 <Divider orientation="vertical" flexItem />
-                <Tooltip title={`1 Moment = ${config.momentSize} ${config.momentBaseInfo.momentType === 'ledger' ? 'XRP Ledgers' : 'Seconds'}`}>
+                <Tooltip title={`1 Moment = ${config.momentSize} ${config.momentBaseInfo.momentType === 'ledger' ? 'Xahau Ledgers' : 'Seconds'}`}>
                   <div className="ml-3">
                     <small className="text-black-50 d-block mb-1 text-uppercase">
                       Moment
