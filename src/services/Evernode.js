@@ -73,7 +73,10 @@ export const EvernodeProvider = (props) => {
 
 let governorAddress;
 let rippledServer;
-let environment=process.env.REACT_APP_NETWORK;
+let stateIndexId;
+let environment = process.env.REACT_APP_NETWORK;
+let overrideStateIndexId = process.env.REACT_APP_STATE_INDEX_ID;
+let overrideGovernorAddress = process.env.REACT_APP_GOVERNOR_ADDRESS;
 let xrplApi;
 
 export const useEvernode = () => {
@@ -85,11 +88,13 @@ await evernode.Defaults.useNetwork(environment);
 const setDefaults = async () => {
 
     const defaults = await evernode.Defaults.values;
-    governorAddress = defaults.governorAddress;
+    governorAddress = overrideGovernorAddress || defaults.governorAddress;
+    stateIndexId = overrideStateIndexId || defaults.stateIndexId;
     rippledServer = defaults.rippledServer;
     evernode.Defaults.set({
         governorAddress: governorAddress,
         rippledServer: rippledServer,
+        stateIndexId: stateIndexId,
         useCentralizedRegistry: true,
     });
     xrplApi = new evernode.XrplApi();
