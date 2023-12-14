@@ -46,7 +46,7 @@ const Candidates = () => {
             candidateStatus: { title: "Status", className: 'text-center' },
             positiveVoteCountVsVoteBaseCount: { title: "Vote Support Ratio", className: 'text-center col-fixed-mw' },
             proposalFee: { title: "Proposal Fee (EVRs)", className: 'text-center col-fixed-mw' },
-            foundationVoteStatus: { title: "Foundation Vote Status", className: 'text-center' },
+            foundationVoteStatus: { title: "Evernode Labs Vote Status", className: 'text-center' },
             candidateType: { title: "Candidate Type", className: 'text-center' },
         };
         const tableValues = updatedCandidateList.map((candidate) => {
