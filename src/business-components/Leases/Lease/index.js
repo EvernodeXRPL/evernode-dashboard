@@ -59,7 +59,7 @@ export default function Lease(props) {
       <ModalDialog open={showTos} scroll="body" onClose={() => setShowTos(false)}>
         <div className="license">
           <object data={lease.tos} type="application/pdf"
-            aria-label="PDF document"
+            aria-label="EVERNODE HOSTING PRINCIPLES"
             style={{ width: '500px', height: '700px', display: 'block' }}
             ></object>
         </div>
