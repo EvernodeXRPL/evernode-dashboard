@@ -5,6 +5,7 @@ import { Grid } from '@material-ui/core';
 import Lease from './Lease';
 import { useEvernode } from '../../services/Evernode';
 import Loader from '../../components/Loader';
+import tosURL from '../../assets/data/tos.pdf'
 
 export default function Leases(props) {
   const { address } = props;
@@ -16,7 +17,7 @@ export default function Leases(props) {
   useEffect(() => {
     const fetchLeases = async () => {
       setLeases(null);
-      const tos = await evernode.getTos();
+      const tos = tosURL;
       const res = await evernode.getLeases(address);
       const leaseData = res.map(l => {
         const uriInfo = evernode.decodeLeaseUri(l.uri)
