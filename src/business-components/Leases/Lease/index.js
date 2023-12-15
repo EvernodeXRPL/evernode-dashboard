@@ -57,7 +57,12 @@ export default function Lease(props) {
         </Grid>
       </AccordionsCollapse>
       <ModalDialog open={showTos} scroll="body" onClose={() => setShowTos(false)}>
-        <div className="license">{lease.tos}</div>
+        <div className="license">
+          <object data={lease.tos} type="application/pdf"
+            aria-label="EVERNODE HOSTING PRINCIPLES"
+            style={{ width: '500px', height: '700px', display: 'block' }}
+            ></object>
+        </div>
       </ModalDialog>
     </Grid>
   );

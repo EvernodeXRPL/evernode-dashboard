@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import ECDSA from 'xrpl/dist/npm/ECDSA';
-import tos from '../assets/data/tos.txt'
 import LoaderScreen from '../pages/LoaderScreen';
 const xrpl = require("xrpl")
 
@@ -34,7 +33,6 @@ export const EvernodeProvider = (props) => {
         getConfigs: props.getConfigs || getConfigs,
         setDefaults: props.setDefaults || setDefaults,
         getDefinitions: props.getDefinitions || getDefinitions,
-        getTos: props.getTos || getTos,
         getHosts: props.getHosts || getHosts,
         decodeLeaseUri: props.decodeLeaseUri || decodeLeaseUri,
         getLeases: props.getLeases || getLeases,
@@ -127,13 +125,6 @@ const getConfigs = async () => {
 
 const getDefinitions = async () => {
     return await evernode.Defaults.values;
-}
-
-
-
-const getTos = async () => {
-    const res = await fetch(tos);
-    return await res.text();
 }
 
 const getHosts = async (filters = null, pageSize = null, nextPageToken = null) => {
