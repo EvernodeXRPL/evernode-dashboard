@@ -78,7 +78,8 @@ const Routes = () => {
                         path="/registry"
                         component={Registry}
                       />
-                    {evernode.getEnvironment() !== 'mainnet' && <Route
+                    {
+                    evernode.environment[0] !== 'mainnet' && <Route
                       path="/testnet-faucet"
                       component={TestnetFaucet}
                     />}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import ECDSA from 'xrpl/dist/npm/ECDSA';
 import tos from '../assets/data/tos.txt'
 import LoaderScreen from '../pages/LoaderScreen';
@@ -9,10 +9,16 @@ const evernode = require("evernode-js-client");
 const { createContext, useContext } = React;
 
 const EvernodeContext = createContext(null);
+let xrplApi;
+let governorClient;
+
 export const EvernodeProvider = (props) => {
     const [loading, setLoading] = useState(true);
     const [nextPageToken, setNextPageToken] = useState(null);
     const [pageQueue, setPageQueue] = useState([]);
+    const [governorAddress, setGovernorAddress] = useState("");
+    const [rippledServer, setRippledServer] = useState("")
+    const [environment, setEnvironment] = useState(process.env.REACT_APP_NETWORK);
 
     const updateNextPageToken = (token) => {
         setNextPageToken(token);
@@ -27,12 +33,33 @@ export const EvernodeProvider = (props) => {
         setPageQueue([]);
     }
 
+    const setDefaults = useCallback(async () => {
+        setLoading(true);
+        await evernode.Defaults.useNetwork(environment);
+        governorClient = await evernode.HookClientFactory.create(evernode.HookTypes.governor);
+        const defaults = evernode.Defaults.values;
+        evernode.Defaults.set({
+            governorAddress: governorAddress,
+            rippledServer: rippledServer,
+            useCentralizedRegistry: true,
+        });
+        setGovernorAddress(defaults.governorAddress);
+        setRippledServer(defaults.rippledServer);
+        xrplApi = new evernode.XrplApi(defaults.rippledServer);
+        evernode.Defaults.set({
+            xrplApi: xrplApi,
+        });
+        await xrplApi.connect();
+        await governorClient.connect();
+        setLoading(false);
+    }, [governorAddress, rippledServer, environment]);
+
     const value = {
-        getGovernorAddress: props.getGovernorAddress || getGovernorAddress,
-        getEnvironment: props.getEnvironment || getEnvironment,
-        setEnvironment: props.setEnvironment || setEnvironment,
+        environment: [environment, setEnvironment],
+        governorAddress: [governorAddress, setGovernorAddress],
+        rippledServer: [rippledServer, setRippledServer],
+        xrplApi: xrplApi,
         getConfigs: props.getConfigs || getConfigs,
-        setDefaults: props.setDefaults || setDefaults,
         getDefinitions: props.getDefinitions || getDefinitions,
         getTos: props.getTos || getTos,
         getHosts: props.getHosts || getHosts,
@@ -50,19 +77,16 @@ export const EvernodeProvider = (props) => {
         updateNextPageToken: updateNextPageToken,
         pageQueue: pageQueue,
         updatePageQueue: updatePageQueue,
-        resetPageTokens: resetPageTokens
+        resetPageTokens: resetPageTokens,
     }
 
-    const connectXrpl = async () => {
-        setLoading(true);
-        await xrplApi.connect();
-        await governorClient.connect();
-        setLoading(false);
-    };
+    const loadDefaults = useCallback(async () => {
+        await setDefaults();
+    }, [setDefaults]);
 
     useEffect(() => {
-        connectXrpl();
-    }, []);
+        loadDefaults();
+    }, [loadDefaults, environment]);
 
     return (
         <EvernodeContext.Provider value={value}>
@@ -71,50 +95,12 @@ export const EvernodeProvider = (props) => {
     )
 }
 
-let governorAddress;
-let rippledServer;
-let environment=process.env.REACT_APP_NETWORK;
-let xrplApi;
+
 
 export const useEvernode = () => {
     return useContext(EvernodeContext)
 }
 
-await evernode.Defaults.useNetwork(environment);
-
-const setDefaults = async () => {
-
-    const defaults = await evernode.Defaults.values;
-    governorAddress = defaults.governorAddress;
-    rippledServer = defaults.rippledServer;
-    evernode.Defaults.set({
-        governorAddress: governorAddress,
-        rippledServer: rippledServer,
-        useCentralizedRegistry: true,
-    });
-    xrplApi = new evernode.XrplApi();
-    evernode.Defaults.set({
-        xrplApi: xrplApi,
-    });
-}
-
-await setDefaults();
-
-let governorClient = await evernode.HookClientFactory.create(evernode.HookTypes.governor);
-
-const getGovernorAddress = () => {
-    return governorAddress;
-}
-
-const getEnvironment = () => {
-    return environment;
-}
-
-const setEnvironment = async (network) => {
-    await evernode.Defaults.useNetwork(network);
-    await setDefaults();
-    environment = network;
-}
 
 const getConfigs = async () => {
     return await governorClient.config;
@@ -183,7 +169,7 @@ const getEVRBalance = async (address) => {
 
 const onLedger = async (callback) => {
     xrplApi.on(evernode.XrplApiEvents.LEDGER, async (e) => {
-
+        await governorClient.connect();
         const moment = await governorClient.getMoment();
         callback({
             ledgerIndex: e.ledger_index,

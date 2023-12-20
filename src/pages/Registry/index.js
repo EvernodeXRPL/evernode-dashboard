@@ -19,7 +19,7 @@ export default function Registry() {
   const evernode = useEvernode();
 
   const [governorConfigs, setGovernorConfigs] = React.useState(null);
-  const [governorAddress, setGovernorAddress] = React.useState(null);
+  const governorAddress = evernode.governorAddress[0];
   const [rewardConfigs, setRewardConfigs] = React.useState(null);
   const [governanceConfigs, setGovernanceConfigs] = React.useState(null);
   const [hookClient, setHookClient] = React.useState(null);
@@ -27,7 +27,6 @@ export default function Registry() {
   useEffect(() => {
     const fetchConfigs = async () => {
       const config = await evernode.getConfigs();
-      setGovernorAddress(evernode.getGovernorAddress());
       const tableHeadings = {
         key: 'Key',
         value: 'Value'
