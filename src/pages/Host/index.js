@@ -169,11 +169,11 @@ export default function Host(props) {
         },
         {
           key: 'Last Heartbeat Index',
-          value: <Tooltip title={`${config.momentBaseInfo.momentType === 'ledger' ? 'XRP Ledger' : 'Timestamp'} at which the last heartbeat was received`}><span>{hostInfo.lastHeartbeatIndex}</span></Tooltip>
+          value: <Tooltip title={`${config.momentBaseInfo.momentType === 'ledger' ? 'Xahau Ledger' : 'Timestamp'} at which the last heartbeat was received`}><span>{hostInfo.lastHeartbeatIndex}</span></Tooltip>
         },
         {
-          key: 'Registered on XRP Ledger',
-          value: <Tooltip title="XRP Ledger at which the host registered"><span>{hostInfo.registrationLedger}</span></Tooltip>
+          key: 'Registered on Xahau Ledger',
+          value: <Tooltip title="Xahau Ledger at which the host registered"><span>{hostInfo.registrationLedger}</span></Tooltip>
         },
         {
           key: 'Registration Fee',
@@ -348,7 +348,7 @@ export default function Host(props) {
       </Fragment >}
       {address === selfAddress && <ModalDialog open={showChangeAddress} scroll="body" onClose={handleChangeAddressClose}>
         <div>
-          <TextField autoFocus error={!!inputAddress && !inputAddressValid()} classes={classes} className="address-input" variant="standard" label="Enter the host XRP address" multiline value={inputAddress || ''} onChange={(e) => setInputAddress(e.target.value)} />
+          <TextField autoFocus error={!!inputAddress && !inputAddressValid()} classes={classes} className="address-input" variant="standard" label="Enter the host Xahau address" multiline value={inputAddress || ''} onChange={(e) => setInputAddress(e.target.value)} />
         </div>
         <div>
           <Button onClick={handleChangeAddress} variant="outlined" disabled={!inputAddress || !inputAddressValid()} className="pull-right mt-3">OK</Button>

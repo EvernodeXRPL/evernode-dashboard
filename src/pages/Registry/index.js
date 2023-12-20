@@ -33,15 +33,15 @@ export default function Registry() {
       }
       let registryConfigTableValues = [
         {
-          key: 'EVR Issuer XRP Address',
-          value: <Tooltip title="EVR Issuer XRP account address"><span>{config.evrIssuerAddress}</span></Tooltip>,
+          key: 'EVR Issuer Xahau Address',
+          value: <Tooltip title="EVR Issuer Xahau account address"><span>{config.evrIssuerAddress}</span></Tooltip>,
           cellConfigs: {
             width: '37%'
           }
         },
         {
-          key: 'Foundation XRP Address',
-          value: <Tooltip title="Evernode foundation XRP account address"><span>{config.foundationAddress}</span></Tooltip>
+          key: 'Evernode Labs Xahau Address',
+          value: <Tooltip title="Evernode Evernode Labs Xahau account address"><span>{config.foundationAddress}</span></Tooltip>
         },
         {
           key: 'Heartbeat Frequency',
@@ -53,7 +53,7 @@ export default function Registry() {
         },
         {
           key: 'Lease Acquire Window',
-          value: <Tooltip title="The maximum no. of XRP ledgers that an acquire-lease request should wait for instance creation"><span>{config.leaseAcquireWindow}</span></Tooltip>
+          value: <Tooltip title="The maximum no. of Xahau ledgers that an acquire-lease request should wait for instance creation"><span>{config.leaseAcquireWindow}</span></Tooltip>
         },
         {
           key: 'Moment Base Timestamp',
@@ -221,12 +221,12 @@ export default function Registry() {
           value: <Tooltip title="Timestamp when the most recently elected candidate was elected"><span>{config.governanceInfo.proposalElectedTimestamp === 0 ? '-' : config.governanceInfo.proposalElectedTimestamp}</span></Tooltip>
         },
         // {
-        //   key: 'Foundation Last Voted Candidate Idx',
+        //   key: 'Evernode Labs Last Voted Candidate Idx',
         //   value: <Tooltip title=""><span>{config.governanceInfo.foundationLastVotedCandidateIdx}</span></Tooltip>
         // },
         // {
-        //   key: 'Foundation Last Voted Timestamp',
-        //   value: <Tooltip title="Timestamp when the foundation's last vote was received"><span>{config.governanceInfo.foundationLastVotedTimestamp}</span></Tooltip>
+        //   key: 'Evernode Labs Last Voted Timestamp',
+        //   value: <Tooltip title="Timestamp when the Evernode Labs's last vote was received"><span>{config.governanceInfo.foundationLastVotedTimestamp}</span></Tooltip>
         // },
         {
           key: 'Governance Mode',

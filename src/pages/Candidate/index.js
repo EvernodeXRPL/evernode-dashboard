@@ -80,8 +80,8 @@ const Candidate = (props) => {
                     }</span></Tooltip>
                 },
                 {
-                    key: 'Foundation Vote Status',
-                    value: <Tooltip title="Foundation Vote Status">
+                    key: 'Evernode Labs Vote Status',
+                    value: <Tooltip title="Evernode Labs Vote Status">
                         <>
                             {candidateInfo.foundationVoteStatus === "supported" ? <LabelText labelType="success">
                                 Supported
