@@ -60,7 +60,6 @@ export const EvernodeProvider = (props) => {
         xrplApi: xrplApi,
         getConfigs: props.getConfigs || getConfigs,
         getDefinitions: props.getDefinitions || getDefinitions,
-        getTos: props.getTos || getTos,
         getHosts: props.getHosts || getHosts,
         decodeLeaseUri: props.decodeLeaseUri || decodeLeaseUri,
         getLeases: props.getLeases || getLeases,
