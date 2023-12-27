@@ -14,31 +14,29 @@ import Loader from '../../components/Loader';
 import { useEvernode } from '../../services/Evernode';
 
 export default function MomentInfo() {
+  const evernode = useEvernode();
+  const environment = evernode.environment[0];
   const [ledger, setLedger] = React.useState(null);
-  const [environment, setEnvironment] = React.useState(null);
   const [config, setConfig] = React.useState(null);
 
-  const evernode = useEvernode();
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const configData = await evernode.getConfigs();
+        setConfig(configData);
+      } catch (error) {
+        console.error("Error fetching config:", error);
+      }
+    };
+
     const listen = async () => {
       await evernode.onLedger((e) => {
         setLedger(e);
-      })
-    }
-
-    const loadEnvironmet = () => {
-      setEnvironment(evernode.getEnvironment());
-    }
-
-    const loadMomentSize = async () => {
-      const config = await evernode.getConfigs();
-      setConfig(config);
-    }
+      });
+      await fetchData();
+    };
 
     listen();
-    loadEnvironmet();
-    loadMomentSize();
   }, [evernode]);
 
   return (

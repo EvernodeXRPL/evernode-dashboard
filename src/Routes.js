@@ -44,60 +44,61 @@ const Routes = () => {
 
   return (
     <ThemeProvider theme={MuiTheme}>
-        <AnimatePresence>
-          <Suspense
-            fallback={<LoaderScreen />}>
-            <Switch>
-              <Redirect exact from="/" to="/hosts" />
-              <Route
-                path={[
-                  '/hosts',
-                  '/host/:address?',
-                  '/registry',
-                  '/testnet-faucet',
-                  '/candidates',
-                  '/candidate/:candidateId?'
-                ]}>
-                <LeftSidebar>
-                  <Switch location={location} key={location.pathname}>
-                    <motion.div
-                      initial="initial"
-                      animate="in"
-                      exit="out"
-                      variants={pageVariants}
-                      transition={pageTransition}>
-                      <Route
-                        path="/hosts"
-                        component={Hosts}
-                      />
-                      <Route
-                        path="/host/:address?"
-                        component={Host}
-                      />
-                      <Route
-                        path="/registry"
-                        component={Registry}
-                      />
-                    {evernode.getEnvironment() !== 'mainnet' && <Route
-                      path="/testnet-faucet"
-                      component={TestnetFaucet}
-                    />}
-                      <Route
-                        path="/candidates"
-                        component={Candidates}
-                      />
-                      <Route
-                        path="/candidate/:candidateId?"
-                        component={Candidate}
-                      />
-                    </motion.div>
-                  </Switch>
-                </LeftSidebar>
-              </Route>
-              <Redirect exact from="*" to="/" />
-            </Switch>
-          </Suspense>
-        </AnimatePresence>
+      <AnimatePresence>
+        <Suspense
+          fallback={<LoaderScreen />}>
+          <Switch>
+            <Redirect exact from="/" to="/hosts" />
+            <Route
+              path={[
+                '/hosts',
+                '/host/:address?',
+                '/registry',
+                '/testnet-faucet',
+                '/candidates',
+                '/candidate/:candidateId?'
+              ]}>
+              <LeftSidebar>
+                <Switch location={location} key={location.pathname}>
+                  <motion.div
+                    initial="initial"
+                    animate="in"
+                    exit="out"
+                    variants={pageVariants}
+                    transition={pageTransition}>
+                    <Route
+                      path="/hosts"
+                      component={Hosts}
+                    />
+                    <Route
+                      path="/host/:address?"
+                      component={Host}
+                    />
+                    <Route
+                      path="/registry"
+                      component={Registry}
+                    />
+                    {
+                      evernode.environment[0] !== 'mainnet' && <Route
+                        path="/testnet-faucet"
+                        component={TestnetFaucet}
+                      />}
+                    <Route
+                      path="/candidates"
+                      component={Candidates}
+                    />
+                    <Route
+                      path="/candidate/:candidateId?"
+                      component={Candidate}
+                    />
+                  </motion.div>
+                </Switch>
+              </LeftSidebar>
+            </Route>
+            <Redirect exact from="*" to="/" />
+          </Switch>
+        </Suspense>
+      </AnimatePresence>
     </ThemeProvider>
   );
 };

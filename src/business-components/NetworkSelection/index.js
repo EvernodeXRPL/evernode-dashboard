@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Select,
   MenuItem,
@@ -9,11 +9,9 @@ import { useEvernode } from '../../services/Evernode';
 
 export default function NetworkSelection() {
   const evernode = useEvernode();
-  const environment = evernode.getEnvironment();
-  const [network, setNetwork] = useState(environment);
+  const [network, setNetwork] = evernode.environment;
 
   const handleChange = async (event) => {
-    await evernode.setEnvironment(event.target.value)
     setNetwork(event.target.value);
   };
 
@@ -26,8 +24,8 @@ export default function NetworkSelection() {
         value={network}
         onChange={handleChange}
       >
-        <MenuItem value={'mainnet'}>Mainnet</MenuItem>
-        <MenuItem value={'devnet'}>Devnet</MenuItem>
+        {/* <MenuItem value={'mainnet'}>Mainnet</MenuItem> */}
+        {/* <MenuItem value={'devnet'}>Devnet</MenuItem> */}
         <MenuItem value={'testnet'}>Testnet</MenuItem>
       </Select>
     </FormControl>

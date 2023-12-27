@@ -26,7 +26,7 @@ const Sidebar = props => {
   const closeDrawer = () => setSidebarToggleMobile(!sidebarToggleMobile);
   let filteredNavItems = navItems;
 
-  if (evernode.getEnvironment() === "mainnet") {
+  if (evernode.environment[0] === "mainnet") {
     filteredNavItems = navItems.map((item) => {
       if (item.content) {
         item.content = item.content.filter(subItem => subItem.to !== "/testnet-faucet");
