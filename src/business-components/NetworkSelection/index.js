@@ -24,8 +24,8 @@ export default function NetworkSelection() {
         value={network}
         onChange={handleChange}
       >
-        <MenuItem value={'mainnet'}>Mainnet</MenuItem>
-        <MenuItem value={'devnet'}>Devnet</MenuItem>
+        {/* <MenuItem value={'mainnet'}>Mainnet</MenuItem> */}
+        {/* <MenuItem value={'devnet'}>Devnet</MenuItem> */}
         <MenuItem value={'testnet'}>Testnet</MenuItem>
       </Select>
     </FormControl>

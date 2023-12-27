@@ -17,7 +17,7 @@ export const EvernodeProvider = (props) => {
     const [pageQueue, setPageQueue] = useState([]);
     const [governorAddress, setGovernorAddress] = useState("");
     const [rippledServer, setRippledServer] = useState("")
-    const [environment, setEnvironment] = useState(process.env.REACT_APP_NETWORK);
+    const [environment, setEnvironment] = useState(process.env.REACT_APP_DEFAULT_NETWORK);
 
     const updateNextPageToken = (token) => {
         setNextPageToken(token);
@@ -35,23 +35,27 @@ export const EvernodeProvider = (props) => {
     const setDefaults = useCallback(async () => {
         setLoading(true);
         await evernode.Defaults.useNetwork(environment);
-        governorClient = await evernode.HookClientFactory.create(evernode.HookTypes.governor);
-        const defaults = evernode.Defaults.values;
         evernode.Defaults.set({
-            governorAddress: governorAddress,
-            rippledServer: rippledServer,
             useCentralizedRegistry: true,
         });
+        const override_governor_env_name = `REACT_APP_OVERRIDE_${environment.toUpperCase()}_GOVERNOR_ADDRESS`
+        if (process.env[override_governor_env_name]) {
+            evernode.Defaults.set({
+                governorAddress: process.env[override_governor_env_name],
+            });
+        }
+        const defaults = evernode.Defaults.values;
         setGovernorAddress(defaults.governorAddress);
         setRippledServer(defaults.rippledServer);
         xrplApi = new evernode.XrplApi(defaults.rippledServer);
+        await xrplApi.connect();
         evernode.Defaults.set({
             xrplApi: xrplApi,
         });
-        await xrplApi.connect();
+        governorClient = await evernode.HookClientFactory.create(evernode.HookTypes.governor);
         await governorClient.connect();
         setLoading(false);
-    }, [governorAddress, rippledServer, environment]);
+    }, [environment]);
 
     const value = {
         environment: [environment, setEnvironment],
@@ -93,12 +97,9 @@ export const EvernodeProvider = (props) => {
     )
 }
 
-
-
 export const useEvernode = () => {
     return useContext(EvernodeContext)
 }
-
 
 const getConfigs = async () => {
     return await governorClient.config;

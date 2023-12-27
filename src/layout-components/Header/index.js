@@ -60,7 +60,7 @@ const Header = props => {
           </Box>
           <HeaderTitle />
           <MomentInfo />
-          <NetworkSelection/>
+          <NetworkSelection />
         </Box>
       </AppBar>
     </Fragment>

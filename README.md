@@ -2,10 +2,18 @@
 Evernode host dashboard web app (ReactJS).
 
 ## Environment
-Add `.env.development.local` file in root directory and specify the dev governor address.
-Add `.env.production.local` file in root directory and specify the prod governor address.
+Add `.env.development.local` file in root directory and specify testnet.
+Add `.env.production.local` file in root directory and specify mainnet.
 ```
-REACT_APP_GOVERNOR_ADDRESS=<Governor address>
+REACT_APP_DEFAULT_NETWORK=<network>
+```
+__Overriding the governor address__
+```
+REACT_APP_OVERRIDE_<network in upper case>_GOVERNOR_ADDRESS=<governor address>
+```
+Example:
+```
+REACT_APP_OVERRIDE_DEVNET_GOVERNOR_ADDRESS=<devnet governor address>
 ```
 
 ### URL
