@@ -22,7 +22,7 @@ const FaucetBox = ({faucetBox}) => {
       value: <CopyBox copyText={faucetBox.secret} iconSize="16"><span className='text-black'>{faucetBox.secret}</span></CopyBox>,
     },
     {
-      key: 'XRP',
+      key: 'XAH',
       value: <span className='text-black'>{faucetBox.xrp}</span>,
         
     },

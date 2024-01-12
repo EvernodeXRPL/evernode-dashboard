@@ -191,7 +191,7 @@ const generateAndFundFaucetAccount = async () => {
     const xrplClient = new xrpl.Client(xrplServerURL);
     await xrplClient.connect();
 
-    // Keep watching until xrps are received XRP balance.
+    // Keep watching until XAHs are received.
     let attempts = 0;
     while (attempts >= 0) {
         await new Promise(solve => setTimeout(solve, 1000));
@@ -203,7 +203,7 @@ const generateAndFundFaucetAccount = async () => {
         if (!balance) {
             if (++attempts <= 20)
                 continue;
-            throw Error("XRP funds not received within timeout.");
+            throw Error("XAH funds not received within timeout.");
         }
         break;
     }
