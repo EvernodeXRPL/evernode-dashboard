@@ -65,6 +65,7 @@ export const EvernodeProvider = (props) => {
         getConfigs: props.getConfigs || getConfigs,
         getDefinitions: props.getDefinitions || getDefinitions,
         getHosts: props.getHosts || getHosts,
+        getHostInfo: props.getHostInfo || getHostInfo,
         decodeLeaseUri: props.decodeLeaseUri || decodeLeaseUri,
         getLeases: props.getLeases || getLeases,
         getEVRBalance: props.getEVRBalance || getEVRBalance,
@@ -111,6 +112,10 @@ const getDefinitions = async () => {
 
 const getHosts = async (filters = null, pageSize = null, nextPageToken = null) => {
     return governorClient.getHosts(filters, pageSize, nextPageToken);
+}
+
+const getHostInfo = async (hostAddress) => {
+    return governorClient.getHostInfo(hostAddress);
 }
 
 const getCandidates = async (filters = null, pageSize = null, nextPageToken = null) => {
