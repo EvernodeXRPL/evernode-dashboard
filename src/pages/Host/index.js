@@ -94,9 +94,8 @@ export default function Host(props) {
   useEffect(() => {
     const fetchInfo = async () => {
       setInfo(null);
-      const hosts = await evernode.getHosts({ address: address });
       const config = await evernode.getConfigs();
-      const hostInfo = (hosts && hosts.length) ? hosts[0] : null;
+      const hostInfo = await evernode.getHostInfo(address);
       const dudHostCandidates = await evernode.getDudHostCandidatesByOwner(address);
       const candidate = await evernode.getCandidateByOwner(address);
       const tableHeadings = {
