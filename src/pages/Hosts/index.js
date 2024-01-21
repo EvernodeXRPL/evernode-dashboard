@@ -132,7 +132,7 @@ export default function Hosts() {
     <PageTitle
       titleHeading="Hosts"
       />
-      {hasError ? (<p className="m-0">Host directory data is temporarily unavailable.</p>):
+      {true ? (<p className="m-0">Host directory data is temporarily unavailable.</p>):
       (
       <div>
       {isHostsLoading && <Loader className={`hostsLoader "p-4"`} />}
