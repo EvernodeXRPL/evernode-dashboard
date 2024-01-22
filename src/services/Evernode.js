@@ -38,6 +38,11 @@ export const EvernodeProvider = (props) => {
         evernode.Defaults.set({
             useCentralizedRegistry: true,
         });
+        if (environment === 'mainnet') {
+            evernode.Defaults.set({
+                rippledServer: 'wss://xahau.evernode.org'
+            });
+        }
         const override_governor_env_name = `REACT_APP_OVERRIDE_${environment.toUpperCase()}_GOVERNOR_ADDRESS`
         if (process.env[override_governor_env_name]) {
             evernode.Defaults.set({
