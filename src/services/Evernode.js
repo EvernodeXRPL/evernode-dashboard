@@ -10,6 +10,7 @@ const { createContext, useContext } = React;
 const EvernodeContext = createContext(null);
 let xrplApi;
 let governorClient;
+let xrplApis = {};
 
 export const EvernodeProvider = (props) => {
     const [loading, setLoading] = useState(true);
@@ -52,7 +53,10 @@ export const EvernodeProvider = (props) => {
         const defaults = evernode.Defaults.values;
         setGovernorAddress(defaults.governorAddress);
         setRippledServer(defaults.rippledServer);
-        xrplApi = new evernode.XrplApi(defaults.rippledServer);
+        if (!xrplApis[environment])
+            xrplApis[environment] = new evernode.XrplApi(defaults.rippledServer);
+
+        xrplApi = xrplApis[environment];
         await xrplApi.connect();
         evernode.Defaults.set({
             xrplApi: xrplApi,
