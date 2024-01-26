@@ -184,17 +184,16 @@ const onLedger = async (callback) => {
     });
 }
 
-const testnetFaucet = async () => {
-    const generatedAccount = await generateAndFundFaucetAccount();
+const testnetFaucet = async (rippledServer) => {
+    const generatedAccount = await generateAndFundFaucetAccount(rippledServer);
     return generatedAccount;
 }
 
-const generateAndFundFaucetAccount = async () => {
-    const xrplServerURL = process.env.REACT_APP_RIPPLED_SERVER;
+const generateAndFundFaucetAccount = async (rippledServer) => {
     // Generating faucet account
     const new_wallet = xrpl.Wallet.generate(ECDSA.secp256k1);
 
-    await fetch(`http${xrplServerURL.substring(2)}/newcreds?account=${new_wallet.address}`, {
+    await fetch(`http${rippledServer.substring(2)}/newcreds?account=${new_wallet.address}`, {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -202,7 +201,7 @@ const generateAndFundFaucetAccount = async () => {
         }
     });
 
-    const xrplClient = new xrpl.Client(xrplServerURL);
+    const xrplClient = new xrpl.Client(rippledServer);
     await xrplClient.connect();
 
     // Keep watching until XAHs are received.

@@ -24,24 +24,14 @@ const Sidebar = props => {
   } = props;
   const evernode = useEvernode();
   const closeDrawer = () => setSidebarToggleMobile(!sidebarToggleMobile);
-  let filteredNavItems = navItems;
-
-  if (evernode.environment[0] === "mainnet") {
-    filteredNavItems = navItems.map((item) => {
-      if (item.content) {
-        item.content = item.content.filter(subItem => subItem.to !== "/testnet-faucet");
-      }
-      return item;
-    });
-  }
 
   const sidebarMenuContent = (
     <div>
-      {filteredNavItems.map((list, i) => (
+      {navItems.map((list, i) => (
         <SidebarMenu
           component="div"
           key={list.label || i}
-          pages={list.content}
+          pages={list.content.filter(i => evernode.environment[0] !== "mainnet" || i.to !== "/testnet-faucet")}
           title={list.label}
         />
       ))}

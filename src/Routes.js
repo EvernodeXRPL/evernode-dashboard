@@ -42,6 +42,8 @@ const Routes = () => {
     duration: 0.4
   };
 
+  const isMainnet = evernode.environment[0] === 'mainnet';
+
   return (
     <ThemeProvider theme={MuiTheme}>
       <AnimatePresence>
@@ -54,9 +56,9 @@ const Routes = () => {
                 '/hosts',
                 '/host/:address?',
                 '/registry',
-                '/testnet-faucet',
                 '/candidates',
-                '/candidate/:candidateId?'
+                '/candidate/:candidateId?',
+                ...(isMainnet ? [] : ['/testnet-faucet'])
               ]}>
               <LeftSidebar>
                 <Switch location={location} key={location.pathname}>
@@ -79,7 +81,7 @@ const Routes = () => {
                       component={Registry}
                     />
                     {
-                      evernode.environment[0] !== 'mainnet' && <Route
+                      !isMainnet && <Route
                         path="/testnet-faucet"
                         component={TestnetFaucet}
                       />}

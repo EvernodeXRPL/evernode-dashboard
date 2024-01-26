@@ -15,7 +15,7 @@ const TestnetFaucet = () => {
   const testnetFaucet = () => {
     setAccountButtonClick(true)
     setAccountGeneratedFlag(false);
-    evernode.testnetFaucet().then(accountDetails => {
+    evernode.testnetFaucet(evernode.rippledServer[0]).then(accountDetails => {
       setWarningDisplay(false);
       setFaucetBox(accountDetails);
       if (accountDetails !== undefined && typeof accountDetails !== 'undefined') {
@@ -23,6 +23,7 @@ const TestnetFaucet = () => {
         setAccountButtonClick(false);
       }
     }).catch(e => {
+      console.log(e);
       setWarningDisplay(true);
       setAccountButtonClick(false);
     });
